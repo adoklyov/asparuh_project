@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/default/asparuh_project/build",
+  "command": "/usr/bin/g++   -I/usr/include/SDL2  -g   -o CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.o -c /home/default/Downloads/pugixml-1.14/src/pugixml.cpp",
+  "file": "/home/default/Downloads/pugixml-1.14/src/pugixml.cpp"
+},
+{
+  "directory": "/home/default/asparuh_project/build",
+  "command": "/usr/bin/g++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/main.cpp.o -c /home/default/asparuh_project/main.cpp",
+  "file": "/home/default/asparuh_project/main.cpp"
+},
+{
+  "directory": "/home/default/asparuh_project/build",
+  "command": "/usr/bin/g++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/App.cpp.o -c /home/default/asparuh_project/App.cpp",
+  "file": "/home/default/asparuh_project/App.cpp"
+},
+{
+  "directory": "/home/default/asparuh_project/build",
+  "command": "/usr/bin/g++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/Deck.cpp.o -c /home/default/asparuh_project/Deck.cpp",
+  "file": "/home/default/asparuh_project/Deck.cpp"
+},
+{
+  "directory": "/home/default/asparuh_project/build",
+  "command": "/usr/bin/g++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/Manager.cpp.o -c /home/default/asparuh_project/Manager.cpp",
+  "file": "/home/default/asparuh_project/Manager.cpp"
+},
+{
+  "directory": "/home/default/asparuh_project/build",
+  "command": "/usr/bin/g++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/Player.cpp.o -c /home/default/asparuh_project/Player.cpp",
+  "file": "/home/default/asparuh_project/Player.cpp"
+}
+]
