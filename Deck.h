@@ -53,10 +53,12 @@ public:
 	Card DealCard();
 	void riffleShuffle();
 	void shuffle();
+
+	Card DealCardForManager();
+
+
     std::vector<Card>& getDeck();
 private:
 	std::vector<Card> deck;
-	//Card backs
-
 };
 #endif

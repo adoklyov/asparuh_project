@@ -17,14 +17,35 @@ Card Player::pullCard()
 	return {};
 }
 
-short Player::getPoints() const
+int Player::getPoints() const
 {
-    return this->points;
+    return points;
 }
 
-void Player::setPoints(short pp)
+
+void Player::setPoints(int pp)
 {
-	this->points = pp;
+	points = pp;
+}
+
+int Player::getWins() const
+{
+	return wins;
+}
+
+void Player::setWins(int w)
+{
+	wins = w;
+}
+
+int Player::getLosses() const
+{
+	return losses;
+}
+
+void Player::setLosses(int l)
+{
+	losses = l;
 }
 
 bool Player::getTurn() const
@@ -96,12 +117,12 @@ void Player::printCards() const
 
 void Player::incrementPoint()
     {
-	this->points++;
+	points++;
     }
 
 void Player::decrementPoint()
 {
-	this->points--;
+	points--;
 }
 
 Card Player::getCurrentCard() const

@@ -1,7 +1,7 @@
 #ifndef APP_H
 #define APP_H
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include "Player.h"
@@ -18,40 +18,45 @@ enum GameState
 class App
 {
 public:
-	App(std::vector<Player> &players, Manager &mgr);
+	App(std::vector<Player> &players);
 	~App();
 
-	bool init(const std::string title, int xpos, int ypos, int width, int height, int flags);
+	bool init(const std::string title, int xpos, int ypos, int width, int height, int flags, Deck &deck, std::vector<Player> &pl);
 	bool ttf_init();
-	void render();
+	void render(std::vector<Player> &players);
 	void loadTextureOnDeck(Deck &deck);
 	void drawTexture(SDL_Texture *tex, int x, int y, int width, int heigth, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	SDL_Texture *loadTexture(const std::string filePath, SDL_Renderer *renderer);
 	SDL_Surface *getSurface(const std::string filePath);
 	bool isClickableRectClicked(SDL_Rect *r, int xDown, int yDown, int xUp, int yUp);
 
+	std::vector<Player> &getPlayers();
 	void update();
-	void handleEvents(Deck &deck, Manager &manager);
+	void handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl);
 	void DestroySDL();
 	bool isRunning();
+	void dealCardToPlayers(Deck &deck, std::vector<Player> &players);
 	// Player rendering
-	void player1Render();
-	void player2Render();
-	void player3Render();
-	//Thrown cards
+	void player1Render(std::vector<Player> &pl);
+	void player2Render(std::vector<Player> &pl);
+	void player3Render(std::vector<Player> &pl);
+	// Thrown cards
 	void thrownCardsRender();
-	//Current player cards holding message
-	void cardsCountMessage();
-	//War message
+	// Current player cards holding message
+	void cardsCountMessage(std::vector<Player> &players);
+	// War message
 	void warMessage();
+	// Stats
+	void statsMessage(std::vector<Player>&players);
+	bool showStats;
 
 private:
 	std::vector<Player> players;
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
-	Manager& manager;
+	void initDeck(Deck &deck, std::vector<Player> &pl);
 
-	//Player deal buttons
+	// Player deal buttons
 	void setDealButton(bool pressed);
 	void setButtonPressedDeal1(bool pr);
 	void setButtonPressedDeal2(bool pr);
@@ -98,6 +103,8 @@ private:
 	SDL_Texture *textStartTexturePlayer3;
 	// deal texture player3
 	SDL_Texture *textDealTexturePlayer3;
+	// stats texture
+	SDL_Texture *statsTexture;
 	// error texture
 	SDL_Texture *textErrorTexture;
 	// Player 1 text texture
@@ -145,12 +152,15 @@ private:
 	SDL_Rect dRectTextPlayer2;
 	SDL_Rect dRectTextPlayer3;
 
+	// stats
+	SDL_Rect statsButton;
+
 	SDL_Rect dRectTextError;
 	// background
 	SDL_Rect dRectBackground;
 
-	//TTF Font
-	TTF_Font* font;
+	// TTF Font
+	TTF_Font *font;
 
 	// mouse coordinates
 	int mouseDownX, mouseDownY;

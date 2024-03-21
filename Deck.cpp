@@ -11,8 +11,7 @@ Deck::Deck() : deck(DECK_CAPACITY)
 		deck[i].face = Face(i % 13);
 		deck[i].value = deck[i].face + 2; // start from 2, not 0
 	}
-}
-
+} 
 
 Deck::~Deck()
 {
@@ -46,7 +45,7 @@ void Deck::print() const
 		{
 		case Suit::Clubs: std::cout << "Clubs"; break;
 		case Suit::Diamonds: std::cout << "Diamonds"; break;
-		case Suit::Hearts: std::cout << "Hearths"; break;
+		case Suit::Hearts: std::cout << "Hearts"; break;
 		case Suit::Spades: std::cout << "Spades"; break;
 		default:
 			break;
@@ -55,14 +54,18 @@ void Deck::print() const
 	}
 }
 
-Card Deck::DealCard()
+Card Deck::DealCardForManager()
 {
-
 	Card result = deck.front();
-	std::cerr << "Deck Deal cards\n";
 	deck.erase(deck.begin());
 	return result;
+}
 
+Card Deck::DealCard()
+{
+	Card result = deck.front();
+	deck.erase(deck.begin());
+	return result;
 }
 
 void Deck::riffleShuffle()
@@ -97,6 +100,7 @@ std::vector<Card>& Deck::getDeck()
 {
     return deck;
 }
+
 void Deck::shuffle()
 {
 	srand(unsigned(time(NULL)));

@@ -6,8 +6,8 @@
 const unsigned CARD_DEALED = 10;
 const unsigned POSITION_DIFF = 5;
 
-App::App(std::vector<Player> &pl, Manager &mgr)
-	: players(pl), manager(mgr), backCardTexture(nullptr), card1Texture(nullptr), card2Texture(nullptr), card3Texture(nullptr), card4Texture(nullptr),
+App::App(std::vector<Player> &pl)
+	: players(pl), backCardTexture(nullptr), card1Texture(nullptr), card2Texture(nullptr), card3Texture(nullptr), card4Texture(nullptr),
 	  card5Texture(nullptr), card6Texture(nullptr), card7Texture(nullptr), card8Texture(nullptr), card9Texture(nullptr),
 	  card10Texture(nullptr)
 
@@ -18,13 +18,39 @@ App::App(std::vector<Player> &pl, Manager &mgr)
 	running = true;
 	buttonPressed = false;
 	state = GameState::START;
+	showStats = false;
 }
 
 App::~App()
 {
 	DestroySDL();
 }
-bool App::init(const std::string title, int xpos, int ypos, int width, int height, int flags)
+
+// void App::dealCardToPlayers(Deck& deck, std::vector<Player>& pl)
+// {
+// 	for (size_t i = 0; i < pl.size(); i++)
+// 	{
+// 		pl[i].dealCards(deck);
+// 	}
+// }
+
+void App::initDeck(Deck &deck, std::vector<Player> &pl)
+{
+	loadTextureOnDeck(deck);
+	deck.shuffle();
+	deck.riffleShuffle();
+	for (unsigned i = 0; i < pl.size(); i++)
+	{
+		pl[i].dealCards(deck);
+	}
+}
+
+std::vector<Player> &App::getPlayers()
+{
+	return this->players;
+}
+
+bool App::init(const std::string title, int xpos, int ypos, int width, int height, int flags, Deck &deck, std::vector<Player> &pl)
 {
 	TTF_Init();
 
@@ -68,6 +94,8 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 	SDL_SetTextureAlphaMod(card1Texture, 255);
 
 	SDL_QueryTexture(backCardTexture, 0, 0, &tw, &th);
+	// Deck init
+	initDeck(deck, pl);
 
 	SDL_FreeSurface(tempSurface);
 	return true;
@@ -94,6 +122,10 @@ bool App::ttf_init()
 	// texture deal
 	tempSurfaceText = TTF_RenderText_Blended(font1, "Deal", {0x00, 0x00, 0x00, 0xFF});
 	textDealTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
+
+	// texture stats
+	tempSurfaceText = TTF_RenderText_Blended(font1, "Stats", {0x00, 0x00, 0x00, 0xFF});
+	statsTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
 	// texture error
 	tempSurfaceText = TTF_RenderText_Blended(font2, "Cannot Click", {0x00, 0x00, 0x00, 0xFF});
@@ -187,11 +219,15 @@ SDL_Texture *App::loadTexture(const std::string filePath, SDL_Renderer *renderer
 	return texture;
 }
 
-void App::render()
+void App::render(std::vector<Player> &players)
 {
 	SDL_RenderClear(renderer);
 	// background
 	SDL_RenderCopy(renderer, backgroundTexture, nullptr, &dRectBackground);
+	//statsMessage();
+	statsButton = {730, 570, 70, 30};
+	SDL_RenderFillRect(renderer, &statsButton);
+	SDL_RenderCopy(renderer, statsTexture, nullptr, &statsButton);
 
 	if (GameState::START == state)
 	{
@@ -203,10 +239,10 @@ void App::render()
 	{
 
 		SDL_QueryTexture(card1Texture, 0, 0, &tw, &th);
-		player1Render();
-		player2Render();
-		player3Render();
-		cardsCountMessage();
+		player1Render(players);
+		player2Render(players);
+		player3Render(players);
+		cardsCountMessage(players);
 
 		if (getDealButton())
 		{
@@ -218,16 +254,21 @@ void App::render()
 	else if (GameState::WAR == state)
 	{
 		SDL_QueryTexture(card1Texture, 0, 0, &tw, &th);
-		player1Render();
-		player2Render();
-		player3Render();
-		cardsCountMessage();
+		player1Render(players);
+		player2Render(players);
+		player3Render(players);
+		cardsCountMessage(players);
 		thrownCardsRender();
 		warMessage();
 	}
 
 	else if (GameState::OVER == state)
 	{
+	}
+
+	if (showStats)
+	{
+		statsMessage(players);
 	}
 	SDL_RenderPresent(renderer);
 }
@@ -254,7 +295,7 @@ void App::drawTexture(SDL_Texture *tex, int x, int y, int width, int heigth, SDL
 	SDL_RenderCopyEx(renderer, tex, &srcRect, &dstRect, 0, 0, flip);
 }
 
-void App::handleEvents(Deck &deck, Manager &manager)
+void App::handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl)
 {
 	SDL_Event event;
 	static bool wasPressed = false;
@@ -300,10 +341,10 @@ void App::handleEvents(Deck &deck, Manager &manager)
 						wasPressed = true;
 						std::cerr << " CLICKED START"
 								  << "\n";
-						for (unsigned i = 0; i < players.size(); i++)
-						{
-							players[i].dealCards(deck);
-						}
+						// for (unsigned i = 0; i < players.size(); i++)
+						// {
+						// 	players[i].dealCards(deck);
+						// }
 						// deck.print();
 						SDL_SetTextureAlphaMod(textStartTexture, 128);
 						SDL_SetTextureAlphaMod(card1Texture, 255);
@@ -320,9 +361,8 @@ void App::handleEvents(Deck &deck, Manager &manager)
 						setButtonPressedDeal2(false);
 						setButtonPressedDeal3(false);
 
-						players[0].setTurn(true);
-
-						c1 = players[0].pullCard();
+						pl[0].setTurn(true);
+						c1 = pl[0].pullCard();
 
 						buttonPressed = true;
 						setDealButton(buttonPressed);
@@ -333,13 +373,10 @@ void App::handleEvents(Deck &deck, Manager &manager)
 						setButtonPressedDeal2(true);
 						setButtonPressedDeal3(false);
 
-						if (!players[1].getPlayerDeck().empty())
-						{
-							players[1].setTurn(true);
-							c2 = players[1].pullCard();
-							buttonPressed = true;
-						}
+						pl[1].setTurn(true);
+						c2 = pl[1].pullCard();
 
+						buttonPressed = true;
 						setDealButton(buttonPressed);
 					}
 					else if (isClickableRectClicked(&dRectButtonDealPlayer3, mouseDownX, mouseDownY, msx, msy))
@@ -348,21 +385,34 @@ void App::handleEvents(Deck &deck, Manager &manager)
 						setButtonPressedDeal2(false);
 						setButtonPressedDeal3(true);
 
-						players[2].setTurn(true);
+						pl[2].setTurn(true);
+						c3 = pl[2].pullCard();
 
-						c3 = players[2].pullCard();
 						buttonPressed = true;
 						setDealButton(buttonPressed);
 					}
-					if (true == players[0].getTurn() && true == players[1].getTurn() && true == players[2].getTurn())
+					if (true == pl[0].getTurn() && true == pl[1].getTurn() && true == pl[2].getTurn())
 					{
-						players[0].setTurn(false);
-						players[1].setTurn(false);
-						players[2].setTurn(false);
+						pl[0].setTurn(false);
+						pl[1].setTurn(false);
+						pl[2].setTurn(false);
 						std::cerr << "playing a round";
+
 						manager.playRound();
-						state = GameState::WAR;
+
+						if(manager.hasWar()){
+							state = GameState::WAR;
+							pl[0].incrementPoint();
+							manager.playWarRound();
+						}
+
+						// state = GameState::WAR;
 					}
+				}
+
+				else if(isClickableRectClicked(&statsButton, mouseDownX, mouseDownY, msx, msy))
+				{
+					showStats = !showStats;
 				}
 				else
 				{
@@ -385,6 +435,7 @@ void App::DestroySDL()
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	IMG_Quit();
+	TTF_Quit();
 	SDL_Quit();
 }
 
@@ -427,7 +478,7 @@ bool App::getDealButton() const
 }
 
 // Player 1 Cards
-void App::player1Render()
+void App::player1Render(std::vector<Player> &players)
 {
 	int numCards = players[0].cntPlayerDeck();
 
@@ -449,7 +500,7 @@ void App::player1Render()
 }
 
 // Player 2 Cards
-void App::player2Render()
+void App::player2Render(std::vector<Player> &players)
 {
 	int numCards = players[1].cntPlayerDeck();
 
@@ -470,7 +521,7 @@ void App::player2Render()
 }
 
 // Player 3 Cards
-void App::player3Render()
+void App::player3Render(std::vector<Player> &players)
 {
 
 	int numCards = players[2].cntPlayerDeck();
@@ -503,7 +554,7 @@ void App::thrownCardsRender()
 	SDL_RenderCopy(renderer, c3.texture, nullptr, &dRectCard3Thrown);
 }
 
-void App::cardsCountMessage()
+void App::cardsCountMessage(std::vector<Player> &players)
 {
 	// Player 1's message
 	int player1CardCount = players[0].cntPlayerDeck();
@@ -574,4 +625,31 @@ void App::warMessage()
 	SDL_RenderCopy(renderer, Message, NULL, &warMessagePos);
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(warSurface);
+}
+
+void App::statsMessage(std::vector<Player>&players)
+{
+	// Stats message
+	std::string statsMessage = " P1 Points: " + std::to_string(players[0].getPoints()) +
+							   " W: " + std::to_string(players[0].getWins()) +
+							   " L: " + std::to_string(players[0].getLosses()) +
+							   " P2 Points: " + std::to_string(players[1].getWins()) +
+							   " W: " + std::to_string(players[1].getWins()) +
+							   " L: " + std::to_string(players[1].getLosses()) +
+							   " P3 Points: " + std::to_string(players[2].getPoints()) +
+							   " W: " + std::to_string(players[2].getWins()) +
+							   " L: " + std::to_string(players[2].getLosses());
+	SDL_Color textColor = {255, 255, 255, 255};
+	SDL_Surface *statsSurface = TTF_RenderText_Solid(font, statsMessage.c_str(), textColor);
+	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, statsSurface);
+
+	SDL_Rect statsPos;
+	statsPos.x = 10;
+	statsPos.y = 15;
+	statsPos.w = 750;
+	statsPos.h = 50;
+
+	SDL_RenderCopy(renderer, Message, NULL, &statsPos);
+	SDL_DestroyTexture(Message);
+	SDL_FreeSurface(statsSurface);
 }

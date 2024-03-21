@@ -24,11 +24,7 @@ public:
 
 	void printDeck(std::vector<Card>& deck) const;
 
-private:
-	std::vector<Player> players;
-	unsigned short session;
-	unsigned short round;
-
+	//War props
 	Card getBiggestPlayerCard();
 	int calcTiePlayers(const Card& c);
 	unsigned findPlayerWithCard(const Card& c);
@@ -36,6 +32,19 @@ private:
 	void playWarRound();
 
 	bool hasWar();
+
+private:
+	std::vector<Player> players;
+	unsigned short session;
+	unsigned short round;
+
+	// Card getBiggestPlayerCard();
+	// int calcTiePlayers(const Card& c);
+	// unsigned findPlayerWithCard(const Card& c);
+	// void playNormalRound();
+	// void playWarRound();
+
+	// bool hasWar();
 	unsigned getWinner();
 	bool registerWinner(std::vector<Card>& deskDeck, unsigned winner);
 };

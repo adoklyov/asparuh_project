@@ -3,55 +3,49 @@
 #include "Manager.h"
 #include "App.h"
 #include "Deck.h"
-#include "Player.h"
+
+App *app = nullptr;
+const unsigned WINDOW_WIDTH = 800;
+const unsigned WINDOW_HEIGHT = 600;
+
+/*
+BUGS:
+	Delay on start button
+	Fix A of Hearts
+	Randomly cards 2 and 3 went bigger when player1 empt his deck
+*/
+
 
 int main(int argc, char **argv)
 {
-    const unsigned WINDOW_WIDTH = 800;
-    const unsigned WINDOW_HEIGHT = 600;
+	Deck deck;
+	Player player1, player2, player3;
+	std::vector<Player> players {player1, player2, player3};
 
-    Deck deck;
-    Player player1, player2, player3;
+	app = new App(players);
 
-    std::vector<Player> players{player1, player2, player3};
-
-    Manager manager(player1, player2, player3);
-
-    App *app = new App(players, manager);
-    bool initSuccess = app->init("WarWithCards",
-                                 SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                 WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE);
-
-    if (!initSuccess) {
-        std::cerr << "Failed to initialize the app\n";
-        delete app;
-        return -1; 
-    }
-
-    if (!app->ttf_init()) {
-        std::cerr << "Failed to initialize TTF\n";
-        delete app;
-        return -1; 
-    }
-
-    deck.shuffle();
-    deck.riffleShuffle(); 
-    // player1.dealCards(deck);
-    // player2.dealCards(deck);
-    // player3.dealCards(deck);
+	bool init = app->init("WarWithCards",
+						  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+						  WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN, deck, players);
+	
+	Manager manager(players[0], players[1], players[2]); // The error: It passes Players without cards
 
 
-    app->loadTextureOnDeck(deck);
+	if (!init)
+	{
+		return -1;
+	}
 
+	app->ttf_init();
+	while (app->isRunning())
+	{
+		app->handleEvents(deck, manager, players);
+		app->update();
+		app->render(players);
+	}
+	app->DestroySDL();
 
-    while (app->isRunning()) {
-        app->handleEvents(deck, manager);
-        app->update(); 
-        app->render(); 
-    }
+	delete app;
 
-    app->DestroySDL();
-    delete app;
-
-    return 0; 
+	return 0;
 }

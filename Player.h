@@ -11,11 +11,15 @@ public:
 
 	std::vector<Card>& getPlayerDeck();
 	size_t cntPlayerDeck();
-
-	short getPoints() const;
+	// stats
+	int getPoints() const;
+	int getWins() const;
+	int getLosses() const;
+	void setWins(int w);
+	void setLosses(int l);
 	bool getTurn() const;
 	void setTurn(bool turn);
-	void setPoints(short pp);
+	void setPoints(int pp);
 	Card pullCard();
 	void dealCards(Deck& deck);
 	void printCards() const;
@@ -23,7 +27,9 @@ public:
 	void decrementPoint();
 	Card getCurrentCard() const;
 private:
-	short points;
+ 	int points = 0;
+	int wins = 0;
+	int losses = 0;
 	bool turn;
 	std::vector<Card> playerDeck;
 };

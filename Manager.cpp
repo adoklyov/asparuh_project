@@ -2,25 +2,25 @@
 #include <iostream>
 #include <random>
 
-Manager::Manager(Player& player1, Player& player2, Player& player3)
-	:round(0), session(0)
+Manager::Manager(Player &player1, Player &player2, Player &player3)
+	: round(0), session(0)
 {
 	players.push_back(player1);
 	players.push_back(player2);
 	players.push_back(player3);
 }
 
-bool operator>(const Card& card1, const Card& card2)
+bool operator>(const Card &card1, const Card &card2)
 {
 	return card1.value > card2.value;
 }
 
-bool operator<(const Card& card1, const Card& card2)
+bool operator<(const Card &card1, const Card &card2)
 {
 	return card1.value < card2.value;
 }
 
-bool operator==(const Card& card1, const Card& card2)
+bool operator==(const Card &card1, const Card &card2)
 {
 	return (card1.value == card2.value);
 }
@@ -35,7 +35,7 @@ unsigned short Manager::getSession() const
 	return this->session;
 }
 
-std::vector<Player>& Manager::getPlayers()
+std::vector<Player> &Manager::getPlayers()
 {
 	return this->players;
 }
@@ -43,40 +43,74 @@ std::vector<Player>& Manager::getPlayers()
 void Manager::printPlayer(unsigned i)
 {
 	std::cerr << "Player " << (i + 1) << ", Cards number: " << players[i].cntPlayerDeck() << '\n';
-	//std::cerr << "Cards:" << '\n';
+	std::cerr << "Cards:" << '\n';
 	players[i].printCards();
 }
 
-void Manager::printDeck(std::vector<Card>& deck) const
+void Manager::printDeck(std::vector<Card> &deck) const
 {
 	for (unsigned i = 0; i < deck.size(); i++)
 	{
 		std::cerr << "Face: ";
 		switch (deck[i].face)
 		{
-		case Face::Two: std::cerr << "2"; break;
-		case Face::Three: std::cerr << "3"; break;
-		case Face::Four: std::cerr << "4"; break;
-		case Face::Five: std::cerr << "5"; break;
-		case Face::Six: std::cerr << "6"; break;
-		case Face::Seven: std::cerr << "7"; break;
-		case Face::Eight: std::cerr << "8"; break;
-		case Face::Nine: std::cerr << "9"; break;
-		case Face::Ten: std::cerr << "T"; break;
-		case Face::Jack: std::cerr << "J"; break;
-		case Face::Queen: std::cerr << "Q"; break;
-		case Face::King: std::cerr << "K"; break;
-		case Face::Ace: std::cerr << "A"; break;
+		case Face::Two:
+			std::cerr << "2";
+			break;
+		case Face::Three:
+			std::cerr << "3";
+			break;
+		case Face::Four:
+			std::cerr << "4";
+			break;
+		case Face::Five:
+			std::cerr << "5";
+			break;
+		case Face::Six:
+			std::cerr << "6";
+			break;
+		case Face::Seven:
+			std::cerr << "7";
+			break;
+		case Face::Eight:
+			std::cerr << "8";
+			break;
+		case Face::Nine:
+			std::cerr << "9";
+			break;
+		case Face::Ten:
+			std::cerr << "T";
+			break;
+		case Face::Jack:
+			std::cerr << "J";
+			break;
+		case Face::Queen:
+			std::cerr << "Q";
+			break;
+		case Face::King:
+			std::cerr << "K";
+			break;
+		case Face::Ace:
+			std::cerr << "A";
+			break;
 		default:
 			break;
 		}
 		std::cerr << " Suit: ";
 		switch (deck[i].suit)
 		{
-		case Suit::Clubs: std::cerr << "Clubs"; break;
-		case Suit::Diamonds: std::cerr << "Diamonds"; break;
-		case Suit::Hearts: std::cerr << "Hearts"; break;
-		case Suit::Spades: std::cerr << "Spades"; break;
+		case Suit::Clubs:
+			std::cerr << "Clubs";
+			break;
+		case Suit::Diamonds:
+			std::cerr << "Diamonds";
+			break;
+		case Suit::Hearts:
+			std::cerr << "Hearts";
+			break;
+		case Suit::Spades:
+			std::cerr << "Spades";
+			break;
 		default:
 			break;
 		}
@@ -114,14 +148,13 @@ void Manager::playRound()
 
 bool Manager::isGameOver()
 {
-	Player& player1 = getPlayers()[0];
-	Player& player2 = getPlayers()[1];
-	Player& player3 = getPlayers()[2];
+	Player &player1 = getPlayers()[0];
+	Player &player2 = getPlayers()[1];
+	Player &player3 = getPlayers()[2];
 	if (player1.cntPlayerDeck() == 0 && player2.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
 	{
 		std::cerr << "Tie!";
 		return true;
-
 	}
 	else if (player1.cntPlayerDeck() == 0 && player2.cntPlayerDeck() == 0)
 	{
@@ -143,9 +176,9 @@ bool Manager::isGameOver()
 
 Card Manager::getBiggestPlayerCard()
 {
-	Player& player1 = players[0];
-	Player& player2 = players[1];
-	Player& player3 = players[2];
+	Player &player1 = players[0];
+	Player &player2 = players[1];
+	Player &player3 = players[2];
 
 	Card biggest = {};
 	biggest.value = 2;
@@ -165,9 +198,9 @@ Card Manager::getBiggestPlayerCard()
 	return biggest;
 }
 
-int Manager::calcTiePlayers(const Card& c)
+int Manager::calcTiePlayers(const Card &c)
 {
-	// int count = 0;
+	int count = 0;
 	for (unsigned i = 0; i < players.size(); i++)
 	{
 		if (!players[i].getPlayerDeck().empty() && players[i].getPlayerDeck().front() == c)
@@ -177,7 +210,7 @@ int Manager::calcTiePlayers(const Card& c)
 	}
 	return count;
 }
-unsigned Manager::findPlayerWithCard(const Card& c)
+unsigned Manager::findPlayerWithCard(const Card &c)
 {
 	for (unsigned i = 0; i < players.size(); i++)
 	{
@@ -335,7 +368,7 @@ unsigned Manager::getWinner()
 	return findPlayerWithCard(c);
 }
 
-bool Manager::registerWinner(std::vector<Card>& deskDeck, unsigned winner)
+bool Manager::registerWinner(std::vector<Card> &deskDeck, unsigned winner)
 {
 	std::cerr << "Winner is: " << winner + 1 << '\n';
 	for (unsigned i = 0; i < deskDeck.size(); i++)
@@ -345,9 +378,11 @@ bool Manager::registerWinner(std::vector<Card>& deskDeck, unsigned winner)
 	return true;
 }
 
-Card Manager::getPlayerCard(unsigned int playerIndex) const {
-    if (playerIndex < players.size()) {
-        return players[playerIndex].getCurrentCard();
-    }
-    return Card(); 
+Card Manager::getPlayerCard(unsigned int playerIndex) const
+{
+	if (playerIndex < players.size())
+	{
+		return players[playerIndex].getCurrentCard();
+	}
+	return Card();
 }
