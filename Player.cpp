@@ -10,6 +10,9 @@ Card Player::pullCard()
 	if (!playerDeck.empty())
 	{
 		Card card = playerDeck.front();
+		std::cout << "------\n";
+		card.print();
+		std::cout << "------\n";
 		playerDeck.erase(playerDeck.begin());
 		return card;
 	}
@@ -17,15 +20,34 @@ Card Player::pullCard()
 	return {};
 }
 
-int Player::getPoints() const
+short Player::getPoints() const
 {
-    return points;
+    return this->points;
 }
 
-
-void Player::setPoints(int pp)
+void Player::setPoints(short pp)
 {
-	points = pp;
+	this->points = pp;
+}
+
+bool Player::getTurn() const
+{
+    return turn;
+}
+
+void Player::setTurn(bool turn)
+{
+	this->turn = turn;
+}
+
+std::vector<Card>& Player::getPlayerDeck()
+{
+	return playerDeck;
+}
+
+size_t Player::cntPlayerDeck()
+{
+	return playerDeck.size();
 }
 
 int Player::getWins() const
@@ -48,33 +70,13 @@ void Player::setLosses(int l)
 	losses = l;
 }
 
-bool Player::getTurn() const
-{
-    return turn;
-}
-
-void Player::setTurn(bool turn)
-{
-	this->turn = turn;
-}
-
-std::vector<Card>& Player::getPlayerDeck() // ERROR: doesnt show
-{
-	return playerDeck;
-}
-
-size_t Player::cntPlayerDeck()
-{
-	// std::cerr << playerDeck.size();
-	return playerDeck.size(); // IT doesnt WORK
-}
-
 void Player::dealCards(Deck& deck)
 {
-    playerDeck.clear(); 
-    for (unsigned count = 0; count < 10; count++)
+    playerDeck.clear();
+
+	for (unsigned count = 0; count < 10; count++)
     {
-        playerDeck.push_back(deck.DealCard());
+		playerDeck.push_back(deck.DealCard());
     }
 }
 
@@ -106,7 +108,7 @@ void Player::printCards() const
 {
 		case Suit::Clubs: std::cout << "Clubs"; break;
 		case Suit::Diamonds: std::cout << "Diamonds"; break;
-		case Suit::Hearts: std::cout << "Hearths"; break;
+		case Suit::Hearts: std::cout << "Hearts"; break;
 		case Suit::Spades: std::cout << "Spades"; break;
 		default:
 			break;
@@ -116,13 +118,13 @@ void Player::printCards() const
 }
 
 void Player::incrementPoint()
-    {
-	points++;
-    }
+{
+	this->points++;
+}
 
 void Player::decrementPoint()
 {
-	points--;
+	this->points--;
 }
 
 Card Player::getCurrentCard() const

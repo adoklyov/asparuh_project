@@ -1,5 +1,4 @@
-#ifndef DECK_H
-#define DECK_H
+#pragma once
 #include <vector>
 #include <iostream>
 class SDL_Texture;
@@ -10,8 +9,7 @@ enum Suit
 	Clubs,
 	Diamonds,
 	Hearts,
-	Spades,
-	Test
+	Spades
 };
 
 enum Face
@@ -48,7 +46,6 @@ class Deck
 {
 public:
 	Deck();
-	~Deck();
 	void print() const;
 	Card DealCard();
 	void riffleShuffle();
@@ -61,4 +58,3 @@ public:
 private:
 	std::vector<Card> deck;
 };
-#endif

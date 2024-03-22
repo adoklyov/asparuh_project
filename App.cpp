@@ -1,56 +1,58 @@
 #include "App.h"
-#include "Manager.h"
 #include <iostream>
-#include <string>
 
 const unsigned CARD_DEALED = 10;
 const unsigned POSITION_DIFF = 5;
 
-App::App(std::vector<Player> &pl)
-	: players(pl), backCardTexture(nullptr), card1Texture(nullptr), card2Texture(nullptr), card3Texture(nullptr), card4Texture(nullptr),
-	  card5Texture(nullptr), card6Texture(nullptr), card7Texture(nullptr), card8Texture(nullptr), card9Texture(nullptr),
-	  card10Texture(nullptr)
+App::App()
+	: card1Texture(nullptr)
 
 {
-	players = pl;
+
+	deck = new Deck();
+	player1 = new Player();
+	player2 = new Player();
+	player3 = new Player();
+
+	players.push_back(*player1);
+	players.push_back(*player2);
+	players.push_back(*player3);
+
 	window = NULL;
 	renderer = NULL;
 	running = true;
 	buttonPressed = false;
 	state = GameState::START;
 	showStats = false;
+	isRoundPlayed = false;
 }
 
 App::~App()
 {
+	// delete[] deck;
+	// for (unsigned i = 0; i < players.size(); i++)
+	// {
+	// 	delete[] &players[i];
+	// }
+
 	DestroySDL();
 }
-
-// void App::dealCardToPlayers(Deck& deck, std::vector<Player>& pl)
-// {
-// 	for (size_t i = 0; i < pl.size(); i++)
-// 	{
-// 		pl[i].dealCards(deck);
-// 	}
-// }
-
-void App::initDeck(Deck &deck, std::vector<Player> &pl)
+bool operator>(const Card &card1, const Card &card2)
 {
-	loadTextureOnDeck(deck);
-	deck.shuffle();
-	deck.riffleShuffle();
-	for (unsigned i = 0; i < pl.size(); i++)
-	{
-		pl[i].dealCards(deck);
-	}
+	return card1.value > card2.value;
 }
 
-std::vector<Player> &App::getPlayers()
+bool operator<(const Card &card1, const Card &card2)
 {
-	return this->players;
+	return card1.value < card2.value;
 }
 
-bool App::init(const std::string title, int xpos, int ypos, int width, int height, int flags, Deck &deck, std::vector<Player> &pl)
+bool operator==(const Card &card1, const Card &card2)
+{
+	return (card1.value == card2.value);
+}
+
+bool App::init(const std::string title, int xpos, int ypos, int width, int height, int flags)
 {
 	TTF_Init();
 
@@ -76,7 +78,9 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 		std::cerr << "Renderer creation failed: " << SDL_GetError() << "\n";
 		return false;
 	}
+
 	SDL_SetRenderDrawColor(renderer, 0x00, 0xCA, 0xAC, 0xFF);
+
 	SDL_Surface *tempSurface = getSurface("/home/default/asparuh_project/assets/cards/background.jpg");
 	backgroundTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
 	int w, h;
@@ -94,11 +98,24 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 	SDL_SetTextureAlphaMod(card1Texture, 255);
 
 	SDL_QueryTexture(backCardTexture, 0, 0, &tw, &th);
-	// Deck init
-	initDeck(deck, pl);
+
+	initDeck();
 
 	SDL_FreeSurface(tempSurface);
 	return true;
+}
+
+void App::initDeck()
+{
+	loadTextureOnDeck();
+	deck->shuffle();
+	deck->riffleShuffle();
+	deck->print();
+
+	for (unsigned i = 0; i < players.size(); i++)
+	{
+		players[i].dealCards(*deck);
+	}
 }
 
 bool App::ttf_init()
@@ -126,7 +143,7 @@ bool App::ttf_init()
 	// texture stats
 	tempSurfaceText = TTF_RenderText_Blended(font1, "Stats", {0x00, 0x00, 0x00, 0xFF});
 	statsTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
-
+	
 	// texture error
 	tempSurfaceText = TTF_RenderText_Blended(font2, "Cannot Click", {0x00, 0x00, 0x00, 0xFF});
 	textErrorTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
@@ -219,7 +236,7 @@ SDL_Texture *App::loadTexture(const std::string filePath, SDL_Renderer *renderer
 	return texture;
 }
 
-void App::render(std::vector<Player> &players)
+void App::render()
 {
 	SDL_RenderClear(renderer);
 	// background
@@ -228,7 +245,6 @@ void App::render(std::vector<Player> &players)
 	statsButton = {730, 570, 70, 30};
 	SDL_RenderFillRect(renderer, &statsButton);
 	SDL_RenderCopy(renderer, statsTexture, nullptr, &statsButton);
-
 	if (GameState::START == state)
 	{
 		dRectButtonStart = {0, 350, 70, 30};
@@ -237,12 +253,11 @@ void App::render(std::vector<Player> &players)
 	}
 	else if (GameState::PLAYING == state)
 	{
-
 		SDL_QueryTexture(card1Texture, 0, 0, &tw, &th);
-		player1Render(players);
-		player2Render(players);
-		player3Render(players);
-		cardsCountMessage(players);
+		player1Render();
+		player2Render();
+		player3Render();
+		cardsCountMessage();
 
 		if (getDealButton())
 		{
@@ -254,36 +269,34 @@ void App::render(std::vector<Player> &players)
 	else if (GameState::WAR == state)
 	{
 		SDL_QueryTexture(card1Texture, 0, 0, &tw, &th);
-		player1Render(players);
-		player2Render(players);
-		player3Render(players);
-		cardsCountMessage(players);
+		player1Render();
+		player2Render();
+		player3Render();
+		cardsCountMessage();
 		thrownCardsRender();
 		warMessage();
 	}
-
 	else if (GameState::OVER == state)
 	{
 	}
-
 	if (showStats)
 	{
 		statsMessage(players);
 	}
+
 	SDL_RenderPresent(renderer);
 }
-
-void App::loadTextureOnDeck(Deck &deck)
+void App::loadTextureOnDeck()
 {
-	const char *const arrSuit[4] = {"spades", "hearts", "diamonds", "clubs"};
+	const char *const arrSuit[4] = {"clubs", "diamonds", "hearts", "spades"};
 	const char *const arrFace[13] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"};
-	for (int i = 0; i < deck.getDeck().size(); i++)
+	for (int i = 0; i < deck->getDeck().size(); i++)
 	{
 		std::string filePathRoot = "/home/default/asparuh_project/assets/cards/";
 		filePathRoot.append(arrFace[i % 13]).append("_of_").append(arrSuit[i % 4]).append(".png");
 		SDL_Texture *tex = loadTexture(filePathRoot, renderer);
-		deck.getDeck()[i].texture = tex;
-		if (!deck.getDeck()[i].texture)
+		deck->getDeck()[i].texture = tex;
+		if (!deck->getDeck()[i].texture)
 			std::cerr << "Failed to load texture for card " << SDL_GetError() << "\n";
 	}
 }
@@ -295,7 +308,7 @@ void App::drawTexture(SDL_Texture *tex, int x, int y, int width, int heigth, SDL
 	SDL_RenderCopyEx(renderer, tex, &srcRect, &dstRect, 0, 0, flip);
 }
 
-void App::handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl)
+void App::handleEvents()
 {
 	SDL_Event event;
 	static bool wasPressed = false;
@@ -334,6 +347,7 @@ void App::handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl)
 						SDL_RenderCopy(renderer, textErrorTexture, nullptr, &dRectTextError);
 						SDL_RenderPresent(renderer);
 						SDL_Delay(1000);
+						
 						SDL_SetTextureAlphaMod(textErrorTexture, 0);
 					}
 					else
@@ -341,15 +355,10 @@ void App::handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl)
 						wasPressed = true;
 						std::cerr << " CLICKED START"
 								  << "\n";
-						// for (unsigned i = 0; i < players.size(); i++)
-						// {
-						// 	players[i].dealCards(deck);
-						// }
-						// deck.print();
 						SDL_SetTextureAlphaMod(textStartTexture, 128);
 						SDL_SetTextureAlphaMod(card1Texture, 255);
 						state = GameState::PLAYING;
-						manager.startMatch();
+						// manager.startMatch();
 					}
 				}
 				else if (isClickableRectClicked(&dRectButtonDeal, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(&dRectButtonDealPlayer2, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(&dRectButtonDealPlayer3, mouseDownX, mouseDownY, msx, msy))
@@ -361,9 +370,10 @@ void App::handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl)
 						setButtonPressedDeal2(false);
 						setButtonPressedDeal3(false);
 
-						pl[0].setTurn(true);
-						c1 = pl[0].pullCard();
+						players[0].setTurn(true);
 
+						// c1 = players[0].pullCard(); // The error: No where to be found here
+						c1 = players[0].getPlayerDeck().front();
 						buttonPressed = true;
 						setDealButton(buttonPressed);
 					}
@@ -373,11 +383,14 @@ void App::handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl)
 						setButtonPressedDeal2(true);
 						setButtonPressedDeal3(false);
 
-						pl[1].setTurn(true);
-						c2 = pl[1].pullCard();
-
-						buttonPressed = true;
-						setDealButton(buttonPressed);
+						if (!players[1].getPlayerDeck().empty())
+						{
+							players[1].setTurn(true);
+							// c2 = players[1].pullCard();
+							c2 = players[1].getPlayerDeck().front();
+							buttonPressed = true;
+							setDealButton(buttonPressed);
+						}
 					}
 					else if (isClickableRectClicked(&dRectButtonDealPlayer3, mouseDownX, mouseDownY, msx, msy))
 					{
@@ -385,34 +398,39 @@ void App::handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl)
 						setButtonPressedDeal2(false);
 						setButtonPressedDeal3(true);
 
-						pl[2].setTurn(true);
-						c3 = pl[2].pullCard();
+						players[2].setTurn(true);
+
+						// c3 = players[2].pullCard();
+						c3 = players[2].getPlayerDeck().front();
 
 						buttonPressed = true;
 						setDealButton(buttonPressed);
 					}
-					if (true == pl[0].getTurn() && true == pl[1].getTurn() && true == pl[2].getTurn())
+					if (true == players[0].getTurn() && true == players[1].getTurn() && true == players[2].getTurn())
 					{
-						pl[0].setTurn(false);
-						pl[1].setTurn(false);
-						pl[2].setTurn(false);
-						std::cerr << "playing a round";
-
-						manager.playRound();
-
-						if(manager.hasWar()){
-							state = GameState::WAR;
-							pl[0].incrementPoint();
-							manager.playWarRound();
-						}
-
-						// state = GameState::WAR;
+						players[0].setTurn(false);
+						players[1].setTurn(false);
+						players[2].setTurn(false);
+						std::cerr << "\nplaying a round\n";
+						isRoundPlayed =  true;
+						playRound();
 					}
 				}
-
-				else if(isClickableRectClicked(&statsButton, mouseDownX, mouseDownY, msx, msy))
+				else if (isClickableRectClicked(&statsButton, mouseDownX, mouseDownY, msx, msy))
 				{
 					showStats = !showStats;
+
+					players[0].setTurn(true);
+					players[1].setTurn(true);
+					players[2].setTurn(true);
+
+					c1 = players[0].getPlayerDeck().front();
+					c2 = players[1].getPlayerDeck().front();
+					c3 = players[2].getPlayerDeck().front();
+					isRoundPlayed =  true;
+
+					playRound();
+
 				}
 				else
 				{
@@ -425,9 +443,358 @@ void App::handleEvents(Deck &deck, Manager &manager, std::vector<Player> &pl)
 		}
 	}
 }
-
-void App::update()
+bool App::registerWinner(std::vector<Card> &deskDeck, unsigned winner)
 {
+	std::cerr << "Winner is: " << winner + 1 << '\n';
+	std::string warMessage = "Winner is: " + std::to_string(winner);
+	SDL_Color textColor = {255, 255, 255, 255};
+	SDL_Surface *warSurface = TTF_RenderText_Solid(font, warMessage.c_str(), textColor);
+	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, warSurface);
+
+	SDL_Rect warMessagePos;
+	warMessagePos.x = 400;
+	warMessagePos.y = 300;
+	warMessagePos.h = 40;
+	warMessagePos.w = 80;
+
+	SDL_RenderCopy(renderer, Message, NULL, &warMessagePos);
+	SDL_DestroyTexture(Message);
+	SDL_FreeSurface(warSurface);
+
+	for (unsigned i = 0; i < deskDeck.size(); i++)
+	{
+		players[winner].getPlayerDeck().push_back(deskDeck[i]);
+	}
+	players[winner].incrementPoint();
+	return true;
+}
+int App::calcTiePlayers(const Card &c)
+{
+	int count = 0;
+	for (unsigned i = 0; i < players.size(); i++)
+	{
+		if (!players[i].getPlayerDeck().empty() && players[i].getPlayerDeck().front() == c)
+		{
+			count++;
+		}
+	}
+	std::cerr << "\ncalcTiePlayers: " << count << '\n';
+	return count;
+}
+Card App::getBiggestPlayerCard()
+{
+	Player &player1 = players[0];
+	Player &player2 = players[1];
+	Player &player3 = players[2];
+
+	Card biggest = {};
+	biggest.value = 2;
+	if (!players[0].getPlayerDeck().empty())
+	{
+		biggest = players[0].getPlayerDeck().front();
+	}
+	if (!players[1].getPlayerDeck().empty() && players[1].getPlayerDeck().front() > biggest)
+	{
+		biggest = players[1].getPlayerDeck().front();
+	}
+	if (!players[2].getPlayerDeck().empty() && players[2].getPlayerDeck().front() > biggest)
+	{
+		biggest = players[2].getPlayerDeck().front();
+	}
+
+	return biggest;
+}
+bool App::hasWar()
+{
+	Card c = getBiggestPlayerCard();
+	c.print();
+	if (calcTiePlayers(c) > 1)
+	{
+		return true;
+	}
+	return false;
+}
+unsigned App::findPlayerWithCard(const Card &c)
+{
+	for (unsigned i = 0; i < players.size(); i++)
+	{
+		if (!players[i].getPlayerDeck().empty() && players[i].getPlayerDeck().front() == c)
+		{
+			return i;
+		}
+	}
+	return (unsigned)players.size();
+}
+unsigned App::getWinner()
+{
+	if (hasWar())
+	{
+		return (unsigned)players.size(); // invalid player
+	}
+	Card c = getBiggestPlayerCard();
+	return findPlayerWithCard(c);
+}
+void App::printDeck(const std::vector<Card> &deskDeck) const
+{
+	for (unsigned i = 0; i < deskDeck.size(); i++)
+	{
+		std::cerr << "Face: ";
+		switch (deskDeck[i].face)
+		{
+		case Face::Two:
+			std::cerr << "2";
+			break;
+		case Face::Three:
+			std::cerr << "3";
+			break;
+		case Face::Four:
+			std::cerr << "4";
+			break;
+		case Face::Five:
+			std::cerr << "5";
+			break;
+		case Face::Six:
+			std::cerr << "6";
+			break;
+		case Face::Seven:
+			std::cerr << "7";
+			break;
+		case Face::Eight:
+			std::cerr << "8";
+			break;
+		case Face::Nine:
+			std::cerr << "9";
+			break;
+		case Face::Ten:
+			std::cerr << "T";
+			break;
+		case Face::Jack:
+			std::cerr << "J";
+			break;
+		case Face::Queen:
+			std::cerr << "Q";
+			break;
+		case Face::King:
+			std::cerr << "K";
+			break;
+		case Face::Ace:
+			std::cerr << "A";
+			break;
+		default:
+			break;
+		}
+		std::cerr << " Suit: ";
+		switch (deskDeck[i].suit)
+		{
+		case Suit::Clubs:
+			std::cerr << "Clubs";
+			break;
+		case Suit::Diamonds:
+			std::cerr << "Diamonds";
+			break;
+		case Suit::Hearts:
+			std::cerr << "Hearts";
+			break;
+		case Suit::Spades:
+			std::cerr << "Spades";
+			break;
+		default:
+			break;
+		}
+		std::cerr << '\n';
+	}
+}
+bool App::isGameOver()
+{
+	Player &player1 = players[0];
+	Player &player2 = players[1];
+	Player &player3 = players[2];
+	if (player1.cntPlayerDeck() == 0 && player2.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
+	{
+		std::cerr << "Tie!\n";
+		return true;
+	}
+	else if (player1.cntPlayerDeck() == 0 && player2.cntPlayerDeck() == 0)
+	{
+		std::cerr << "Player 3 wins!\n";
+		return true;
+	}
+	else if (player1.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
+	{
+		std::cerr << "Player 2 wins!\n";
+		return true;
+	}
+	else if (player2.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
+	{
+		std::cerr << "Player 1 wins!\n";
+		return true;
+	}
+	return false;
+}
+void App::playRound()
+{
+	if (isGameOver())
+	{
+		return;
+	}
+	round++;
+
+	if (hasWar())
+	{
+		state = GameState::WAR;
+		playWarRound();
+	}
+	else
+	{
+		state = GameState::PLAYING;
+		playNormalRound();
+	}
+}
+// void App::playWarRoundTest()
+// {
+// 		// calculate winner
+// 		Card strongest = {};
+// 		strongest.value = 2;
+// 		for (int i = 0; i < players.size(); i++)
+// 		{
+// 			if (isActive[i] && players[i].getPlayerDeck().front() > strongest)
+// 			{
+// 				strongest = players[i].getPlayerDeck().front();
+// 			}
+// 		}
+// }
+void App::playWarRound()
+{
+	std::cerr << "WAR: " << '\n';
+	std::vector<bool> isActive;
+	for (int i = 0; i < players.size(); i++)
+	{
+		if (players[i].cntPlayerDeck() > 0)
+		{
+			isActive.push_back(true);
+		}
+		else
+		{
+			isActive.push_back(false);
+		}
+	}
+
+	std::vector<Card> deskDeck;
+
+	while (isRoundPlayed)
+	{
+		// calculate winner
+		Card strongest = {};
+		strongest.value = 2;
+		for (int i = 0; i < players.size(); i++)
+		{
+			if (isActive[i] && players[i].getPlayerDeck().front() > strongest)
+			{
+				strongest = players[i].getPlayerDeck().front();
+			}
+		}
+
+		// take cards from player
+		int playersWithStrongest = 0;
+		for (int i = 0; i < players.size(); i++)
+		{
+			if (isActive[i])
+			{
+				Card c = players[i].pullCard();
+				deskDeck.push_back(c);
+
+				if (c == strongest)
+				{
+					playersWithStrongest++;
+				}
+				else
+				{
+					isActive[i] = false;
+				}
+			}
+		}
+
+		if (playersWithStrongest == 1)
+		{
+			for (int i = 0; i < players.size(); i++)
+			{
+				if (isActive[i] && players[i].getPlayerDeck().front() == strongest)
+				{
+					// Winner
+					registerWinner(deskDeck, i);
+					for (int i = 0; i < players.size(); i++)
+					{
+						printPlayer(i);
+					}
+					return;
+				}
+			}
+		}
+
+		// is game over
+		bool hasActivePlayers = false;
+		for (unsigned i = 0; i < players.size(); i++)
+		{
+			if (isActive[i] && players[i].cntPlayerDeck() > 0)
+			{
+				hasActivePlayers = true;
+			}
+			else
+			{
+				isActive[i] = false;
+			}
+		}
+
+		if (!hasActivePlayers)
+		{
+			// not specified what to do when cards over during war
+			unsigned p = 0;
+			while (!deskDeck.empty())
+			{
+				Card c = deskDeck.back();
+				deskDeck.pop_back();
+				players[p].getPlayerDeck().push_back(c);
+				p++;
+				if (p == players.size())
+				{
+					p = 0;
+				}
+			}
+		}
+		isRoundPlayed = false;	
+	}
+}
+void App::printPlayer(unsigned i)
+{
+	std::cerr << "Player " << (i + 1) << ", Cards number: " << players[i].cntPlayerDeck() << '\n';
+	std::cerr << "Cards:" << '\n';
+	players[i].printCards();
+}
+void App::playNormalRound()
+{
+	unsigned winner = getWinner();
+
+	std::vector<Card> deskDeck;
+	for (unsigned i = 0; i < players.size(); i++)
+	{
+		if (players[i].cntPlayerDeck() > 0)
+		{
+			Card c = players[i].pullCard();
+			// Card c = players[i].getPlayerDeck().front();
+			deskDeck.push_back(c);
+		}
+	}
+	std::cerr << "Desk deck:\n";
+	printDeck(deskDeck);
+
+	// play the game
+
+	registerWinner(deskDeck, winner);
+
+	for (int i = 0; i < players.size(); i++)
+	{
+		printPlayer(i);
+	}
 }
 
 void App::DestroySDL()
@@ -435,10 +802,8 @@ void App::DestroySDL()
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	IMG_Quit();
-	TTF_Quit();
 	SDL_Quit();
 }
-
 bool App::isRunning()
 {
 	return running;
@@ -476,13 +841,12 @@ bool App::getDealButton() const
 {
 	return buttonPressed;
 }
-
 // Player 1 Cards
-void App::player1Render(std::vector<Player> &players)
+void App::player1Render()
 {
 	int numCards = players[0].cntPlayerDeck();
 
-	SDL_Rect dRectPlayer1Cards[10] = {};
+	SDL_Rect dRectPlayer1Cards[30] = {};
 
 	for (int i = 0; i < numCards; i++)
 	{
@@ -500,11 +864,11 @@ void App::player1Render(std::vector<Player> &players)
 }
 
 // Player 2 Cards
-void App::player2Render(std::vector<Player> &players)
+void App::player2Render()
 {
 	int numCards = players[1].cntPlayerDeck();
 
-	SDL_Rect dRectPlayer2Cards[10];
+	SDL_Rect dRectPlayer2Cards[30] = {};
 	for (int i = 0; i < numCards; i++)
 	{
 		dRectPlayer2Cards[i] = {200, 400 + i * 2, tw, th};
@@ -521,11 +885,11 @@ void App::player2Render(std::vector<Player> &players)
 }
 
 // Player 3 Cards
-void App::player3Render(std::vector<Player> &players)
+void App::player3Render()
 {
 
 	int numCards = players[2].cntPlayerDeck();
-	SDL_Rect dRectPlayer3Cards[10] = {};
+	SDL_Rect dRectPlayer3Cards[30] = {};
 
 	for (int i = 0; i < numCards; i++)
 	{
@@ -545,6 +909,9 @@ void App::player3Render(std::vector<Player> &players)
 
 void App::thrownCardsRender()
 {
+	SDL_Rect dRectCard1Thrown;
+	SDL_Rect dRectCard2Thrown;
+	SDL_Rect dRectCard3Thrown;
 	SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
 	dRectCard1Thrown = {200, 100, tw, th};
 	dRectCard2Thrown = {300, 200, tw, th};
@@ -554,7 +921,7 @@ void App::thrownCardsRender()
 	SDL_RenderCopy(renderer, c3.texture, nullptr, &dRectCard3Thrown);
 }
 
-void App::cardsCountMessage(std::vector<Player> &players)
+void App::cardsCountMessage()
 {
 	// Player 1's message
 	int player1CardCount = players[0].cntPlayerDeck();
@@ -626,14 +993,13 @@ void App::warMessage()
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(warSurface);
 }
-
-void App::statsMessage(std::vector<Player>&players)
+void App::statsMessage(std::vector<Player> &players)
 {
 	// Stats message
 	std::string statsMessage = " P1 Points: " + std::to_string(players[0].getPoints()) +
 							   " W: " + std::to_string(players[0].getWins()) +
 							   " L: " + std::to_string(players[0].getLosses()) +
-							   " P2 Points: " + std::to_string(players[1].getWins()) +
+							   " P2 Points: " + std::to_string(players[1].getPoints()) +
 							   " W: " + std::to_string(players[1].getWins()) +
 							   " L: " + std::to_string(players[1].getLosses()) +
 							   " P3 Points: " + std::to_string(players[2].getPoints()) +

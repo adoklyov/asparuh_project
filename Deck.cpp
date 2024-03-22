@@ -13,14 +13,11 @@ Deck::Deck() : deck(DECK_CAPACITY)
 	}
 } 
 
-Deck::~Deck()
-{
-}
 
 void Deck::print() const
 {
 	for (unsigned i = 0; i < deck.size(); i++)
-	{
+	{	
 		std::cout << "Face: ";
 		switch (deck[i].face)
 		{

@@ -18,18 +18,12 @@ BUGS:
 
 int main(int argc, char **argv)
 {
-	Deck deck;
-	Player player1, player2, player3;
-	std::vector<Player> players {player1, player2, player3};
-
-	app = new App(players);
+	app = new App();
 
 	bool init = app->init("WarWithCards",
 						  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-						  WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN, deck, players);
+						  WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 	
-	Manager manager(players[0], players[1], players[2]); // The error: It passes Players without cards
-
 
 	if (!init)
 	{
@@ -39,11 +33,9 @@ int main(int argc, char **argv)
 	app->ttf_init();
 	while (app->isRunning())
 	{
-		app->handleEvents(deck, manager, players);
-		app->update();
-		app->render(players);
+		app->handleEvents();
+		app->render();
 	}
-	app->DestroySDL();
 
 	delete app;
 
