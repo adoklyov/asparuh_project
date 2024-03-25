@@ -10,9 +10,6 @@ Card Player::pullCard()
 	if (!playerDeck.empty())
 	{
 		Card card = playerDeck.front();
-		std::cout << "------\n";
-		card.print();
-		std::cout << "------\n";
 		playerDeck.erase(playerDeck.begin());
 		return card;
 	}
@@ -73,8 +70,7 @@ void Player::setLosses(int l)
 void Player::dealCards(Deck& deck)
 {
     playerDeck.clear();
-
-	for (unsigned count = 0; count < 10; count++)
+	for (unsigned count = 0; count < 9; count++)
     {
 		playerDeck.push_back(deck.DealCard());
     }
@@ -117,9 +113,9 @@ void Player::printCards() const
 	}
 }
 
-void Player::incrementPoint()
+void Player::incrementPoint(const Card& c)
 {
-	this->points++;
+	this->points += c.value;
 }
 
 void Player::decrementPoint()
@@ -133,4 +129,48 @@ Card Player::getCurrentCard() const
         return playerDeck.front(); 
     }
     return Card(); 
+}
+
+void Player::setPlayerDeck()
+{
+	Card c1;
+	c1.value = 10;
+	Card c2;
+	c2.value = 10;
+	Card c3;
+	c3.value = 10;
+	Card c4;
+	c4.value = 10;
+	Card c5;
+	c5.value = 10;
+	Card c6;
+	c6.value = 10;
+	Card c7;
+	c7.value = 10;
+	Card c8;
+	c8.value = 10;
+	Card c9;
+	c9.value = 10;
+	Card c10;
+	c10.value = 10;
+	
+	playerDeck.push_back(c1);
+	playerDeck.push_back(c2);
+	playerDeck.push_back(c3);
+	playerDeck.push_back(c4);
+	playerDeck.push_back(c5);
+	playerDeck.push_back(c6);
+	playerDeck.push_back(c7);
+	playerDeck.push_back(c8);
+	playerDeck.push_back(c9);
+	playerDeck.push_back(c10);
+}
+
+void Player::setCard()
+{
+	Card c1;
+	c1.value = 10;
+	c1.face = Face::Ace;
+	c1.suit = Suit::Hearts;
+	playerDeck.insert(playerDeck.begin()+ 1,c1);
 }

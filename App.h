@@ -57,8 +57,11 @@ public:
 	bool isGameOver();
 	void printPlayer(unsigned i);
 	void playWarRoundTest();
+	unsigned playDuoNormalRound(Player& player1, Player& player2, std::vector<Card>& deskDeck);
+	Card getBiggestWarCard(Player& player1, Player& player2);
 
 	void statsMessage(std::vector<Player>&players);
+	void playAllDeal();
 	bool showStats;
 
 
@@ -81,10 +84,10 @@ private:
 	
 	bool getButtonPressedDeal1() const;
 	bool getButtonPressedDeal2() const;
-	bool getButtonPressedDeal3() const;
-
+	bool getButtonPressedDeal3() const;	
 	bool getDealButton() const;
 	bool buttonPressed;
+	std::vector<bool> buttonPressedDeal;
 	bool buttonPressedDeal1;
 	bool buttonPressedDeal2;
 	bool buttonPressedDeal3;
@@ -145,6 +148,10 @@ private:
 	SDL_Texture *statsTexture;
 	// stats
 	SDL_Rect statsButton;
+	// all deal texture
+	SDL_Texture *allDealTexture;
+	// all deal
+	SDL_Rect allDeal;
 
 	SDL_Rect dRectTextError;
 		//background

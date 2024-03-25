@@ -22,9 +22,11 @@ public:
 	Card pullCard();
 	void dealCards(Deck& deck);
 	void printCards() const;
-	void incrementPoint();
+	void incrementPoint(const Card& c);
 	void decrementPoint();
 	Card getCurrentCard() const;
+	void setPlayerDeck();
+	void setCard();
 private:
 	short points;
 	int wins = 0;
