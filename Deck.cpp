@@ -11,39 +11,72 @@ Deck::Deck() : deck(DECK_CAPACITY)
 		deck[i].face = Face(i % 13);
 		deck[i].value = deck[i].face + 2; // start from 2, not 0
 	}
-} 
-
+}
 
 void Deck::print() const
 {
 	for (unsigned i = 0; i < deck.size(); i++)
-	{	
+	{
 		std::cout << "Face: ";
 		switch (deck[i].face)
 		{
-		case Face::Two: std::cout << "2"; break;
-		case Face::Three: std::cout << "3"; break;
-		case Face::Four: std::cout << "4"; break;
-		case Face::Five: std::cout << "5"; break;
-		case Face::Six: std::cout << "6"; break;
-		case Face::Seven: std::cout << "7"; break;
-		case Face::Eight: std::cout << "8"; break;
-		case Face::Nine: std::cout << "9"; break;
-		case Face::Ten: std::cout << "T"; break;
-		case Face::Jack: std::cout << "J"; break;
-		case Face::Queen: std::cout << "Q"; break;
-		case Face::King: std::cout << "K"; break;
-		case Face::Ace: std::cout << "A"; break;
+		case Face::Two:
+			std::cout << "2";
+			break;
+		case Face::Three:
+			std::cout << "3";
+			break;
+		case Face::Four:
+			std::cout << "4";
+			break;
+		case Face::Five:
+			std::cout << "5";
+			break;
+		case Face::Six:
+			std::cout << "6";
+			break;
+		case Face::Seven:
+			std::cout << "7";
+			break;
+		case Face::Eight:
+			std::cout << "8";
+			break;
+		case Face::Nine:
+			std::cout << "9";
+			break;
+		case Face::Ten:
+			std::cout << "T";
+			break;
+		case Face::Jack:
+			std::cout << "J";
+			break;
+		case Face::Queen:
+			std::cout << "Q";
+			break;
+		case Face::King:
+			std::cout << "K";
+			break;
+		case Face::Ace:
+			std::cout << "A";
+			break;
 		default:
 			break;
 		}
 		std::cout << " Suit: ";
 		switch (deck[i].suit)
 		{
-		case Suit::Clubs: std::cout << "Clubs"; break;
-		case Suit::Diamonds: std::cout << "Diamonds"; break;
-		case Suit::Hearts: std::cout << "Hearts"; break;
-		case Suit::Spades: std::cout << "Spades"; break;
+		case Suit::Clubs:
+			std::cout << "Clubs";
+			break;
+		case Suit::Diamonds:
+			std::cout << "Diamonds";
+			break;
+		case Suit::Hearts:
+			std::cout << "Hearts";
+			break;
+		case Suit::Spades:
+			std::cout << "Spades";
+			break;
 		default:
 			break;
 		}
@@ -90,12 +123,11 @@ void Deck::riffleShuffle()
 	{
 		deck[i] = deckFirstHalf[j];
 	}
-
 }
 
-std::vector<Card>& Deck::getDeck()
+std::vector<Card> &Deck::getDeck()
 {
-    return deck;
+	return deck;
 }
 
 void Deck::shuffle()

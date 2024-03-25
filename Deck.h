@@ -34,11 +34,11 @@ struct Card
 	Suit suit = {};
 	Face face = {};
 	unsigned short value = 0;
-	SDL_Texture* texture = nullptr;
+	SDL_Texture *texture = nullptr;
 
-	void print() 
+	void print()
 	{
-		std::cerr << suit << ' ' << face << ' ' << value << ' '; 
+		std::cerr << suit << ' ' << face << ' ' << value << ' ';
 	}
 };
 
@@ -53,8 +53,8 @@ public:
 
 	Card DealCardForManager();
 
+	std::vector<Card> &getDeck();
 
-    std::vector<Card>& getDeck();
 private:
 	std::vector<Card> deck;
 };

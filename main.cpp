@@ -15,7 +15,6 @@ BUGS:
 	Randomly cards 2 and 3 went bigger when player1 empt his deck
 */
 
-
 int main(int argc, char **argv)
 {
 	app = new App();

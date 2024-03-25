@@ -22,6 +22,7 @@ App::App()
 	renderer = NULL;
 	running = true;
 
+	wasStartPressed = false;
 	buttonPressedDeal1 = false;
 	buttonPressedDeal2 = true;
 	buttonPressedDeal3 = true;
@@ -159,6 +160,10 @@ bool App::ttf_init()
 	tempSurfaceText = TTF_RenderText_Blended(font1, "All Deal", {0x00, 0x00, 0x00, 0xFF});
 	allDealTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
+	// texture reset
+	tempSurfaceText = TTF_RenderText_Blended(font1, "Reset", {0x00, 0x00, 0x00, 0xFF});
+	resetTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
+
 	// texture error
 	tempSurfaceText = TTF_RenderText_Blended(font2, "Cannot Click", {0x00, 0x00, 0x00, 0xFF});
 	textErrorTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
@@ -253,6 +258,8 @@ SDL_Texture *App::loadTexture(const std::string filePath, SDL_Renderer *renderer
 
 void App::render()
 {
+	updateStatsXML(players);
+	statsMessage(players);
 	SDL_RenderClear(renderer);
 	// background
 	SDL_RenderCopy(renderer, backgroundTexture, nullptr, &dRectBackground);
@@ -264,6 +271,10 @@ void App::render()
 	allDeal = {730, 540, 70, 30};
 	SDL_RenderFillRect(renderer, &allDeal);
 	SDL_RenderCopy(renderer, allDealTexture, nullptr, &allDeal);
+	// reset
+	reset = {730, 510, 70, 30};
+	SDL_RenderFillRect(renderer, &reset);
+	SDL_RenderCopy(renderer, resetTexture, nullptr, &reset);
 	if (GameState::START == state)
 	{
 		dRectButtonStart = {0, 350, 70, 30};
@@ -301,9 +312,14 @@ void App::render()
 	if (showStats)
 	{
 		statsMessage(players);
+		updateStatsXML(players);
 	}
 
 	SDL_RenderPresent(renderer);
+}
+void App::update()
+{
+	updateStatsXML(players);
 }
 void App::loadTextureOnDeck()
 {
@@ -329,8 +345,8 @@ void App::drawTexture(SDL_Texture *tex, int x, int y, int width, int heigth, SDL
 
 void App::handleEvents()
 {
+
 	SDL_Event event;
-	static bool wasPressed = false;
 	if (SDL_PollEvent(&event))
 	{
 		switch (event.type)
@@ -358,7 +374,7 @@ void App::handleEvents()
 				SDL_GetMouseState(&msx, &msy);
 				if (isClickableRectClicked(&dRectButtonStart, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(&dRectButtonStartPlayer2, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(&dRectButtonStartPlayer3, mouseDownX, mouseDownY, msx, msy))
 				{
-					if (wasPressed)
+					if (wasStartPressed)
 					{
 						std::cerr << "cannot click start again"
 								  << "\n";
@@ -371,7 +387,7 @@ void App::handleEvents()
 					}
 					else
 					{
-						wasPressed = true;
+						wasStartPressed = true;
 						std::cerr << " CLICKED START"
 								  << "\n";
 						SDL_SetTextureAlphaMod(textStartTexture, 128);
@@ -429,17 +445,16 @@ void App::handleEvents()
 						players[2].setTurn(false);
 						std::cerr << "\nplaying a round\n";
 						isRoundPlayed = true;
-						// playRound();
-					}
-					else if (isRoundPlayed)
-					{
+						playRound();
 					}
 				}
 				else if (isClickableRectClicked(&statsButton, mouseDownX, mouseDownY, msx, msy))
 				{
 					showStats = !showStats;
+					updateStatsXML(players);
+					statsMessage(players);
 				}
-				else if(isClickableRectClicked(&allDeal, mouseDownX, mouseDownY, msx, msy))
+				else if (isClickableRectClicked(&allDeal, mouseDownX, mouseDownY, msx, msy))
 				{
 					players[0].setTurn(true);
 					players[1].setTurn(true);
@@ -452,6 +467,10 @@ void App::handleEvents()
 					isRoundPlayed = true;
 
 					playRound();
+				}
+				else if (isClickableRectClicked(&reset, mouseDownX, mouseDownY, msx, msy))
+				{
+					restartGame();
 				}
 
 				else
@@ -1212,16 +1231,16 @@ void App::warMessage()
 }
 void App::statsMessage(std::vector<Player> &players)
 {
-	// Stats message
-	std::string statsMessage = " P1 Points: " + std::to_string(players[0].getPoints()) +
-							   " W: " + std::to_string(players[0].getWins()) +
-							   " L: " + std::to_string(players[0].getLosses()) +
-							   " P2 Points: " + std::to_string(players[1].getPoints()) +
-							   " W: " + std::to_string(players[1].getWins()) +
-							   " L: " + std::to_string(players[1].getLosses()) +
-							   " P3 Points: " + std::to_string(players[2].getPoints()) +
-							   " W: " + std::to_string(players[2].getWins()) +
-							   " L: " + std::to_string(players[2].getLosses());
+	updateStatsXML(players);
+	// Stats message;
+	std::string statsMessage;
+	for (size_t i = 0; i < players.size(); ++i)
+	{
+		statsMessage += "Pl:" + std::to_string(i + 1) +
+						" Points: " + std::to_string(players[i].getPoints()) +
+						" W: " + std::to_string(players[i].getWins()) +
+						" L: " + std::to_string(players[i].getLosses());
+	}
 	SDL_Color textColor = {255, 255, 255, 255};
 	SDL_Surface *statsSurface = TTF_RenderText_Solid(font, statsMessage.c_str(), textColor);
 	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, statsSurface);
@@ -1240,15 +1259,56 @@ void App::statsMessage(std::vector<Player> &players)
 void App::updateStatsXML(std::vector<Player> &players)
 {
 	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file("stats.xml");
+	pugi::xml_parse_result result = doc.load_file("/home/default/asparuh_project/stats.xml");
 
-	for (int i = 0; i < players.size(); ++i)
+	int id = 1;
+	for (auto &player : players)
 	{
-		std::string playerId = "Player" + std::to_string(i+1);
-		auto playerNode = doc.child("Stats").find_child_by_attribute("Player", "id" , playerId.c_str());
-
-		players[i].setPoints(playerNode.child("Points").text().as_int());
-		players[i].setPoints(playerNode.child("Wins").text().as_int());
-		players[i].setPoints(playerNode.child("Losses").text().as_int());
+		auto node = doc.child("Stats").find_child_by_attribute("Player", "id", std::to_string(id).c_str());
+		if (node)
+		{
+			player.setPoints(node.child("Points").text().as_int());
+			player.setWins(node.child("Wins").text().as_int());
+			player.setLosses(node.child("Losses").text().as_int());
+		}
+		++id;
 	}
+}
+
+// Restart game
+void App::restartGame()
+{
+	delete deck;
+	delete player1;
+	delete player2;
+	delete player3;
+
+	players.clear();
+	buttonPressedDeal.clear();
+
+	deck = new Deck();
+
+	player1 = new Player();
+	player2 = new Player();
+	player3 = new Player();
+
+	players.push_back(*player1);
+	players.push_back(*player2);
+	players.push_back(*player3);
+
+	wasStartPressed = false;
+	initDeck();
+
+	buttonPressedDeal1 = false;
+	buttonPressedDeal2 = true;
+	buttonPressedDeal3 = true;
+
+	buttonPressedDeal.push_back(buttonPressedDeal1);
+	buttonPressedDeal.push_back(buttonPressedDeal2);
+	buttonPressedDeal.push_back(buttonPressedDeal3);
+
+	state = GameState::START;
+	buttonPressed = false;
+	showStats = false;
+	isRoundPlayed = false;
 }

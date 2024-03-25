@@ -85,17 +85,17 @@
 // }
 
 // // void Manager::addPlayersDecks(Deck deck) //The error: Tried to make the same functionallity for the manager, adding players deck when dealCards is called
-// // 									     //so i made copy of deck but now there are the same cards 
+// // 									     //so i made copy of deck but now there are the same cards
 // // {
 // // 	std::cerr << "Players Deck in func addPLayersDecks in Manager:\n ";
 // // 	players[0].printCards();
 // // 	for (unsigned i = 0; i < players.size(); i++)
 // // 	{
 // // 		players[i].dealCardsForManager(deck);
-// // 	}	
+// // 	}
 // // 	std::cerr << "Players Deck infunc addPLayersDecks in Manager after the loop:\n ";
 // // 	players[0].printCards();
-	
+
 // // }
 
 // void Manager::startMatch()
@@ -227,7 +227,7 @@
 
 // 	for (int i = 0; i < players.size(); i++)
 // 	{
-// 		printPlayer(i); 
+// 		printPlayer(i);
 // 	}
 // }
 

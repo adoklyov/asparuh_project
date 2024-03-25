@@ -2,15 +2,14 @@
 #include <vector>
 #include "Deck.h"
 
-
 class Player
 {
 public:
 	Player();
-	std::vector<Card>& getPlayerDeck();
+	std::vector<Card> &getPlayerDeck();
 	size_t cntPlayerDeck();
 
-	//stats
+	// stats
 	short getPoints() const;
 	int getWins() const;
 	int getLosses() const;
@@ -20,13 +19,14 @@ public:
 	void setTurn(bool turn);
 	void setPoints(short pp);
 	Card pullCard();
-	void dealCards(Deck& deck);
+	void dealCards(Deck &deck);
 	void printCards() const;
-	void incrementPoint(const Card& c);
+	void incrementPoint(const Card &c);
 	void decrementPoint();
 	Card getCurrentCard() const;
 	void setPlayerDeck();
 	void setCard();
+
 private:
 	short points;
 	int wins = 0;
