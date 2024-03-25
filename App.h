@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include "Player.h"
+#include <pugixml.hpp>
 #include "Manager.h"
 #include <vector>
 enum GameState
@@ -64,6 +65,8 @@ public:
 	void playAllDeal();
 	bool showStats;
 
+	//XML
+	void updateStatsXML(std::vector<Player> &players);
 
 private:
 	Deck* deck;

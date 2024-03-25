@@ -141,6 +141,8 @@ bool App::ttf_init()
 
 	SDL_Surface *tempSurfaceText = nullptr;
 
+	updateStatsXML(players);
+
 	// texture start
 	tempSurfaceText = TTF_RenderText_Blended(font1, "Start", {0x00, 0x00, 0x00, 0xFF});
 	textStartTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
@@ -1235,3 +1237,18 @@ void App::statsMessage(std::vector<Player> &players)
 	SDL_FreeSurface(statsSurface);
 }
 
+void App::updateStatsXML(std::vector<Player> &players)
+{
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file("stats.xml");
+
+	for (int i = 0; i < players.size(); ++i)
+	{
+		std::string playerId = "Player" + std::to_string(i+1);
+		auto playerNode = doc.child("Stats").find_child_by_attribute("Player", "id" , playerId.c_str());
+
+		players[i].setPoints(playerNode.child("Points").text().as_int());
+		players[i].setPoints(playerNode.child("Wins").text().as_int());
+		players[i].setPoints(playerNode.child("Losses").text().as_int());
+	}
+}

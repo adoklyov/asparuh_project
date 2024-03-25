@@ -23,6 +23,8 @@ string
 -
 Player.h
 /home/default/asparuh_project/Player.h
+pugixml.hpp
+-
 Manager.h
 /home/default/asparuh_project/Manager.h
 vector
@@ -41,6 +43,18 @@ Player.h
 /home/default/asparuh_project/Player.h
 vector
 -
+Deck.h
+/home/default/asparuh_project/Deck.h
+
+/home/default/asparuh_project/main.cpp
+SDL.h
+-
+iostream
+-
+Manager.h
+/home/default/asparuh_project/Manager.h
+App.h
+/home/default/asparuh_project/App.h
 Deck.h
 /home/default/asparuh_project/Deck.h
 

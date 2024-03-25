@@ -70,7 +70,7 @@ void Player::setLosses(int l)
 void Player::dealCards(Deck& deck)
 {
     playerDeck.clear();
-	for (unsigned count = 0; count < 9; count++)
+	for (unsigned count = 0; count < 10; count++)
     {
 		playerDeck.push_back(deck.DealCard());
     }
