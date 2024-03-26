@@ -69,7 +69,7 @@ public:
 
 	// XML
 	void updateStatsXML(std::vector<Player> &players);
-	void readStatsXML(std::vector<Player> &players);
+	void saveStatsXML(std::vector<Player> &players);
 
 	// game restart
 	void restartGame();

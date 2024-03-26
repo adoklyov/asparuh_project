@@ -63,6 +63,9 @@ bool operator==(const Card &card1, const Card &card2)
 
 bool App::init(const std::string title, int xpos, int ypos, int width, int height, int flags)
 {
+
+	updateStatsXML(players);
+
 	TTF_Init();
 
 	// Load ttf font
@@ -141,8 +144,6 @@ bool App::ttf_init()
 		return false;
 
 	SDL_Surface *tempSurfaceText = nullptr;
-
-	updateStatsXML(players);
 
 	// texture start
 	tempSurfaceText = TTF_RenderText_Blended(font1, "Start", {0x00, 0x00, 0x00, 0xFF});
@@ -258,7 +259,6 @@ SDL_Texture *App::loadTexture(const std::string filePath, SDL_Renderer *renderer
 
 void App::render()
 {
-	updateStatsXML(players);
 	statsMessage(players);
 	SDL_RenderClear(renderer);
 	// background
@@ -312,15 +312,15 @@ void App::render()
 	if (showStats)
 	{
 		statsMessage(players);
-		updateStatsXML(players);
+
 	}
 
 	SDL_RenderPresent(renderer);
 }
-void App::update()
-{
-	updateStatsXML(players);
-}
+// void App::update()
+// {
+// 	updateStatsXML(players);
+// }
 void App::loadTextureOnDeck()
 {
 	const char *const arrSuit[4] = {"clubs", "diamonds", "hearts", "spades"};
@@ -451,7 +451,6 @@ void App::handleEvents()
 				else if (isClickableRectClicked(&statsButton, mouseDownX, mouseDownY, msx, msy))
 				{
 					showStats = !showStats;
-					updateStatsXML(players);
 					statsMessage(players);
 				}
 				else if (isClickableRectClicked(&allDeal, mouseDownX, mouseDownY, msx, msy))
@@ -465,7 +464,7 @@ void App::handleEvents()
 					c3 = players[2].getPlayerDeck().front();
 
 					isRoundPlayed = true;
-
+					saveStatsXML(players);
 					playRound();
 				}
 				else if (isClickableRectClicked(&reset, mouseDownX, mouseDownY, msx, msy))
@@ -1231,7 +1230,6 @@ void App::warMessage()
 }
 void App::statsMessage(std::vector<Player> &players)
 {
-	updateStatsXML(players);
 	// Stats message;
 	std::string statsMessage;
 	for (size_t i = 0; i < players.size(); ++i)
@@ -1273,6 +1271,36 @@ void App::updateStatsXML(std::vector<Player> &players)
 		}
 		++id;
 	}
+}
+
+void App::saveStatsXML(std::vector<Player> &players)
+{
+	pugi::xml_document doc;
+	auto root = doc.append_child("Stats");
+
+	int id = 1;
+	for (auto &player : players)
+	{
+		auto node = doc.child("Stats").find_child_by_attribute("Player", "id", std::to_string(id).c_str());
+		node = root.append_child("Player");
+		node.append_attribute("id") = std::to_string(id).c_str();
+
+		auto pointsNode = node.child("Points");
+		pointsNode = node.append_child("Points");
+		pointsNode.text() = player.getPoints();
+
+		auto winsNode = node.child("Wins");
+		winsNode = node.append_child("Wins");
+		winsNode.text() = player.getWins();
+
+		auto lossesNode = node.child("Losses");
+		lossesNode = node.append_child("Losses");
+		lossesNode.text() = player.getLosses();
+
+		++id;
+	}
+
+	doc.save_file("/home/default/asparuh_project/stats.xml");
 }
 
 // Restart game
