@@ -5,7 +5,7 @@ const unsigned CARD_DEALED = 10;
 const unsigned POSITION_DIFF = 5;
 
 App::App()
-	: card1Texture(nullptr)
+	: card1Texture(nullptr), warCardPlayer1(), warCardPlayer2(), warCardPlayer3()
 
 {
 
@@ -144,6 +144,7 @@ bool App::ttf_init()
 		return false;
 
 	SDL_Surface *tempSurfaceText = nullptr;
+
 
 	// texture start
 	tempSurfaceText = TTF_RenderText_Blended(font1, "Start", {0x00, 0x00, 0x00, 0xFF});
@@ -305,6 +306,15 @@ void App::render()
 		cardsCountMessage();
 		thrownCardsRender();
 		warMessage();
+
+		//War cards position teset
+    	SDL_Rect warRect1 = {200, 125, tw, th}; 
+    	SDL_Rect warRect2 = {300, 225, tw, th};
+    	SDL_Rect warRect3 = {400, 125, tw, th};
+
+    	SDL_RenderCopy(renderer, c1.texture, nullptr, &warRect1);
+    	SDL_RenderCopy(renderer, c2.texture, nullptr, &warRect2);
+    	SDL_RenderCopy(renderer, c3.texture, nullptr, &warRect3);
 	}
 	else if (GameState::OVER == state)
 	{
@@ -786,101 +796,64 @@ unsigned App::playDuoNormalRound(Player &player1, Player &player2, std::vector<C
 		return -1;
 	}
 }
-void App::playWarRoundTest()
-{
-	std::cerr << "WAR: " << '\n';
-	std::vector<bool> isActive;
-	for (int i = 0; i < players.size(); i++)
-	{
-		if (players[i].cntPlayerDeck() > 0)
-		{
-			isActive.push_back(true);
-		}
-		else
-		{
-			isActive.push_back(false);
-		}
-	}
+void App::playWarRoundTest() {
+    std::cerr << "WAR: " << '\n';
+    std::vector<bool> isActive(players.size(), false);
+    std::vector<Card> deskDeck, warCards;
 
-	std::vector<Card> deskDeck;
+	Card warCardPlayer1 = players[0].pullWarCard();
+    Card warCardPlayer2 = players[1].pullWarCard();
+    Card warCardPlayer3 = players[2].pullWarCard();
 
-	Card strongest = {};
-	strongest.value = 2;
-	for (int i = 0; i < players.size(); i++)
-	{
-		if (isActive[i] && players[i].getPlayerDeck().front() > strongest)
+    Card strongest = {Suit::Hearts, Face::Two, 2}; 
+    int playersWithStrongest = 0;
+
+    for (int i = 0; i < players.size(); i++) {
+        if (players[i].cntPlayerDeck() > 1) { 
+            isActive[i] = true;
+            Card currentCard = players[i].getPlayerDeck().front();
+            players[i].pullCard(); 
+            Card warCard = players[i].pullCard();
+            deskDeck.push_back(currentCard);
+            warCards.push_back(warCard);
+
+            if (warCard > strongest) {
+                strongest = warCard;
+                playersWithStrongest = 1;
+            } else if (warCard == strongest) {
+                playersWithStrongest++;
+            }
+        }
+    }
+
+    if (playersWithStrongest > 1) { 
+        if (isActive[0]) warCardPlayer1 = warCards[0];
+        if (isActive[1]) warCardPlayer2 = warCards[1];
+        if (players.size() > 2 && isActive[2]) warCardPlayer3 = warCards[2];
+
+
+        if (playersWithStrongest == 2) {
+
+            int idx1 = isActive[0] ? 0 : 1;
+            int idx2 = idx1 + 1; 
+
+
+            unsigned winner = playDuoNormalRound(players[idx1], players[idx2], deskDeck);
+            registerWinner(deskDeck, winner); 
+        }
+
+		if (playersWithStrongest == 3)
 		{
-			strongest = players[i].getPlayerDeck().front();
+			playRound();
 		}
-	}
+    } else {
 
-	// take cards from player
-	int playersWithStrongest = 0;
-	for (int i = 0; i < players.size(); i++)
-	{
-		if (isActive[i])
-		{
-			Card c = players[i].pullCard();
-			deskDeck.push_back(c);
+    }
 
-			if (c == strongest)
-			{
-				playersWithStrongest++;
-			}
-			else
-			{
-				isActive[i] = false;
-			}
-		}
-	}
-
-	if (playersWithStrongest == 1)
-	{
-		for (int i = 0; i < players.size(); i++)
-		{
-			if (isActive[i] && players[i].getPlayerDeck().front() == strongest)
-			{
-				// Winner
-				registerWinner(deskDeck, i);
-				for (int i = 0; i < players.size(); i++)
-				{
-					printPlayer(i);
-				}
-				return;
-			}
-		}
-	}
-	else if (playersWithStrongest == 2)
-	{
-		while (GameState::PLAYING != state)
-		{
-			unsigned n;
-			if (isActive[0] == false)
-			{
-				n = playDuoNormalRound(players[1], players[2], deskDeck);
-				(n == 1) ? n = 1 : n = 2;
-			}
-			else if (isActive[1] == false)
-			{
-				n = playDuoNormalRound(players[0], players[2], deskDeck);
-				(n == 1) ? n = 0 : n = 2;
-			}
-			else if (isActive[2] == false)
-			{
-				n = playDuoNormalRound(players[0], players[1], deskDeck);
-				(n == 1) ? n = 0 : n = 1;
-			}
-			registerWinner(deskDeck, n);
-		}
-	}
-	else if (playersWithStrongest == 3)
-	{
-		playRound();
-	}
-
-	std::cerr << "War deck\n";
-	printDeck(deskDeck);
+    std::cerr << "War deck\n";
+    printDeck(deskDeck);
 }
+
 void App::playWarRound()
 {
 	std::cerr << "WAR: " << '\n';

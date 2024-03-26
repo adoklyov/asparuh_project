@@ -5,7 +5,6 @@
 #include <string>
 #include "Player.h"
 #include <pugixml.hpp>
-#include "Manager.h"
 #include <vector>
 enum GameState
 {
@@ -64,7 +63,6 @@ public:
 	Card getBiggestWarCard(Player &player1, Player &player2);
 
 	void statsMessage(std::vector<Player> &players);
-	void playAllDeal();
 	bool showStats;
 
 	// XML
@@ -106,9 +104,13 @@ private:
 	Card c1;
 	Card c2;
 	Card c3;
+	Card warCardPlayer1;
+    Card warCardPlayer2;
+    Card warCardPlayer3;
 	// textures
 	// player 1 cards Textures
 	SDL_Texture *card1Texture;
+	
 	// background texture
 	SDL_Texture *backgroundTexture;
 	// start texture player1

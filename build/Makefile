@@ -587,33 +587,6 @@ Deck.cpp.s:
 	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Deck.cpp.s
 .PHONY : Deck.cpp.s
 
-Manager.o: Manager.cpp.o
-
-.PHONY : Manager.o
-
-# target to build an object file
-Manager.cpp.o:
-	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Manager.cpp.o
-.PHONY : Manager.cpp.o
-
-Manager.i: Manager.cpp.i
-
-.PHONY : Manager.i
-
-# target to preprocess a source file
-Manager.cpp.i:
-	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Manager.cpp.i
-.PHONY : Manager.cpp.i
-
-Manager.s: Manager.cpp.s
-
-.PHONY : Manager.s
-
-# target to generate assembly for a file
-Manager.cpp.s:
-	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Manager.cpp.s
-.PHONY : Manager.cpp.s
-
 Player.o: Player.cpp.o
 
 .PHONY : Player.o
@@ -742,9 +715,6 @@ help:
 	@echo "... Deck.o"
 	@echo "... Deck.i"
 	@echo "... Deck.s"
-	@echo "... Manager.o"
-	@echo "... Manager.i"
-	@echo "... Manager.s"
 	@echo "... Player.o"
 	@echo "... Player.i"
 	@echo "... Player.s"

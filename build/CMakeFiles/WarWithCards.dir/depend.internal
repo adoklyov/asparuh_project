@@ -5,7 +5,6 @@ CMakeFiles/WarWithCards.dir/App.cpp.o
  /home/default/asparuh_project/App.cpp
  /home/default/asparuh_project/App.h
  /home/default/asparuh_project/Deck.h
- /home/default/asparuh_project/Manager.h
  /home/default/asparuh_project/Player.h
  /usr/include/SDL2/SDL.h
  /usr/include/SDL2/SDL_assert.h
@@ -56,8 +55,6 @@ CMakeFiles/WarWithCards.dir/App.cpp.o
 CMakeFiles/WarWithCards.dir/Deck.cpp.o
  /home/default/asparuh_project/Deck.cpp
  /home/default/asparuh_project/Deck.h
-CMakeFiles/WarWithCards.dir/Manager.cpp.o
- /home/default/asparuh_project/Manager.cpp
 CMakeFiles/WarWithCards.dir/Player.cpp.o
  /home/default/asparuh_project/Deck.h
  /home/default/asparuh_project/Player.cpp
@@ -65,7 +62,6 @@ CMakeFiles/WarWithCards.dir/Player.cpp.o
 CMakeFiles/WarWithCards.dir/main.cpp.o
  /home/default/asparuh_project/App.h
  /home/default/asparuh_project/Deck.h
- /home/default/asparuh_project/Manager.h
  /home/default/asparuh_project/Player.h
  /home/default/asparuh_project/main.cpp
  /usr/include/SDL2/SDL.h

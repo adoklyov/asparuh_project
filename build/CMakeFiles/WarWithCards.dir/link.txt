@@ -1,1 +1,1 @@
-/usr/bin/g++  -g  -rdynamic CMakeFiles/WarWithCards.dir/main.cpp.o CMakeFiles/WarWithCards.dir/App.cpp.o CMakeFiles/WarWithCards.dir/Deck.cpp.o CMakeFiles/WarWithCards.dir/Manager.cpp.o CMakeFiles/WarWithCards.dir/Player.cpp.o  -o WarWithCards  -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf libpugixml.a 
+/usr/bin/g++  -g  -rdynamic CMakeFiles/WarWithCards.dir/main.cpp.o CMakeFiles/WarWithCards.dir/App.cpp.o CMakeFiles/WarWithCards.dir/Deck.cpp.o CMakeFiles/WarWithCards.dir/Player.cpp.o  -o WarWithCards  -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf libpugixml.a 

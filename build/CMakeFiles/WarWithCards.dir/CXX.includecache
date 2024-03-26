@@ -25,8 +25,6 @@ Player.h
 /home/default/asparuh_project/Player.h
 pugixml.hpp
 -
-Manager.h
-/home/default/asparuh_project/Manager.h
 vector
 -
 
@@ -35,10 +33,6 @@ vector
 -
 iostream
 -
-
-/home/default/asparuh_project/Manager.h
-Player.h
-/home/default/asparuh_project/Player.h
 
 /home/default/asparuh_project/Player.h
 vector

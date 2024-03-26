@@ -19,6 +19,7 @@ public:
 	void setTurn(bool turn);
 	void setPoints(short pp);
 	Card pullCard();
+	Card pullWarCard();
 	void dealCards(Deck &deck);
 	void printCards() const;
 	void incrementPoint(const Card &c);

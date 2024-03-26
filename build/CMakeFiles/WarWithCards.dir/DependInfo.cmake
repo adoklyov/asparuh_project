@@ -6,7 +6,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/default/asparuh_project/App.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/App.cpp.o"
   "/home/default/asparuh_project/Deck.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Deck.cpp.o"
-  "/home/default/asparuh_project/Manager.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Manager.cpp.o"
   "/home/default/asparuh_project/Player.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Player.cpp.o"
   "/home/default/asparuh_project/main.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/main.cpp.o"
   )

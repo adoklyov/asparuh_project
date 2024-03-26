@@ -17,6 +17,17 @@ Card Player::pullCard()
 	return {};
 }
 
+//Separate cards for war
+Card Player::pullWarCard()
+{
+        if (!playerDeck.empty()) {
+        Card card = playerDeck.front();
+        playerDeck.erase(playerDeck.begin());
+        return card;
+    }
+    return {}; 
+}
+
 short Player::getPoints() const
 {
 	return this->points;
@@ -209,3 +220,4 @@ void Player::setCard()
 	c1.suit = Suit::Hearts;
 	playerDeck.insert(playerDeck.begin() + 1, c1);
 }
+

@@ -21,11 +21,6 @@
 },
 {
   "directory": "/home/default/asparuh_project/build",
-  "command": "/usr/bin/g++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/Manager.cpp.o -c /home/default/asparuh_project/Manager.cpp",
-  "file": "/home/default/asparuh_project/Manager.cpp"
-},
-{
-  "directory": "/home/default/asparuh_project/build",
   "command": "/usr/bin/g++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/Player.cpp.o -c /home/default/asparuh_project/Player.cpp",
   "file": "/home/default/asparuh_project/Player.cpp"
 }

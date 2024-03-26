@@ -1,6 +1,5 @@
 #include <SDL.h>
 #include <iostream>
-#include "Manager.h"
 #include "App.h"
 #include "Deck.h"
 

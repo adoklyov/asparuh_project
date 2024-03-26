@@ -4,7 +4,6 @@
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../App.cpp
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../App.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../Deck.h
-CMakeFiles/WarWithCards.dir/App.cpp.o: ../Manager.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../Player.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: /usr/include/SDL2/SDL.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: /usr/include/SDL2/SDL_assert.h
@@ -56,15 +55,12 @@ CMakeFiles/WarWithCards.dir/App.cpp.o: /usr/include/SDL2/close_code.h
 CMakeFiles/WarWithCards.dir/Deck.cpp.o: ../Deck.cpp
 CMakeFiles/WarWithCards.dir/Deck.cpp.o: ../Deck.h
 
-CMakeFiles/WarWithCards.dir/Manager.cpp.o: ../Manager.cpp
-
 CMakeFiles/WarWithCards.dir/Player.cpp.o: ../Deck.h
 CMakeFiles/WarWithCards.dir/Player.cpp.o: ../Player.cpp
 CMakeFiles/WarWithCards.dir/Player.cpp.o: ../Player.h
 
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../App.h
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../Deck.h
-CMakeFiles/WarWithCards.dir/main.cpp.o: ../Manager.h
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../Player.h
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../main.cpp
 CMakeFiles/WarWithCards.dir/main.cpp.o: /usr/include/SDL2/SDL.h
