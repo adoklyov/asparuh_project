@@ -110,7 +110,8 @@ private:
 	// textures
 	// player 1 cards Textures
 	SDL_Texture *card1Texture;
-	
+	// war card textures
+	SDL_Texture *warCardTexture;
 	// background texture
 	SDL_Texture *backgroundTexture;
 	// start texture player1

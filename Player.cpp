@@ -3,6 +3,7 @@
 Player::Player()
 {
 	this->turn = false;
+	this->active = true;
 }
 
 Card Player::pullCard()
@@ -221,3 +222,12 @@ void Player::setCard()
 	playerDeck.insert(playerDeck.begin() + 1, c1);
 }
 
+void Player::setActive(bool isActive)
+{
+	this->active = isActive;
+}
+
+bool Player::isActive()
+{
+    return active;
+}

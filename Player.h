@@ -28,8 +28,12 @@ public:
 	void setPlayerDeck();
 	void setCard();
 
+	void setActive(bool isActive);
+	bool isActive();
+
 private:
-	short points;
+	bool active;
+	short points = 0;
 	int wins = 0;
 	int losses = 0;
 	bool turn;

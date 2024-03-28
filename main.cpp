@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 
 	bool init = app->init("WarWithCards",
 						  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-						  WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+						  WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE);
 
 	if (!init)
 	{
