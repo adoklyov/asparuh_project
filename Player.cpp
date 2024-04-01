@@ -3,7 +3,7 @@
 Player::Player()
 {
 	this->turn = false;
-	this->active = true;
+	this->active = false;
 }
 
 Card Player::pullCard()
@@ -16,17 +16,6 @@ Card Player::pullCard()
 	}
 	std::cout << "No more cards!\n";
 	return {};
-}
-
-//Separate cards for war
-Card Player::pullWarCard()
-{
-        if (!playerDeck.empty()) {
-        Card card = playerDeck.front();
-        playerDeck.erase(playerDeck.begin());
-        return card;
-    }
-    return {}; 
 }
 
 short Player::getPoints() const
@@ -52,6 +41,11 @@ void Player::setTurn(bool turn)
 std::vector<Card> &Player::getPlayerDeck()
 {
 	return playerDeck;
+}
+
+std::vector<Card> &Player::getMiniPlayerDeck()
+{
+	return miniPlayerDeck;
 }
 
 size_t Player::cntPlayerDeck()
@@ -227,7 +221,7 @@ void Player::setActive(bool isActive)
 	this->active = isActive;
 }
 
-bool Player::isActive()
+bool Player::isActive() const
 {
-    return active;
+	return active;
 }

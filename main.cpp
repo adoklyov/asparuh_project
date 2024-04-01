@@ -10,7 +10,6 @@ const unsigned WINDOW_HEIGHT = 600;
 /*
 BUGS:
 	Delay on start button
-	Fix A of Hearts
 	Randomly cards 2 and 3 went bigger when player1 empt his deck
 */
 

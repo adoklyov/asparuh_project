@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <Stats>
 	<Player id="1">
-		<Points>398</Points>
-		<Wins>0</Wins>
-		<Losses>1</Losses>
-	</Player>
-	<Player id="2">
-		<Points>631</Points>
-		<Wins>0</Wins>
-		<Losses>1</Losses>
-	</Player>
-	<Player id="3">
-		<Points>745</Points>
+		<Points>2354</Points>
 		<Wins>0</Wins>
 		<Losses>0</Losses>
+	</Player>
+	<Player id="2">
+		<Points>2235</Points>
+		<Wins>0</Wins>
+		<Losses>0</Losses>
+	</Player>
+	<Player id="3">
+		<Points>183</Points>
+		<Wins>0</Wins>
+		<Losses>1</Losses>
 	</Player>
 </Stats>

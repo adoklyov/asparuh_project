@@ -7,6 +7,7 @@ class Player
 public:
 	Player();
 	std::vector<Card> &getPlayerDeck();
+	std::vector<Card>& getMiniPlayerDeck();
 	size_t cntPlayerDeck();
 
 	// stats
@@ -19,7 +20,6 @@ public:
 	void setTurn(bool turn);
 	void setPoints(short pp);
 	Card pullCard();
-	Card pullWarCard();
 	void dealCards(Deck &deck);
 	void printCards() const;
 	void incrementPoint(const Card &c);
@@ -29,13 +29,14 @@ public:
 	void setCard();
 
 	void setActive(bool isActive);
-	bool isActive();
+	bool isActive() const;
 
 private:
-	bool active;
+	bool active = false;
 	short points = 0;
 	int wins = 0;
 	int losses = 0;
 	bool turn;
+	std::vector<Card> miniPlayerDeck;
 	std::vector<Card> playerDeck;
 };

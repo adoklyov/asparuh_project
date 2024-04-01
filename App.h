@@ -19,6 +19,8 @@ class App
 	friend bool operator>(const Card &card1, const Card &card2);
 	friend bool operator<(const Card &card1, const Card &card2);
 	friend bool operator==(const Card &card1, const Card &card2);
+	friend bool operator!=(const Card& card1, const Card& card2);
+
 
 public:
 	App();
@@ -50,17 +52,22 @@ public:
 	bool registerWinner(std::vector<Card> &deskDeck, unsigned winner);
 	unsigned getWinner();
 	bool hasWar();
+	bool hasWarForTwo(Player &player1, Player &player2);
 	int calcTiePlayers(const Card &c);
 	Card getBiggestPlayerCard();
 	unsigned findPlayerWithCard(const Card &c);
 	void printDeck(const std::vector<Card> &deskDeck) const;
 	void playWarRound();
 	void playRound();
+	bool PlayWarRound();
 	bool isGameOver();
 	void printPlayer(unsigned i);
 	void playWarRoundTest();
 	unsigned playDuoNormalRound(Player &player1, Player &player2, std::vector<Card> &deskDeck);
 	Card getBiggestWarCard(Player &player1, Player &player2);
+
+	int calcTiePlayersResizable(const Card &c, std::vector<Player> players);
+
 
 	void statsMessage(std::vector<Player> &players);
 	bool showStats;
@@ -71,8 +78,12 @@ public:
 
 	// game restart
 	void restartGame();
-
+	void setWar(bool war);
+	bool getWar() const;
 private:
+
+	std::vector<Player> activePlayers;
+	bool war = false;
 	Deck *deck;
 	Player *player1;
 	Player *player2;
@@ -105,8 +116,8 @@ private:
 	Card c2;
 	Card c3;
 	Card warCardPlayer1;
-    Card warCardPlayer2;
-    Card warCardPlayer3;
+	Card warCardPlayer2;
+	Card warCardPlayer3;
 	// textures
 	// player 1 cards Textures
 	SDL_Texture *card1Texture;
