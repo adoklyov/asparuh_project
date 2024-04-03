@@ -11,14 +11,14 @@ public:
 	size_t cntPlayerDeck();
 
 	// stats
-	short getPoints() const;
+	unsigned int getPoints() const;
 	int getWins() const;
 	int getLosses() const;
 	void setWins(int w);
 	void setLosses(int l);
 	bool getTurn() const;
 	void setTurn(bool turn);
-	void setPoints(short pp);
+	void setPoints(unsigned int pp);
 	Card pullCard();
 	void dealCards(Deck &deck);
 	void printCards() const;
@@ -33,7 +33,7 @@ public:
 
 private:
 	bool active = false;
-	short points = 0;
+	unsigned int points = 0;
 	int wins = 0;
 	int losses = 0;
 	bool turn;

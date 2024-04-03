@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <Stats>
 	<Player id="1">
-		<Points>2354</Points>
+		<Points>14025</Points>
 		<Wins>0</Wins>
-		<Losses>0</Losses>
+		<Losses>1</Losses>
 	</Player>
 	<Player id="2">
-		<Points>2235</Points>
+		<Points>12797</Points>
 		<Wins>0</Wins>
-		<Losses>0</Losses>
+		<Losses>1</Losses>
 	</Player>
 	<Player id="3">
-		<Points>183</Points>
+		<Points>9969</Points>
 		<Wins>0</Wins>
 		<Losses>1</Losses>
 	</Player>

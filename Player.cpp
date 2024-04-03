@@ -18,12 +18,12 @@ Card Player::pullCard()
 	return {};
 }
 
-short Player::getPoints() const
+unsigned int Player::getPoints() const
 {
 	return this->points;
 }
 
-void Player::setPoints(short pp)
+void Player::setPoints(unsigned int pp)
 {
 	this->points = pp;
 }

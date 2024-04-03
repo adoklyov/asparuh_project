@@ -44,6 +44,9 @@ public:
 	void cardsCountMessage();
 	// War message
 	void warMessage();
+	// // player winner message
+	// void winnerMessage();
+
 	void handleEvents();
 	void DestroySDL();
 	bool isRunning();
@@ -68,8 +71,9 @@ public:
 
 	int calcTiePlayersResizable(const Card &c, std::vector<Player> players);
 
-
+	// stats message
 	void statsMessage(std::vector<Player> &players);
+
 	bool showStats;
 
 	// XML
@@ -81,8 +85,6 @@ public:
 	void setWar(bool war);
 	bool getWar() const;
 private:
-
-	std::vector<Player> activePlayers;
 	bool war = false;
 	Deck *deck;
 	Player *player1;
