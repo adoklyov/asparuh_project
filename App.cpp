@@ -272,7 +272,6 @@ void App::render()
 	// //Winner Message test rendering
 	// winnerMessage();
 
-
 	if (GameState::START == state)
 	{
 		dRectButtonStart = {0, 350, 70, 30};
@@ -306,10 +305,14 @@ void App::render()
 	}
 	else if (GameState::OVER == state)
 	{
+
+		// Winner Message test rendering
+		winnerMessage();
 	}
 	if (showStats)
 	{
 		statsMessage(players);
+
 	}
 
 	SDL_RenderPresent(renderer);
@@ -450,10 +453,15 @@ void App::handleEvents()
 					}
 					// conditions to put actives on false so that we can proceed with rendering based on the war players
 				}
+				else if (isGameOver())
+				{
+					state == GameState::OVER;
+				}
 				else if (isClickableRectClicked(&statsButton, mouseDownX, mouseDownY, msx, msy))
 				{
 					showStats = !showStats;
 					statsMessage(players);
+				
 				}
 				else if (isClickableRectClicked(&allDeal, mouseDownX, mouseDownY, msx, msy))
 				{
@@ -475,11 +483,11 @@ void App::handleEvents()
 					}
 					std::cerr << "\nSUM " << sum;
 					std::cerr << "\nnew  round\n";
-					for (int i = 0; i < 10; i++)
+
+					for (unsigned i = 0; i < 10; i++)
 					{
 						playRound();
 					}
-					// playRound();
 				}
 				else if (isClickableRectClicked(&reset, mouseDownX, mouseDownY, msx, msy))
 				{
@@ -692,11 +700,14 @@ void App::printDeck(const std::vector<Card> &deskDeck) const
 		std::cerr << '\n';
 	}
 }
+
 bool App::isGameOver()
 {
+	// cerr is being printed, but the state is not being changed
 	Player &player1 = players[0];
 	Player &player2 = players[1];
 	Player &player3 = players[2];
+	state == GameState::OVER;
 	if (player1.cntPlayerDeck() == 0 && player2.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
 	{
 		std::cerr << "Tie!\n";
@@ -705,20 +716,27 @@ bool App::isGameOver()
 	else if (player1.cntPlayerDeck() == 0 && player2.cntPlayerDeck() == 0)
 	{
 		std::cerr << "Player 3 wins!\n";
+		setWinner(3);
+		state == GameState::OVER;
+
 		player3.setWins(1);
 		return true;
 	}
 	else if (player1.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
 	{
 		std::cerr << "Player 2 wins!\n";
+		setWinner(2);
 		player2.setWins(1);
+		state == GameState::OVER;
 
 		return true;
 	}
 	else if (player2.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
 	{
 		std::cerr << "Player 1 wins!\n";
+		setWinner(1);
 		player1.setWins(1);
+		state == GameState::OVER;
 
 		return true;
 	}
@@ -890,6 +908,7 @@ bool App::PlayWarRound()
 				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
 				{
 					players[i].incrementPoint(biggest);
+					// setWinner(i);
 					winner = i;
 				}
 			}
@@ -1058,14 +1077,18 @@ bool App::PlayWarRound()
 }
 void App::playRound()
 {
+	// This does not work, it doesnt transition to OVER state!!!!!!!!!!!!
+	// Potentially change isGameOver
 	if (isGameOver())
 	{
+		state == GameState::OVER;
 		return;
 	}
 	round++;
 
 	if (hasWar())
 	{
+		//Transition is successful, even when I changed it to OVER
 		state = GameState::WAR;
 		for (unsigned i = 0; i < players.size(); i++)
 		{
@@ -1412,24 +1435,23 @@ void App::cardsCountMessage()
 	SDL_FreeSurface(surfaceMessage3);
 }
 
-// void App::winnerMessage()
-// {
-// 	std::string winnerMessage = "P" + std::to_string(winner);
-// 	SDL_Color textColor = {255, 255, 255, 255};
-// 	SDL_Surface *winnerSurface = TTF_RenderText_Solid(font, winnerMessage.c_str(), textColor);
-// 	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, winnerSurface);
+void App::winnerMessage()
+{
+	std::string winnerMessage = "P: " + std::to_string(getWinner() + 1) + " wins!";
+	SDL_Color textColor = {255, 255, 255, 255};
+	SDL_Surface *winnerSurface = TTF_RenderText_Solid(font, winnerMessage.c_str(), textColor);
+	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, winnerSurface);
 
-// 	SDL_Rect warMessagePos;
-// 	warMessagePos.x = 550;
-// 	warMessagePos.y = 475;
-// 	warMessagePos.h = 40;
-// 	warMessagePos.w = 80;
+	SDL_Rect warMessagePos;
+	warMessagePos.x = 550;
+	warMessagePos.y = 475;
+	warMessagePos.h = 40;
+	warMessagePos.w = 80;
 
-// 	SDL_RenderCopy(renderer, Message, NULL, &warMessagePos);
-// 	SDL_DestroyTexture(Message);
-// 	SDL_FreeSurface(winnerSurface);
-
-// }
+	SDL_RenderCopy(renderer, Message, NULL, &warMessagePos);
+	SDL_DestroyTexture(Message);
+	SDL_FreeSurface(winnerSurface);
+}
 
 void App::warMessage()
 {
@@ -1577,4 +1599,14 @@ void App::setWar(bool war)
 bool App::getWar() const
 {
 	return war;
+}
+
+void App::setWinner(int winner)
+{
+	this->winner = winner;
+}
+
+int App::getWinner() const
+{
+	return winner;
 }

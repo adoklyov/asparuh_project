@@ -216,6 +216,7 @@ void Player::setCard()
 	playerDeck.insert(playerDeck.begin() + 1, c1);
 }
 
+
 void Player::setActive(bool isActive)
 {
 	this->active = isActive;

@@ -44,8 +44,8 @@ public:
 	void cardsCountMessage();
 	// War message
 	void warMessage();
-	// // player winner message
-	// void winnerMessage();
+	// player winner message
+	void winnerMessage();
 
 	void handleEvents();
 	void DestroySDL();
@@ -84,6 +84,11 @@ public:
 	void restartGame();
 	void setWar(bool war);
 	bool getWar() const;
+
+	//winner
+	void setWinner(int winner);
+	int getWinner() const;
+
 private:
 	bool war = false;
 	Deck *deck;
@@ -198,4 +203,6 @@ private:
 	int pts = 0;
 	int ws = 0;
 	int ls = 0;
+	//winner
+	int winner = -1;
 };
