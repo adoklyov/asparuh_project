@@ -11,6 +11,8 @@ App.h
 /home/default/asparuh_project/App.h
 iostream
 -
+cassert
+-
 
 /home/default/asparuh_project/App.h
 SDL.h

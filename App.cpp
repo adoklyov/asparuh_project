@@ -1,11 +1,11 @@
 #include "App.h"
 #include <iostream>
+#include <cassert>
 
-const unsigned PLAYERS_RENDERING_CARDS_CNT = 30;
+const unsigned PLAYERS_RENDERING_CARDS_CNT = 300;
 
 App::App()
-	: card1Texture(nullptr), warCardPlayer1(), warCardPlayer2(), warCardPlayer3()
-
+	: card1Texture(nullptr)
 {
 
 	deck = new Deck();
@@ -39,6 +39,14 @@ App::~App()
 {
 	DestroySDL();
 }
+bool operator>=(const Card& card1 , const Card& card2)
+{
+	return !(card1.value < card2.value);
+}
+bool operator<=(const Card& card1 , const Card& card2)
+{
+	return !(card1.value > card2.value);
+}
 bool operator>(const Card &card1, const Card &card2)
 {
 	return card1.value > card2.value;
@@ -58,12 +66,7 @@ bool operator!=(const Card &card1, const Card &card2)
 
 bool App::init(const std::string title, int xpos, int ypos, int width, int height, int flags)
 {
-	updateStatsXML(players);
-
-	TTF_Init();
-
-	// Load ttf font
-	font = TTF_OpenFont("/home/default/asparuh_project/assets/fonts/segoepr.ttf", 24);
+	updateStatsXML();
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
@@ -130,14 +133,18 @@ bool App::ttf_init()
 
 	TTF_Font *font1 = TTF_OpenFont("/home/default/asparuh_project/assets/fonts/Arcade.ttf", 25);
 	TTF_Font *font2 = TTF_OpenFont("/home/default/asparuh_project/assets/fonts/segoepr.ttf", 45);
+	TTF_Font *fontStartOver = TTF_OpenFont("/home/default/asparuh_project/assets/fonts/segoepr.ttf", 120);
 	TTF_Font *fontPlayer = TTF_OpenFont("/home/default/asparuh_project/assets/fonts/segoepr.ttf", 30);
 	font = TTF_OpenFont("/home/default/asparuh_project/assets/fonts/segoepr.ttf", 30);
 
-	if (nullptr == font1 || nullptr == font2 || nullptr == fontPlayer)
+	if (nullptr == font1 || nullptr == font2 || nullptr == fontPlayer || nullptr == fontStartOver)
 		return false;
 
 	SDL_Surface *tempSurfaceText = nullptr;
 
+	// texture start from Over state
+	tempSurfaceText = TTF_RenderText_Blended(fontStartOver, "Start", {0xAB, 0xCF, 0xFD, 0xFF});
+	textStartOverTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 	// texture start
 	tempSurfaceText = TTF_RenderText_Blended(font1, "Start", {0x00, 0x00, 0x00, 0xFF});
 	textStartTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
@@ -174,6 +181,9 @@ bool App::ttf_init()
 	tempSurfaceText = TTF_RenderText_Blended(fontPlayer, "Player 3", {0xFF, 0xCC, 0xAA, 0xFF});
 	textPlayer3Texture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
+	// getting and setting label start for over stare
+	SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
+	dRectStartOver = {330, 270, tw, th};
 	// getting and setting label textStartTexture for player1
 	SDL_QueryTexture(textStartTexture, 0, 0, &tw, &th);
 	dRectTextStart = {5, 355, tw, th};
@@ -250,9 +260,16 @@ SDL_Texture *App::loadTexture(const std::string filePath, SDL_Renderer *renderer
 	return texture;
 }
 
+void App::clearTable()
+{
+	c1.texture = nullptr;
+	c2.texture = nullptr;
+	c3.texture = nullptr;
+}
+
 void App::render()
 {
-	statsMessage(players);
+	statsMessage();
 	SDL_RenderClear(renderer);
 	// background
 	SDL_RenderCopy(renderer, backgroundTexture, nullptr, &dRectBackground);
@@ -277,21 +294,20 @@ void App::render()
 		dRectButtonStart = {0, 350, 70, 30};
 		SDL_RenderFillRect(renderer, &dRectButtonStart);
 		SDL_RenderCopy(renderer, textStartTexture, nullptr, &dRectTextStart);
+
+		SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
+		// SDL_RenderCopy(renderer, textStartOverTexture, NULL, &dRectStartOver);
 	}
 	else if (GameState::PLAYING == state)
 	{
 		thrownCardsRender();
-		// SDL_QueryTexture(card1Texture, 0, 0, &tw, &th);
 		player1Render();
 		player2Render();
 		player3Render();
 		cardsCountMessage();
 
-		// if (getDealButton())
-		// {
 		buttonPressed = true;
 		setDealButton(buttonPressed);
-		// }
 	}
 	else if (GameState::WAR == state)
 	{
@@ -305,14 +321,26 @@ void App::render()
 	}
 	else if (GameState::OVER == state)
 	{
+		// dRectStartOver = {330, 270, 70, 30};
+		// SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
+		SDL_RenderCopy(renderer, textStartOverTexture, NULL, &dRectStartOver);
+		if (players[0].getFlag())
+			players[0].setLosses(1);
+		else if (players[1].getFlag())
+			players[1].setLosses(1);
+		else if (players[2].getFlag())
+			players[2].setLosses(1);
+		players[0].setFlag(false);
+		players[1].setFlag(false);
+		players[2].setFlag(false);
 
-		// Winner Message test rendering
+		saveStatsXML();
 		winnerMessage();
 	}
+
 	if (showStats)
 	{
-		statsMessage(players);
-
+		statsMessage();
 	}
 
 	SDL_RenderPresent(renderer);
@@ -362,6 +390,33 @@ void App::handleEvents()
 			}
 		};
 		break;
+		case SDL_MOUSEWHEEL:
+		{
+			if (true)
+			{
+
+				players[0].setTurn(true);
+				players[1].setTurn(true);
+				players[2].setTurn(true);
+
+				c1 = players[0].getPlayerDeck().front();
+				c2 = players[1].getPlayerDeck().front();
+				c3 = players[2].getPlayerDeck().front();
+
+				isRoundPlayed = true;
+				saveStatsXML();
+				std::cerr << "---------------------------------\n";
+				int sum = 0;
+				for (unsigned i = 0; i < players.size(); i++)
+				{
+					sum += players[i].cntPlayerDeck();
+				}
+				std::cerr << "\nSUM " << sum;
+				std::cerr << "\nnew  round\n";
+				playRound();
+			}
+		};
+		break;
 		case SDL_MOUSEBUTTONUP:
 		{
 			int msx, msy;
@@ -371,6 +426,10 @@ void App::handleEvents()
 				// Waiting to press a button
 
 				SDL_GetMouseState(&msx, &msy);
+				if (isClickableRectClicked(&dRectStartOver, mouseDownX, mouseDownY, msx, msy) && state == GameState::OVER)
+				{
+					restartGame();
+				}
 				if (isClickableRectClicked(&dRectButtonStart, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(&dRectButtonStartPlayer2, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(&dRectButtonStartPlayer3, mouseDownX, mouseDownY, msx, msy))
 				{
 					if (wasStartPressed)
@@ -400,7 +459,7 @@ void App::handleEvents()
 					// a possible if structure here
 					if (isClickableRectClicked(&dRectButtonDeal, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal1())
 					{
-
+						clearTable();
 						players[0].setTurn(true);
 
 						c1 = players[0].getPlayerDeck().front();
@@ -423,22 +482,19 @@ void App::handleEvents()
 						players[2].setTurn(true);
 
 						c3 = players[2].getPlayerDeck().front();
-
 						buttonPressed = true;
 						setDealButton(buttonPressed);
 						setButtonPressedDeal1(false);
 						setButtonPressedDeal2(true);
 						setButtonPressedDeal3(true);
 					}
-					if (player1->isActive() && player2->isActive() && player3->isActive())
-					{
-					}
 					if (true == players[0].getTurn() && true == players[1].getTurn() && true == players[2].getTurn())
 					{
+
 						players[0].setTurn(false);
 						players[1].setTurn(false);
 						players[2].setTurn(false);
-						saveStatsXML(players);
+						saveStatsXML();
 						std::cerr << "---------------------------------\n";
 						int sum = 0;
 						for (unsigned i = 0; i < players.size(); i++)
@@ -453,15 +509,11 @@ void App::handleEvents()
 					}
 					// conditions to put actives on false so that we can proceed with rendering based on the war players
 				}
-				else if (isGameOver())
-				{
-					state == GameState::OVER;
-				}
+
 				else if (isClickableRectClicked(&statsButton, mouseDownX, mouseDownY, msx, msy))
 				{
 					showStats = !showStats;
-					statsMessage(players);
-				
+					statsMessage();
 				}
 				else if (isClickableRectClicked(&allDeal, mouseDownX, mouseDownY, msx, msy))
 				{
@@ -474,7 +526,7 @@ void App::handleEvents()
 					c3 = players[2].getPlayerDeck().front();
 
 					isRoundPlayed = true;
-					saveStatsXML(players);
+					saveStatsXML();
 					std::cerr << "---------------------------------\n";
 					int sum = 0;
 					for (unsigned i = 0; i < players.size(); i++)
@@ -483,11 +535,11 @@ void App::handleEvents()
 					}
 					std::cerr << "\nSUM " << sum;
 					std::cerr << "\nnew  round\n";
-
-					for (unsigned i = 0; i < 10; i++)
-					{
-						playRound();
-					}
+					playRound();
+					// for (unsigned i = 0; i < 5; ++i)
+					// {
+					// 	playRound();
+					// }
 				}
 				else if (isClickableRectClicked(&reset, mouseDownX, mouseDownY, msx, msy))
 				{
@@ -580,7 +632,7 @@ Card App::getBiggestPlayerCard()
 	{
 		biggest = players[0].getPlayerDeck().front();
 	}
-	if (!players[1].getPlayerDeck().empty() && players[1].getPlayerDeck().front() > biggest)
+	if (!players[1].getPlayerDeck().empty() && players[1].getPlayerDeck().front() >= biggest)
 	{
 		biggest = players[1].getPlayerDeck().front();
 	}
@@ -615,7 +667,8 @@ unsigned App::findPlayerWithCard(const Card &c)
 	{
 		if (!players[i].getPlayerDeck().empty() && players[i].getPlayerDeck().front() == c)
 		{
-			players[i].incrementPoint(c);
+			if (state != GameState::OVER)
+				players[i].incrementPoint(c);
 			return i;
 		}
 	}
@@ -707,7 +760,7 @@ bool App::isGameOver()
 	Player &player1 = players[0];
 	Player &player2 = players[1];
 	Player &player3 = players[2];
-	state == GameState::OVER;
+
 	if (player1.cntPlayerDeck() == 0 && player2.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
 	{
 		std::cerr << "Tie!\n";
@@ -717,17 +770,17 @@ bool App::isGameOver()
 	{
 		std::cerr << "Player 3 wins!\n";
 		setWinner(3);
-		state == GameState::OVER;
 
-		player3.setWins(1);
+		if (state == GameState::OVER)
+			player3.setWins(1);
 		return true;
 	}
 	else if (player1.cntPlayerDeck() == 0 && player3.cntPlayerDeck() == 0)
 	{
 		std::cerr << "Player 2 wins!\n";
 		setWinner(2);
-		player2.setWins(1);
-		state == GameState::OVER;
+		if (state == GameState::OVER)
+			player2.setWins(1);
 
 		return true;
 	}
@@ -735,22 +788,22 @@ bool App::isGameOver()
 	{
 		std::cerr << "Player 1 wins!\n";
 		setWinner(1);
-		player1.setWins(1);
-		state == GameState::OVER;
+		if (state == GameState::OVER)
+			player1.setWins(1);
 
 		return true;
 	}
 	if (player1.cntPlayerDeck() == 0 && player2.cntPlayerDeck() != 0 && player3.cntPlayerDeck() != 0)
 	{
-		player1.setLosses(1);
+		player1.setFlag(true);
 	}
 	else if (player1.cntPlayerDeck() != 0 && player2.cntPlayerDeck() == 0 && player3.cntPlayerDeck() != 0)
 	{
-		player2.setLosses(1);
+		player2.setFlag(true);
 	}
 	else if (player1.cntPlayerDeck() != 0 && player2.cntPlayerDeck() != 0 && player3.cntPlayerDeck() == 0)
 	{
-		player3.setLosses(1);
+		player3.setFlag(true);
 	}
 	return false;
 }
@@ -771,30 +824,28 @@ bool App::PlayWarRound()
 		{
 			if (players[i].isActive())
 			{
-				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > strongestCardInWar)
+				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() >= strongestCardInWar)
 				{
 					strongestCardInWar = players[i].getMiniPlayerDeck().back();
-				}
-
-				// trnasfering  the miniDeck to Deck
-				for (unsigned j = 0; j < players[i].getMiniPlayerDeck().size(); j++)
-				{
-					deskDeck.push_back(players[i].getMiniPlayerDeck()[j]);
 				}
 			}
 		}
 
 		for (unsigned i = 0; i < players.size(); i++)
 		{
-			if (!players[i].getPlayerDeck().empty() && players[i].getPlayerDeck().front() == strongestCardInWar)
+			if (players[i].isActive())
 			{
-				playersInWarCnt++;
+				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == strongestCardInWar)
+				{
+					playersInWarCnt++;
+				}
 			}
 		}
-		war = false;
 	}
 	else // for the first round of war
 	{
+		strongestCard = {};
+		strongestCard.value = 2;
 		strongestCard = getBiggestPlayerCard();
 		playersInWarCnt = calcTiePlayers(strongestCard);
 	}
@@ -813,27 +864,63 @@ bool App::PlayWarRound()
 	}
 
 	// checking if the cards are the strongest in players deck
-	for (unsigned i = 0; i < players.size(); i++)
+	if (war)
 	{
-		if (!players[i].getPlayerDeck().empty() && players[i].getPlayerDeck().front() == strongestCard)
+		for (unsigned i = 0; i < players.size(); i++)
 		{
-			players[i].setActive(true);
+			if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == strongestCardInWar)
+			{
+				players[i].setActive(true);
+			}
+			else
+			{
+				std::cerr << "No cards, is that why there is an ERROR\n";
+			}
+		}
+	}
+	else
+	{
+		for (unsigned i = 0; i < players.size(); i++)
+		{
+			if (!players[i].getPlayerDeck().empty() && players[i].getPlayerDeck().front() == strongestCard)
+			{
+				players[i].setActive(true);
+			}
+			else
+				std::cerr << "No cards, is that why there is an ERROR\n";
 		}
 	}
 
 	// checking if the cards are the strongest in player mini deck
-	for (unsigned i = 0; i < players.size(); i++)
+
+	// trnasfering  the miniDeck to Deck
+
+	// pulling the card which triggered the state
+
+	if (!war)
 	{
-		if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == strongestCardInWar)
+		for (unsigned i = 0; i < players.size(); i++)
 		{
-			players[i].setActive(true);
+			if (!players[i].getPlayerDeck().empty())
+			{
+				deskDeck.push_back(players[i].pullCard());
+			}
+		}
+		for (unsigned i = 0; i < deskDeck.size(); i++)
+		{
+			dump.push_back(deskDeck[i]);
 		}
 	}
 
-	// pulling the card which triggered the state
-	for (unsigned i = 0; i < players.size() && !players[i].getPlayerDeck().empty(); i++)
+	for (unsigned i = 0; i < players.size(); i++)
 	{
-		deskDeck.push_back(players[i].pullCard());
+		if (players[i].isActive())
+		{
+			for (unsigned j = 0; j < players[i].getMiniPlayerDeck().size(); j++)
+			{
+				deskDeck.push_back(players[i].getMiniPlayerDeck()[j]);
+			}
+		}
 	}
 
 	std::cerr << "=======================\n";
@@ -846,7 +933,7 @@ bool App::PlayWarRound()
 	}
 
 	// Every player throws 3 cards
-	for (size_t i = 0; i < players.size(); i++)
+	for (unsigned i = 0; i < players.size(); i++)
 	{
 		std::cerr << std::boolalpha << players[i].isActive() << '\n';
 	}
@@ -866,8 +953,328 @@ bool App::PlayWarRound()
 			}
 		}
 	}
+	if (players[0].isActive() && players[1].isActive() && players[2].isActive())
+	{
+		std::cerr << "Here we are in player 1, 2 and 3 isActive\n";
+		// printing
+		std::cerr << "Player 1 is playing:\n";
+		printDeck(players[0].getMiniPlayerDeck());
 
-	if (players[0].isActive() && players[1].isActive())
+		std::cerr << "Player 2 is playing:\n";
+		printDeck(players[1].getMiniPlayerDeck());
+
+		std::cerr << "Player 3 is playing:\n";
+		printDeck(players[2].getMiniPlayerDeck());
+
+		if (players[0].getPlayerDeck().empty() || players[1].getPlayerDeck().empty() || players[2].getPlayerDeck().empty())
+		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			if (players[0].getPlayerDeck().empty() || players[1].getPlayerDeck().empty())
+			{
+				registerWinner(deskDeck, 2);
+				setWar(false);
+				return true;
+			}
+			else if (players[0].getPlayerDeck().empty() || players[2].getPlayerDeck().empty())
+			{
+				registerWinner(deskDeck, 1);
+				setWar(false);
+				return true;
+			}
+			else if (players[1].getPlayerDeck().empty() || players[2].getPlayerDeck().empty())
+			{
+				registerWinner(deskDeck, 0);
+				setWar(false);
+				return true;
+			}
+		}
+
+		if (players[0].getMiniPlayerDeck().back() != players[1].getMiniPlayerDeck().back() &&
+			players[0].getMiniPlayerDeck().back() != players[2].getMiniPlayerDeck().back() &&
+			players[1].getMiniPlayerDeck().back() != players[2].getMiniPlayerDeck().back())
+		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			Card biggest = {};
+			biggest.value = 2;
+			for (unsigned i = 0; i < players.size(); i++)
+			{
+				if (players[i].isActive())
+				{
+					if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+					{
+						biggest = players[i].getMiniPlayerDeck().back();
+					}
+				}
+			}
+
+			int winner = -1;
+			for (unsigned i = 0; i < players.size(); i++)
+			{
+				if (players[i].isActive())
+				{
+					if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+					{
+						players[i].incrementPoint(biggest);
+						winner = i;
+					}
+				}
+			}
+
+			registerWinner(deskDeck, winner);
+			setWar(false);
+
+			return true; // the war is done
+		}
+		else
+		{
+			if (players[0].isActive() && players[1].isActive())
+			{
+				std::cerr << "Here we are in player 1 and 2 isActive\n";
+				// printing
+				std::cerr << "Player 1 is playing:\n";
+				printDeck(players[0].getMiniPlayerDeck());
+
+				std::cerr << "Player 2 is playing:\n";
+				printDeck(players[1].getMiniPlayerDeck());
+
+				if (players[0].getPlayerDeck().empty() || players[1].getPlayerDeck().empty())
+				{
+					if (war)
+					{
+						for (unsigned i = 0; i < dump.size(); i++)
+							deskDeck.push_back(dump[i]);
+					}
+					if (players[0].getPlayerDeck().empty())
+					{
+						registerWinner(deskDeck, 1); // its was 0
+						setWar(false);
+						return true;
+					}
+					else if (players[1].getPlayerDeck().empty())
+					{
+						registerWinner(deskDeck, 0);
+						setWar(false);
+						return true;
+					}
+				}
+				if (players[0].getMiniPlayerDeck().back() != players[1].getMiniPlayerDeck().back())
+				{
+					if (war)
+					{
+						for (unsigned i = 0; i < dump.size(); i++)
+							deskDeck.push_back(dump[i]);
+					}
+					Card biggest = {};
+					biggest.value = 2;
+					for (unsigned i = 0; i < players.size(); i++)
+					{
+						if (players[i].isActive())
+						{
+							if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+							{
+								biggest = players[i].getMiniPlayerDeck().back();
+							}
+						}
+					}
+
+					int winner = -1;
+					for (unsigned i = 0; i < players.size(); i++)
+					{
+						if (players[i].isActive())
+						{
+							if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+							{
+								players[i].incrementPoint(biggest);
+								winner = i;
+							}
+						}
+					}
+
+					registerWinner(deskDeck, winner);
+					setWar(false);
+
+					return true; // the war is done
+				}
+				else
+				{
+					std::cout << "\n\tWAR AGAIN\n";
+					war = true;
+
+					PlayWarRound();
+					// War again
+				}
+			}
+			else if (players[0].isActive() && players[2].isActive())
+			{
+				std::cerr << "here are playing player1 and player 3\n";
+				std::cerr << "Player 1 is playing:\n";
+				printDeck(players[0].getMiniPlayerDeck());
+
+				std::cerr << "Player 3 is playing:\n";
+				printDeck(players[2].getMiniPlayerDeck());
+				if (players[0].getPlayerDeck().empty() || players[2].getPlayerDeck().empty())
+				{
+					if (war)
+					{
+						for (unsigned i = 0; i < dump.size(); i++)
+							deskDeck.push_back(dump[i]);
+					}
+					if (players[0].getPlayerDeck().empty())
+					{
+						registerWinner(deskDeck, 2);
+						setWar(false);
+
+						return true;
+					}
+					else if (players[2].getPlayerDeck().empty())
+					{
+						registerWinner(deskDeck, 0);
+						setWar(false);
+
+						return true;
+					}
+				}
+				if (players[0].getMiniPlayerDeck().back() != players[2].getMiniPlayerDeck().back())
+				{
+					if (war)
+					{
+						for (unsigned i = 0; i < dump.size(); i++)
+							deskDeck.push_back(dump[i]);
+					}
+					Card biggest = {};
+					biggest.value = 2;
+					for (unsigned i = 0; i < players.size(); i++)
+					{
+						if (players[i].isActive())
+						{
+							if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+							{
+								biggest = players[i].getMiniPlayerDeck().back();
+							}
+						}
+					}
+
+					int winner = -1;
+					for (unsigned i = 0; i < players.size(); i++)
+					{
+						if (players[i].isActive())
+						{
+							if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+							{
+								players[i].incrementPoint(biggest);
+								winner = i;
+							}
+						}
+					}
+
+					registerWinner(deskDeck, winner);
+					setWar(false);
+
+					return true; // the war is done
+				}
+				else
+				{
+					std::cout << "\n\tWAR AGAIN\n";
+					war = true;
+					PlayWarRound();
+
+					// War again
+				}
+			}
+			else if (players[1].isActive() && players[2].isActive())
+			{
+				std::cerr << "Here are playing player 2 and 3\n";
+				std::cerr << "Player 2 is playing:\n";
+				printDeck(players[1].getMiniPlayerDeck());
+
+				std::cerr << "Player 3 is playing:\n";
+				printDeck(players[2].getMiniPlayerDeck());
+				if (players[1].getPlayerDeck().empty() || players[2].getPlayerDeck().empty())
+				{
+					if (war)
+					{
+						for (unsigned i = 0; i < dump.size(); i++)
+							deskDeck.push_back(dump[i]);
+					}
+					if (players[1].getPlayerDeck().empty())
+					{
+						registerWinner(deskDeck, 2);
+						setWar(false);
+
+						return true;
+					}
+					else if (players[2].getPlayerDeck().empty())
+					{
+						registerWinner(deskDeck, 1);
+						setWar(false);
+
+						return true;
+					}
+				}
+				if (players[1].getMiniPlayerDeck().back() != players[2].getMiniPlayerDeck().back())
+				{
+					if (war)
+					{
+						for (unsigned i = 0; i < dump.size(); i++)
+							deskDeck.push_back(dump[i]);
+					}
+					Card biggest = {};
+					biggest.value = 2;
+					for (unsigned i = 0; i < players.size(); i++)
+					{
+						if (players[i].isActive())
+						{
+							if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+							{
+								biggest = players[i].getMiniPlayerDeck().back();
+							}
+						}
+					}
+
+					int winner = -1;
+					for (unsigned i = 0; i < players.size(); i++)
+					{
+						if (players[i].isActive())
+						{
+							if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+							{
+								players[i].incrementPoint(biggest);
+								winner = i;
+							}
+						}
+					}
+					std::cerr << "\n";
+					registerWinner(deskDeck, winner);
+					setWar(false);
+
+					return true; // the war is done
+				}
+				else
+				{
+					std::cout << "\n\tWAR AGAIN\n";
+					war = true;
+					PlayWarRound();
+
+					// WAR again
+				}
+			}
+			else
+			{
+				std::cout << "\n\tERROR\n";
+				setWar(false);
+				return false;
+			}
+		}
+	}
+	else if (players[0].isActive() && players[1].isActive())
 	{
 		std::cerr << "Here we are in player 1 and 2 isActive\n";
 		// printing
@@ -877,49 +1284,94 @@ bool App::PlayWarRound()
 		std::cerr << "Player 2 is playing:\n";
 		printDeck(players[1].getMiniPlayerDeck());
 
-		if (players[0].getMiniPlayerDeck().empty() || players[1].getMiniPlayerDeck().empty())
+		if (players[0].getPlayerDeck().empty() && players[0].getMiniPlayerDeck().empty() || players[1].getPlayerDeck().empty() && players[1].getMiniPlayerDeck().empty())
 		{
-			if (players[0].getMiniPlayerDeck().empty())
+			if (war)
 			{
-				registerWinner(deskDeck, 0);
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+
+			if (players[0].getPlayerDeck().empty())
+			{
+				registerWinner(deskDeck, 1); // its was 0
+				setWar(false);
 				return true;
 			}
-			else if (players[1].getMiniPlayerDeck().empty())
+			else if (players[1].getPlayerDeck().empty())
 			{
-				registerWinner(deskDeck, 1);
+				registerWinner(deskDeck, 0);
+				setWar(false);
 				return true;
 			}
 		}
+		else if (players[0].getMiniPlayerDeck().size() > players[1].getMiniPlayerDeck().size())
+		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+
+			registerWinner(deskDeck, 0);
+			setWar(false);
+			return true;
+		}
+		else if (players[0].getMiniPlayerDeck().size() < players[1].getMiniPlayerDeck().size())
+		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+
+			registerWinner(deskDeck, 1);
+			setWar(false);
+			return true;
+		}
 		if (players[0].getMiniPlayerDeck().back() != players[1].getMiniPlayerDeck().back())
 		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
 			Card biggest = {};
 			biggest.value = 2;
 			for (unsigned i = 0; i < players.size(); i++)
 			{
-				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+				if (players[i].isActive())
 				{
-					biggest = players[i].getMiniPlayerDeck().back();
+					if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+					{
+						biggest = players[i].getMiniPlayerDeck().back();
+					}
 				}
 			}
 
 			int winner = -1;
 			for (unsigned i = 0; i < players.size(); i++)
 			{
-				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+				if (players[i].isActive())
 				{
-					players[i].incrementPoint(biggest);
-					// setWinner(i);
-					winner = i;
+					if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+					{
+						players[i].incrementPoint(biggest);
+						winner = i;
+					}
 				}
 			}
 
 			registerWinner(deskDeck, winner);
-
-			// for (unsigned i = 0; i < players.size(); i++)
-			// {
-			// 	players[i].getMiniPlayerDeck().clear();
-			// 	players[i].setActive(false);
-			// }
+			setWar(false);
 
 			return true; // the war is done
 		}
@@ -927,6 +1379,7 @@ bool App::PlayWarRound()
 		{
 			std::cout << "\n\tWAR AGAIN\n";
 			war = true;
+
 			PlayWarRound();
 			// War again
 		}
@@ -939,49 +1392,95 @@ bool App::PlayWarRound()
 
 		std::cerr << "Player 3 is playing:\n";
 		printDeck(players[2].getMiniPlayerDeck());
-		if (players[0].getMiniPlayerDeck().empty() || players[2].getMiniPlayerDeck().empty())
+		if (players[0].getPlayerDeck().empty() && players[0].getMiniPlayerDeck().empty() || players[2].getPlayerDeck().empty() && players[2].getMiniPlayerDeck().empty())
 		{
-			if (players[0].getMiniPlayerDeck().empty())
+			if (war)
 			{
-				registerWinner(deskDeck, 0);
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+			if (players[0].getPlayerDeck().empty())
+			{
+				registerWinner(deskDeck, 2);
+				setWar(false);
 
 				return true;
 			}
-			else if (players[2].getMiniPlayerDeck().empty())
+			else if (players[2].getPlayerDeck().empty())
 			{
-				registerWinner(deskDeck, 2);
+				registerWinner(deskDeck, 0);
+				setWar(false);
+
 				return true;
 			}
 		}
+		else if (players[0].getMiniPlayerDeck().size() > players[2].getMiniPlayerDeck().size())
+		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+
+			registerWinner(deskDeck, 0);
+			setWar(false);
+			return true;
+		}
+		else if (players[0].getMiniPlayerDeck().size() < players[2].getMiniPlayerDeck().size())
+		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+
+			registerWinner(deskDeck, 2);
+			setWar(false);
+			return true;
+		}
 		if (players[0].getMiniPlayerDeck().back() != players[2].getMiniPlayerDeck().back())
 		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
 			Card biggest = {};
 			biggest.value = 2;
 			for (unsigned i = 0; i < players.size(); i++)
 			{
-				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+				if (players[i].isActive())
 				{
-					biggest = players[i].getMiniPlayerDeck().back();
+					if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+					{
+						biggest = players[i].getMiniPlayerDeck().back();
+					}
 				}
 			}
 
 			int winner = -1;
 			for (unsigned i = 0; i < players.size(); i++)
 			{
-				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+				if (players[i].isActive())
 				{
-					players[i].incrementPoint(biggest);
-					winner = i;
+					if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+					{
+						players[i].incrementPoint(biggest);
+						winner = i;
+					}
 				}
 			}
 
-			std::cerr << "\n";
 			registerWinner(deskDeck, winner);
-			// for (unsigned i = 0; i < players.size(); i++)
-			// {
-			// 	players[i].getMiniPlayerDeck().clear();
-			// 	players[i].setActive(false);
-			// }
+			setWar(false);
 
 			return true; // the war is done
 		}
@@ -1002,49 +1501,96 @@ bool App::PlayWarRound()
 
 		std::cerr << "Player 3 is playing:\n";
 		printDeck(players[2].getMiniPlayerDeck());
-		if (players[1].getMiniPlayerDeck().empty() || players[2].getMiniPlayerDeck().empty())
+		if (players[1].getPlayerDeck().empty() && players[1].getMiniPlayerDeck().empty() || players[2].getPlayerDeck().empty() && players[2].getMiniPlayerDeck().empty())
 		{
-			if (players[1].getMiniPlayerDeck().empty())
+			if (war)
 			{
-				registerWinner(deskDeck, 1);
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+
+			if (players[1].getPlayerDeck().empty())
+			{
+				registerWinner(deskDeck, 2);
+				setWar(false);
 
 				return true;
 			}
-			else if (players[2].getMiniPlayerDeck().empty())
+			else if (players[2].getPlayerDeck().empty())
 			{
-				registerWinner(deskDeck, 2);
+				registerWinner(deskDeck, 1);
+				setWar(false);
+
 				return true;
 			}
 		}
+		else if (players[1].getMiniPlayerDeck().size() > players[2].getMiniPlayerDeck().size())
+		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+
+			registerWinner(deskDeck, 1);
+			setWar(false);
+			return true;
+		}
+		else if (players[1].getMiniPlayerDeck().size() < players[2].getMiniPlayerDeck().size())
+		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
+
+			registerWinner(deskDeck, 2);
+			setWar(false);
+			return true;
+		}
 		if (players[1].getMiniPlayerDeck().back() != players[2].getMiniPlayerDeck().back())
 		{
+			if (war)
+			{
+				for (unsigned i = 0; i < dump.size(); i++)
+					deskDeck.push_back(dump[i]);
+			}
+			else
+				dump.clear();
 			Card biggest = {};
 			biggest.value = 2;
 			for (unsigned i = 0; i < players.size(); i++)
 			{
-				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+				if (players[i].isActive())
 				{
-					biggest = players[i].getMiniPlayerDeck().back();
+					if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() > biggest)
+					{
+						biggest = players[i].getMiniPlayerDeck().back();
+					}
 				}
 			}
 
 			int winner = -1;
 			for (unsigned i = 0; i < players.size(); i++)
 			{
-				if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+				if (players[i].isActive())
 				{
-					players[i].incrementPoint(biggest);
-					winner = i;
+					if (!players[i].getMiniPlayerDeck().empty() && players[i].getMiniPlayerDeck().back() == biggest)
+					{
+						players[i].incrementPoint(biggest);
+						winner = i;
+					}
 				}
 			}
 			std::cerr << "\n";
 			registerWinner(deskDeck, winner);
-
-			// for (unsigned i = 0; i < players.size(); i++)
-			// {
-			// 	players[i].getMiniPlayerDeck().clear();
-			// 	players[i].setActive(false);
-			// }
+			setWar(false);
 
 			return true; // the war is done
 		}
@@ -1060,6 +1606,7 @@ bool App::PlayWarRound()
 	else
 	{
 		std::cout << "\n\tERROR\n";
+		setWar(false);
 
 		return false;
 	}
@@ -1067,28 +1614,23 @@ bool App::PlayWarRound()
 	// tova go povtarqme dokato edna ot kartite e po golqma
 	// pehrylqme kartite na popeditelq
 	// predvijdame kyde restartiterame activitito
-	// for (unsigned i = 0; i < players.size(); i++)
-	// {
-	// 	players[i].getMiniPlayerDeck().clear();
-	// 	players[i].setActive(false);
-	// }
+	setWar(false);
 
 	return true;
 }
 void App::playRound()
 {
-	// This does not work, it doesnt transition to OVER state!!!!!!!!!!!!
-	// Potentially change isGameOver
+
 	if (isGameOver())
 	{
-		state == GameState::OVER;
+		state = GameState::OVER;
 		return;
 	}
-	round++;
+	// round++;
 
 	if (hasWar())
 	{
-		//Transition is successful, even when I changed it to OVER
+		// Transition is successful, even when I changed it to OVER
 		state = GameState::WAR;
 		for (unsigned i = 0; i < players.size(); i++)
 		{
@@ -1248,7 +1790,7 @@ void App::player1Render()
 		SDL_RenderCopy(renderer, card1Texture, nullptr, &dRectPlayer1Cards[i]);
 	}
 	// if players 0 and 1 or 0 and 2 are active its always activeplayer[0]
-	if (state == GameState::WAR && players[0].isActive())
+	if (state == GameState::WAR && players[0].isActive() && !players[0].getMiniPlayerDeck().empty())
 	{
 		SDL_Rect dRectPlayer1MiniCards[9] = {};
 
@@ -1260,7 +1802,6 @@ void App::player1Render()
 		}
 	}
 
-	// players[0].setActive(false);
 	dRectButtonDeal = {80, 350, 70, 30};
 	dRectButtonStart = {0, 350, 70, 30};
 	SDL_RenderFillRect(renderer, &dRectButtonDeal);
@@ -1281,7 +1822,7 @@ void App::player2Render()
 		dRectPlayer2Cards[i] = {220, 400 + i * 2, tw, th};
 		SDL_RenderCopy(renderer, card1Texture, nullptr, &dRectPlayer2Cards[i]);
 	}
-	if (state == GameState::WAR && players[1].isActive())
+	if (state == GameState::WAR && players[1].isActive() && !players[1].getMiniPlayerDeck().empty())
 	{
 		SDL_Rect dRectPlayer2MiniCards[9] = {};
 		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
@@ -1312,7 +1853,7 @@ void App::player3Render()
 		dRectPlayer3Cards[i] = {800 - tw, 150 + i * 2, tw, th};
 		SDL_RenderCopy(renderer, card1Texture, nullptr, &dRectPlayer3Cards[i]);
 	}
-	if (state == GameState::WAR && players[2].isActive())
+	if (state == GameState::WAR && players[2].isActive() && !players[2].getMiniPlayerDeck().empty())
 	{
 		// std::cerr << std::boolalpha << players[2].isActive();
 		SDL_Rect dRectPlayer3MiniCards[9] = {};
@@ -1336,7 +1877,31 @@ void App::player3Render()
 
 void App::thrownCardsRender()
 {
-	if (players[0].cntPlayerDeck() == 0)
+	if (players[0].cntPlayerDeck() == 0 && players[1].cntPlayerDeck() == 0)
+	{
+		SDL_Rect dRectCard3Thrown;
+		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
+		dRectCard3Thrown = {400, 100, tw, th};
+		SDL_RenderCopy(renderer, c3.texture, nullptr, &dRectCard3Thrown);
+		return;
+	}
+	else if (players[0].cntPlayerDeck() == 0 && players[2].cntPlayerDeck() == 0)
+	{
+		SDL_Rect dRectCard2Thrown;
+		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
+		dRectCard2Thrown = {300, 200, tw, th};
+		SDL_RenderCopy(renderer, c2.texture, nullptr, &dRectCard2Thrown);
+		return;
+	}
+	else if (players[1].cntPlayerDeck() == 0 && players[2].cntPlayerDeck() == 0)
+	{
+		SDL_Rect dRectCard1Thrown;
+		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
+		dRectCard1Thrown = {400, 100, tw, th};
+		SDL_RenderCopy(renderer, c1.texture, nullptr, &dRectCard1Thrown);
+		return;
+	}
+	else if (players[0].cntPlayerDeck() == 0)
 	{
 		SDL_Rect dRectCard2Thrown;
 		SDL_Rect dRectCard3Thrown;
@@ -1437,18 +2002,19 @@ void App::cardsCountMessage()
 
 void App::winnerMessage()
 {
-	std::string winnerMessage = "P: " + std::to_string(getWinner() + 1) + " wins!";
+	std::string winnerMessage = "Player " + std::to_string(getWinner() + 1) + " wins! "
+																			  "Press Start for a new game!";
 	SDL_Color textColor = {255, 255, 255, 255};
 	SDL_Surface *winnerSurface = TTF_RenderText_Solid(font, winnerMessage.c_str(), textColor);
 	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, winnerSurface);
 
-	SDL_Rect warMessagePos;
-	warMessagePos.x = 550;
-	warMessagePos.y = 475;
-	warMessagePos.h = 40;
-	warMessagePos.w = 80;
+	SDL_Rect winMessagePos;
+	winMessagePos.x = 50;
+	winMessagePos.y = 75;
+	winMessagePos.h = 85;
+	winMessagePos.w = 660;
 
-	SDL_RenderCopy(renderer, Message, NULL, &warMessagePos);
+	SDL_RenderCopy(renderer, Message, NULL, &winMessagePos);
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(winnerSurface);
 }
@@ -1471,7 +2037,7 @@ void App::warMessage()
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(warSurface);
 }
-void App::statsMessage(std::vector<Player> &players)
+void App::statsMessage()
 {
 	// Stats message;
 	std::string statsMessage;
@@ -1497,7 +2063,7 @@ void App::statsMessage(std::vector<Player> &players)
 	SDL_FreeSurface(statsSurface);
 }
 
-void App::updateStatsXML(std::vector<Player> &players)
+void App::updateStatsXML()
 {
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file("/home/default/asparuh_project/stats.xml");
@@ -1516,7 +2082,7 @@ void App::updateStatsXML(std::vector<Player> &players)
 	}
 }
 
-void App::saveStatsXML(std::vector<Player> &players)
+void App::saveStatsXML()
 {
 	pugi::xml_document doc;
 	auto root = doc.append_child("Stats");
@@ -1583,12 +2149,15 @@ void App::restartGame()
 	buttonPressedDeal.push_back(buttonPressedDeal2);
 	buttonPressedDeal.push_back(buttonPressedDeal3);
 
-	state = GameState::START;
+	state = GameState::PLAYING;
+	clearTable();
 	buttonPressed = false;
 	showStats = false;
 	isRoundPlayed = false;
+	setWar(false);
+	dump.clear();
 	SDL_SetTextureAlphaMod(textStartTexture, 255);
-	updateStatsXML(players);
+	updateStatsXML();
 }
 
 void App::setWar(bool war)

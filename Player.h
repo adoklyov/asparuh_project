@@ -27,12 +27,17 @@ public:
 	Card getCurrentCard() const;
 	void setPlayerDeck();
 	void setCard();
+	void setFlag(bool f);
+	bool getFlag() const;
+
+
 
 	void setActive(bool isActive);
 	bool isActive() const;
 
 private:
 	bool active = false;
+	bool flag = false;
 	unsigned int points = 0;
 	int wins = 0;
 	int losses = 0;

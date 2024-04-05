@@ -60,7 +60,17 @@ int Player::getWins() const
 
 void Player::setWins(int w)
 {
-	wins = w;
+	wins += w;
+}
+
+bool Player::getFlag() const
+{
+	return flag;
+}
+
+void Player::setFlag(bool f)
+{
+	this->flag = f;
 }
 
 int Player::getLosses() const
@@ -70,7 +80,7 @@ int Player::getLosses() const
 
 void Player::setLosses(int l)
 {
-	losses = l;
+	losses += l;
 }
 
 void Player::dealCards(Deck &deck)

@@ -20,6 +20,8 @@ class App
 	friend bool operator<(const Card &card1, const Card &card2);
 	friend bool operator==(const Card &card1, const Card &card2);
 	friend bool operator!=(const Card& card1, const Card& card2);
+	friend bool operator<=(const Card& card1 , const Card& card2);
+	friend bool operator>=(const Card& card1 , const Card& card2);
 
 
 public:
@@ -62,6 +64,8 @@ public:
 	void printDeck(const std::vector<Card> &deskDeck) const;
 	void playWarRound();
 	void playRound();
+	void clearTable();
+
 	bool PlayWarRound();
 	bool isGameOver();
 	void printPlayer(unsigned i);
@@ -72,13 +76,13 @@ public:
 	int calcTiePlayersResizable(const Card &c, std::vector<Player> players);
 
 	// stats message
-	void statsMessage(std::vector<Player> &players);
+	void statsMessage();
 
 	bool showStats;
 
 	// XML
-	void updateStatsXML(std::vector<Player> &players);
-	void saveStatsXML(std::vector<Player> &players);
+	void updateStatsXML();
+	void saveStatsXML();
 
 	// game restart
 	void restartGame();
@@ -95,6 +99,7 @@ private:
 	Player *player1;
 	Player *player2;
 	Player *player3;
+	std::vector<Card> dump;
 	std::vector<Player> players;
 	bool isRoundPlayed;
 	unsigned short round;
@@ -122,9 +127,6 @@ private:
 	Card c1;
 	Card c2;
 	Card c3;
-	Card warCardPlayer1;
-	Card warCardPlayer2;
-	Card warCardPlayer3;
 	// textures
 	// player 1 cards Textures
 	SDL_Texture *card1Texture;
@@ -132,6 +134,8 @@ private:
 	SDL_Texture *warCardTexture;
 	// background texture
 	SDL_Texture *backgroundTexture;
+	//start from Over state texture
+	SDL_Texture* textStartOverTexture; 
 	// start texture player1
 	SDL_Texture *textStartTexture;
 	// deal texture player1
@@ -154,6 +158,8 @@ private:
 	SDL_Texture *textPlayer3Texture;
 	// Rects
 	// buttons
+	//start from over state
+	SDL_Rect dRectStartOver;
 	// start
 	SDL_Rect dRectButtonStart;
 	SDL_Rect dRectButtonStartPlayer2;
