@@ -122,6 +122,7 @@ void App::initDeck()
 
 	for (unsigned i = 0; i < players.size(); i++)
 	{
+		// players[i].setPlayerDeck();
 		players[i].dealCards(*deck);
 	}
 }
@@ -2162,12 +2163,12 @@ void App::restartGame()
 
 void App::setWar(bool war)
 {
-	war = war;
+	this->war = war;
 }
 
 bool App::getWar() const
 {
-	return war;
+	return this->war;
 }
 
 void App::setWinner(int winner)
@@ -2179,3 +2180,4 @@ int App::getWinner() const
 {
 	return winner;
 }
+

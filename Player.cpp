@@ -183,38 +183,20 @@ Card Player::getCurrentCard() const
 }
 
 void Player::setPlayerDeck()
-{
+{	std::string arrSuit[4] = {"clubs", "diamonds", "hearts", "spades"};
+	std::string arrFace[13] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"};
+
 	Card c1;
 	c1.value = 10;
-	Card c2;
-	c2.value = 10;
-	Card c3;
-	c3.value = 10;
-	Card c4;
-	c4.value = 10;
-	Card c5;
-	c5.value = 10;
-	Card c6;
-	c6.value = 10;
-	Card c7;
-	c7.value = 10;
-	Card c8;
-	c8.value = 10;
-	Card c9;
-	c9.value = 10;
-	Card c10;
-	c10.value = 10;
 
 	playerDeck.push_back(c1);
-	playerDeck.push_back(c2);
-	playerDeck.push_back(c3);
-	playerDeck.push_back(c4);
-	playerDeck.push_back(c5);
-	playerDeck.push_back(c6);
-	playerDeck.push_back(c7);
-	playerDeck.push_back(c8);
-	playerDeck.push_back(c9);
-	playerDeck.push_back(c10);
+	for (unsigned i = 1; i < 10; i++)
+	{
+		Card c;
+		c.value = rand()%10;
+		playerDeck.push_back(c);
+
+	}
 }
 
 void Player::setCard()

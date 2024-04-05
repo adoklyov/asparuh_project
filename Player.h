@@ -30,8 +30,6 @@ public:
 	void setFlag(bool f);
 	bool getFlag() const;
 
-
-
 	void setActive(bool isActive);
 	bool isActive() const;
 
