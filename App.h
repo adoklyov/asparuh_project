@@ -11,7 +11,7 @@ enum GameState
 	START,
 	PLAYING,
 	WAR,
-	OVER
+	OVER,
 };
 
 class App
@@ -31,7 +31,6 @@ public:
 	bool init(const std::string title, int xpos, int ypos, int width, int height, int flags);
 	bool ttf_init();
 	void render();
-	void update();
 	void loadTextureOnDeck();
 	void drawTexture(SDL_Texture *tex, int x, int y, int width, int heigth, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	SDL_Texture *loadTexture(const std::string filePath, SDL_Renderer *renderer);
@@ -47,6 +46,7 @@ public:
 	// War message
 	void warMessage();
 	// player winner message
+	void winnerOverMessage();
 	void winnerMessage();
 
 	void handleEvents();
@@ -62,14 +62,12 @@ public:
 	Card getBiggestPlayerCard();
 	unsigned findPlayerWithCard(const Card &c);
 	void printDeck(const std::vector<Card> &deskDeck) const;
-	void playWarRound();
 	void playRound();
 	void clearTable();
 
 	bool PlayWarRound();
 	bool isGameOver();
 	void printPlayer(unsigned i);
-	void playWarRoundTest();
 	unsigned playDuoNormalRound(Player &player1, Player &player2, std::vector<Card> &deskDeck);
 	Card getBiggestWarCard(Player &player1, Player &player2);
 
@@ -107,7 +105,6 @@ private:
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
 	void initDeck();
-	void setDealButton(bool pressed);
 
 	void setButtonPressedDeal1(bool pr);
 	void setButtonPressedDeal2(bool pr);
@@ -116,8 +113,6 @@ private:
 	bool getButtonPressedDeal1() const;
 	bool getButtonPressedDeal2() const;
 	bool getButtonPressedDeal3() const;
-	bool getDealButton() const;
-	bool buttonPressed;
 	std::vector<bool> buttonPressedDeal;
 	bool buttonPressedDeal1;
 	bool buttonPressedDeal2;
@@ -158,8 +153,6 @@ private:
 	SDL_Texture *textPlayer3Texture;
 	// Rects
 	// buttons
-	//start from over state
-	SDL_Rect dRectStartOver;
 	// start
 	SDL_Rect dRectButtonStart;
 	SDL_Rect dRectButtonStartPlayer2;
@@ -168,18 +161,6 @@ private:
 	SDL_Rect dRectButtonDeal;
 	SDL_Rect dRectButtonDealPlayer2;
 	SDL_Rect dRectButtonDealPlayer3;
-	// labels
-	SDL_Rect dRectTextStart;
-	SDL_Rect dRectTextStartPlayer2;
-	SDL_Rect dRectTextStartPlayer3;
-
-	SDL_Rect dRectTextDeal;
-	SDL_Rect dRectTextDealPlayer2;
-	SDL_Rect dRectTextDealPlayer3;
-
-	SDL_Rect dRectTextPlayer1;
-	SDL_Rect dRectTextPlayer2;
-	SDL_Rect dRectTextPlayer3;
 
 	// stats texture
 	SDL_Texture *statsTexture;
@@ -193,11 +174,6 @@ private:
 	SDL_Texture *resetTexture;
 	// reset
 	SDL_Rect reset;
-
-	SDL_Rect dRectTextError;
-	// background
-	SDL_Rect dRectBackground;
-
 	// TTF Font
 	TTF_Font *font;
 

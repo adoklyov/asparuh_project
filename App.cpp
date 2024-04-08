@@ -30,7 +30,6 @@ App::App()
 	buttonPressedDeal.push_back(buttonPressedDeal3);
 
 	state = GameState::START;
-	buttonPressed = false;
 	showStats = false;
 	isRoundPlayed = false;
 }
@@ -39,11 +38,11 @@ App::~App()
 {
 	DestroySDL();
 }
-bool operator>=(const Card& card1 , const Card& card2)
+bool operator>=(const Card &card1, const Card &card2)
 {
 	return !(card1.value < card2.value);
 }
-bool operator<=(const Card& card1 , const Card& card2)
+bool operator<=(const Card &card1, const Card &card2)
 {
 	return !(card1.value > card2.value);
 }
@@ -92,9 +91,6 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 
 	SDL_Surface *tempSurface = getSurface("/home/default/asparuh_project/assets/cards/background2.jpg");
 	backgroundTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-	dRectBackground = {0, 0, w, h};
 
 	SDL_Texture *backCardTexture = loadTexture("/home/default/asparuh_project/assets/cards/backCard_120.png", renderer);
 	if (!backCardTexture)
@@ -106,7 +102,7 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 
 	SDL_SetTextureAlphaMod(card1Texture, 255);
 
-	SDL_QueryTexture(backCardTexture, 0, 0, &tw, &th);
+	// SDL_QueryTexture(backCardTexture, 0, 0, &tw, &th);
 
 	initDeck();
 
@@ -142,32 +138,32 @@ bool App::ttf_init()
 		return false;
 
 	SDL_Surface *tempSurfaceText = nullptr;
-
+	SDL_Color blackColor = {0x00, 0x00, 0x00, 0xFF};
 	// texture start from Over state
 	tempSurfaceText = TTF_RenderText_Blended(fontStartOver, "Start", {0xAB, 0xCF, 0xFD, 0xFF});
 	textStartOverTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 	// texture start
-	tempSurfaceText = TTF_RenderText_Blended(font1, "Start", {0x00, 0x00, 0x00, 0xFF});
+	tempSurfaceText = TTF_RenderText_Blended(font1, "Start", blackColor);
 	textStartTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
 	// texture deal
-	tempSurfaceText = TTF_RenderText_Blended(font1, "Deal", {0x00, 0x00, 0x00, 0xFF});
+	tempSurfaceText = TTF_RenderText_Blended(font1, "Deal", blackColor);
 	textDealTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
 	// texture stats
-	tempSurfaceText = TTF_RenderText_Blended(font1, "Stats", {0x00, 0x00, 0x00, 0xFF});
+	tempSurfaceText = TTF_RenderText_Blended(font1, "Stats", blackColor);
 	statsTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
 	// texture all deal
-	tempSurfaceText = TTF_RenderText_Blended(font1, "All Deal", {0x00, 0x00, 0x00, 0xFF});
+	tempSurfaceText = TTF_RenderText_Blended(font1, "All Deal", blackColor);
 	allDealTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
 	// texture reset
-	tempSurfaceText = TTF_RenderText_Blended(font1, "Reset", {0x00, 0x00, 0x00, 0xFF});
+	tempSurfaceText = TTF_RenderText_Blended(font1, "Reset", blackColor);
 	resetTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
 	// texture error
-	tempSurfaceText = TTF_RenderText_Blended(font2, "Cannot Click", {0x00, 0x00, 0x00, 0xFF});
+	tempSurfaceText = TTF_RenderText_Blended(font2, "Cannot Click", blackColor);
 	textErrorTexture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
 
 	// label player1
@@ -181,49 +177,6 @@ bool App::ttf_init()
 	// label player3
 	tempSurfaceText = TTF_RenderText_Blended(fontPlayer, "Player 3", {0xFF, 0xCC, 0xAA, 0xFF});
 	textPlayer3Texture = SDL_CreateTextureFromSurface(renderer, tempSurfaceText);
-
-	// getting and setting label start for over stare
-	SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
-	dRectStartOver = {330, 270, tw, th};
-	// getting and setting label textStartTexture for player1
-	SDL_QueryTexture(textStartTexture, 0, 0, &tw, &th);
-	dRectTextStart = {5, 355, tw, th};
-
-	// getting and setting label textDealTexture for player1
-	SDL_QueryTexture(textDealTexture, 0, 0, &tw, &th);
-	dRectTextDeal = {95, 355, tw, th};
-
-	// getting and setting label name for player1
-	SDL_QueryTexture(textPlayer1Texture, 0, 0, &tw, &th);
-	dRectTextPlayer1 = {0, 100, tw, th};
-
-	// getting and setting label textStartTexture for player2
-	SDL_QueryTexture(textStartTexture, 0, 0, &tw, &th);
-	dRectTextStartPlayer2 = {360, 455, tw, th};
-
-	// getting and setting label textDealTexture for player2
-	SDL_QueryTexture(textDealTexture, 0, 0, &tw, &th);
-	dRectTextDealPlayer2 = {365, 505, tw, th};
-
-	// getting and setting label name for player2
-	SDL_QueryTexture(textPlayer2Texture, 0, 0, &tw, &th);
-	dRectTextPlayer2 = {220, 350, tw, th};
-
-	// getting and setting label textStartTexture for player3
-	SDL_QueryTexture(textStartTexture, 0, 0, &tw, &th);
-	dRectTextStartPlayer3 = {800 - tw - 5 - 90, 355, tw, th};
-
-	// getting and setting label textDealTexture for player3
-	SDL_QueryTexture(textDealTexture, 0, 0, &tw, &th);
-	dRectTextDealPlayer3 = {800 - tw - 5, 355, tw, th};
-
-	// getting and setting label name for player3
-	SDL_QueryTexture(textPlayer3Texture, 0, 0, &tw, &th);
-	dRectTextPlayer3 = {800 - tw, 100, tw, th};
-
-	// getting and setting Error
-	SDL_QueryTexture(textErrorTexture, 0, 0, &tw, &th);
-	dRectTextError = {300, 50, tw, th};
 
 	SDL_FreeSurface(tempSurfaceText);
 	TTF_CloseFont(font1);
@@ -272,9 +225,7 @@ void App::clearTable()
 		{
 			players[i].getMiniPlayerDeck()[j].texture = nullptr;
 		}
-		
 	}
-	
 }
 
 void App::render()
@@ -282,32 +233,32 @@ void App::render()
 	statsMessage();
 	SDL_RenderClear(renderer);
 	// background
-	SDL_RenderCopy(renderer, backgroundTexture, nullptr, &dRectBackground);
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	drawTexture(backgroundTexture, 0, 0, w, h, SDL_FLIP_NONE);
 	// statsMessage();
 	statsButton = {730, 570, 70, 30};
 	SDL_RenderFillRect(renderer, &statsButton);
-	SDL_RenderCopy(renderer, statsTexture, nullptr, &statsButton);
+	drawTexture(statsTexture, 730, 570, 70, 30, SDL_FLIP_NONE);
 	// all deal
-	allDeal = {730, 540, 70, 30};
+	allDeal = {730, 539, 70, 30};
 	SDL_RenderFillRect(renderer, &allDeal);
-	SDL_RenderCopy(renderer, allDealTexture, nullptr, &allDeal);
+	drawTexture(allDealTexture, 730, 539, 70, 30, SDL_FLIP_NONE);
 	// reset
-	reset = {730, 510, 70, 30};
+	reset = {730, 508, 70, 30};
 	SDL_RenderFillRect(renderer, &reset);
-	SDL_RenderCopy(renderer, resetTexture, nullptr, &reset);
+	drawTexture(resetTexture, 730, 508, 70, 30, SDL_FLIP_NONE);
 
 	// //Winner Message test rendering
-	// winnerMessage();
 
 	if (GameState::START == state)
 	{
 		dRectButtonStart = {0, 350, 70, 30};
 		SDL_RenderFillRect(renderer, &dRectButtonStart);
-		SDL_RenderCopy(renderer, textStartTexture, nullptr, &dRectTextStart);
-
-		SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
-		// SDL_RenderCopy(renderer, textStartOverTexture, NULL, &dRectStartOver);
+		SDL_QueryTexture(textStartTexture, 0, 0, &tw, &th);
+		drawTexture(textStartTexture, 5, 355, tw, th, SDL_FLIP_NONE);
 	}
+
 	else if (GameState::PLAYING == state)
 	{
 		thrownCardsRender();
@@ -315,9 +266,7 @@ void App::render()
 		player2Render();
 		player3Render();
 		cardsCountMessage();
-
-		buttonPressed = true;
-		setDealButton(buttonPressed);
+		winnerMessage();
 	}
 	else if (GameState::WAR == state)
 	{
@@ -327,13 +276,14 @@ void App::render()
 		player2Render();
 		player3Render();
 		cardsCountMessage();
+		winnerMessage();
+
 		warMessage();
 	}
 	else if (GameState::OVER == state)
 	{
-		// dRectStartOver = {330, 270, 70, 30};
-		// SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
-		SDL_RenderCopy(renderer, textStartOverTexture, NULL, &dRectStartOver);
+		SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
+		drawTexture(textStartOverTexture, 330, 270, tw, th, SDL_FLIP_NONE);
 		if (players[0].getFlag())
 			players[0].setLosses(1);
 		else if (players[1].getFlag())
@@ -345,7 +295,7 @@ void App::render()
 		players[2].setFlag(false);
 
 		saveStatsXML();
-		winnerMessage();
+		winnerOverMessage();
 	}
 
 	if (showStats)
@@ -402,29 +352,26 @@ void App::handleEvents()
 		break;
 		case SDL_MOUSEWHEEL:
 		{
-			if (true)
+			winnerMessage();
+			players[0].setTurn(true);
+			players[1].setTurn(true);
+			players[2].setTurn(true);
+
+			c1 = players[0].getPlayerDeck().front();
+			c2 = players[1].getPlayerDeck().front();
+			c3 = players[2].getPlayerDeck().front();
+
+			isRoundPlayed = true;
+			saveStatsXML();
+			std::cerr << "---------------------------------\n";
+			int sum = 0;
+			for (unsigned i = 0; i < players.size(); i++)
 			{
-
-				players[0].setTurn(true);
-				players[1].setTurn(true);
-				players[2].setTurn(true);
-
-				c1 = players[0].getPlayerDeck().front();
-				c2 = players[1].getPlayerDeck().front();
-				c3 = players[2].getPlayerDeck().front();
-
-				isRoundPlayed = true;
-				saveStatsXML();
-				std::cerr << "---------------------------------\n";
-				int sum = 0;
-				for (unsigned i = 0; i < players.size(); i++)
-				{
-					sum += players[i].cntPlayerDeck();
-				}
-				std::cerr << "\nSUM " << sum;
-				std::cerr << "\nnew  round\n";
-				playRound();
+				sum += players[i].cntPlayerDeck();
 			}
+			std::cerr << "\nSUM " << sum;
+			std::cerr << "\nnew  round\n";
+			playRound();
 		};
 		break;
 		case SDL_MOUSEBUTTONUP:
@@ -436,6 +383,8 @@ void App::handleEvents()
 				// Waiting to press a button
 
 				SDL_GetMouseState(&msx, &msy);
+				SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
+				SDL_Rect dRectStartOver = {330, 270, tw, th};
 				if (isClickableRectClicked(&dRectStartOver, mouseDownX, mouseDownY, msx, msy) && state == GameState::OVER)
 				{
 					restartGame();
@@ -447,7 +396,10 @@ void App::handleEvents()
 						std::cerr << "cannot click start again"
 								  << "\n";
 						SDL_SetTextureAlphaMod(textErrorTexture, 255);
-						SDL_RenderCopy(renderer, textErrorTexture, nullptr, &dRectTextError);
+
+						SDL_QueryTexture(textErrorTexture, 0, 0, &tw, &th);
+						drawTexture(textErrorTexture, 300, 50, tw, th, SDL_FLIP_NONE);
+
 						SDL_RenderPresent(renderer);
 						SDL_Delay(1000);
 
@@ -467,14 +419,33 @@ void App::handleEvents()
 				{
 					// Having a boolean helps with indicating whether there is a war or not
 					// a possible if structure here
+					if (players[0].cntPlayerDeck() == 0)
+					{
+						players[0].setTurn(true);
+						setButtonPressedDeal1(true);
+						setButtonPressedDeal2(false);
+						setButtonPressedDeal3(false);
+					}
+					else if (players[1].cntPlayerDeck() == 0)
+					{
+						players[1].setTurn(true);
+						setButtonPressedDeal1(false);
+						setButtonPressedDeal2(true);
+						setButtonPressedDeal3(false);
+					}
+					else if (players[2].cntPlayerDeck() == 0)
+					{
+						players[2].setTurn(true);
+						setButtonPressedDeal1(false);
+						setButtonPressedDeal2(false);
+						setButtonPressedDeal3(true);
+					}
 					if (isClickableRectClicked(&dRectButtonDeal, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal1())
 					{
 						clearTable();
 						players[0].setTurn(true);
 
 						c1 = players[0].getPlayerDeck().front();
-						buttonPressed = true;
-						setDealButton(buttonPressed);
 						setButtonPressedDeal1(true);
 						setButtonPressedDeal2(false);
 					}
@@ -483,8 +454,6 @@ void App::handleEvents()
 
 						players[1].setTurn(true);
 						c2 = players[1].getPlayerDeck().front();
-						buttonPressed = true;
-						setDealButton(buttonPressed);
 						setButtonPressedDeal3(false);
 					}
 					else if (isClickableRectClicked(&dRectButtonDealPlayer3, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal3())
@@ -492,11 +461,14 @@ void App::handleEvents()
 						players[2].setTurn(true);
 
 						c3 = players[2].getPlayerDeck().front();
-						buttonPressed = true;
-						setDealButton(buttonPressed);
 						setButtonPressedDeal1(false);
 						setButtonPressedDeal2(true);
 						setButtonPressedDeal3(true);
+					}
+					else if (GameState::WAR == state && isClickableRectClicked(&dRectButtonDeal, mouseDownX, mouseDownY, msx, msy))
+					{
+						state = GameState::PLAYING;
+						isRoundPlayed = false;
 					}
 					if (true == players[0].getTurn() && true == players[1].getTurn() && true == players[2].getTurn())
 					{
@@ -546,10 +518,6 @@ void App::handleEvents()
 					std::cerr << "\nSUM " << sum;
 					std::cerr << "\nnew  round\n";
 					playRound();
-					// for (unsigned i = 0; i < 5; ++i)
-					// {
-					// 	playRound();
-					// }
 				}
 				else if (isClickableRectClicked(&reset, mouseDownX, mouseDownY, msx, msy))
 				{
@@ -567,24 +535,24 @@ void App::handleEvents()
 		}
 	}
 }
-bool App::registerWinner(std::vector<Card> &deskDeck, unsigned winner)
+
+void App::winnerMessage()
 {
-	std::cerr << "Winner is: " << winner + 1 << '\n';
-	std::string warMessage = "Winner is: " + std::to_string(winner);
+	std::string warMessage = "Winner is: " + std::to_string(winner + 1);
 	SDL_Color textColor = {255, 255, 255, 255};
 	SDL_Surface *warSurface = TTF_RenderText_Solid(font, warMessage.c_str(), textColor);
 	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, warSurface);
 
-	SDL_Rect warMessagePos;
-	warMessagePos.x = 400;
-	warMessagePos.y = 300;
-	warMessagePos.h = 40;
-	warMessagePos.w = 80;
-
-	SDL_RenderCopy(renderer, Message, NULL, &warMessagePos);
+	SDL_QueryTexture(Message, 0, 0, &tw, &th);
+	drawTexture(Message, 500, 60, tw, th, SDL_FLIP_NONE);
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(warSurface);
+}
 
+bool App::registerWinner(std::vector<Card> &deskDeck, unsigned winner)
+{
+	std::cerr << "Winner is: " << winner + 1 << '\n';
+	this->winner = winner;
 	for (unsigned i = 0; i < deskDeck.size(); i++)
 	{
 		players[winner].getPlayerDeck().push_back(deskDeck[i]);
@@ -690,7 +658,7 @@ unsigned App::getWinner()
 	{
 		return (unsigned)players.size(); // invalid player
 	}
-	Card c = getBiggestPlayerCard(); // bug: does not compare the right cards, comparing the player's decks but the cards are already pulled
+	Card c = getBiggestPlayerCard();
 	return findPlayerWithCard(c);
 }
 void App::printDeck(const std::vector<Card> &deskDeck) const
@@ -1621,9 +1589,6 @@ bool App::PlayWarRound()
 		return false;
 	}
 
-	// tova go povtarqme dokato edna ot kartite e po golqma
-	// pehrylqme kartite na popeditelq
-	// predvijdame kyde restartiterame activitito
 	setWar(false);
 
 	return true;
@@ -1753,10 +1718,6 @@ bool App::isRunning()
 	return running;
 }
 
-void App::setDealButton(bool pressed)
-{
-	buttonPressed = pressed;
-}
 void App::setButtonPressedDeal1(bool pr)
 {
 	buttonPressedDeal[0] = pr;
@@ -1781,10 +1742,6 @@ bool App::getButtonPressedDeal3() const
 {
 	return buttonPressedDeal[2];
 }
-bool App::getDealButton() const
-{
-	return buttonPressed;
-}
 // Player 1 Cards
 void App::player1Render()
 {
@@ -1792,23 +1749,18 @@ void App::player1Render()
 
 	int numCards = players[0].cntPlayerDeck();
 
-	SDL_Rect dRectPlayer1Cards[PLAYERS_RENDERING_CARDS_CNT] = {};
-
 	for (int i = 0; i < numCards; i++)
 	{
-		dRectPlayer1Cards[i] = {0, 150 + i * 2, tw, th};
-		SDL_RenderCopy(renderer, card1Texture, nullptr, &dRectPlayer1Cards[i]);
+		drawTexture(card1Texture, 0, 150 + i * 2, tw, th, SDL_FLIP_NONE);
 	}
+
 	// if players 0 and 1 or 0 and 2 are active its always activeplayer[0]
 	if (state == GameState::WAR && players[0].isActive() && !players[0].getMiniPlayerDeck().empty())
 	{
-		SDL_Rect dRectPlayer1MiniCards[9] = {};
-
 		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
 		for (int i = 0; i < players[0].getMiniPlayerDeck().size(); i++)
 		{
-			dRectPlayer1MiniCards[i] = {200, 120 + i * 20, tw, th};
-			SDL_RenderCopy(renderer, players[0].getMiniPlayerDeck()[i].texture, nullptr, &dRectPlayer1MiniCards[i]);
+			drawTexture(players[0].getMiniPlayerDeck()[i].texture, 200, 120 + i * 20, tw, th, SDL_FLIP_NONE);
 		}
 	}
 
@@ -1816,9 +1768,15 @@ void App::player1Render()
 	dRectButtonStart = {0, 350, 70, 30};
 	SDL_RenderFillRect(renderer, &dRectButtonDeal);
 	SDL_RenderFillRect(renderer, &dRectButtonStart);
-	SDL_RenderCopy(renderer, textStartTexture, nullptr, &dRectTextStart);
-	SDL_RenderCopy(renderer, textDealTexture, nullptr, &dRectTextDeal);
-	SDL_RenderCopy(renderer, textPlayer1Texture, nullptr, &dRectTextPlayer1);
+
+	SDL_QueryTexture(textStartTexture, 0, 0, &tw, &th);
+	drawTexture(textStartTexture, 5, 355, tw, th, SDL_FLIP_NONE);
+
+	SDL_QueryTexture(textDealTexture, 0, 0, &tw, &th);
+	drawTexture(textDealTexture, 95, 355, tw, th, SDL_FLIP_NONE);
+
+	SDL_QueryTexture(textPlayer1Texture, 0, 0, &tw, &th);
+	drawTexture(textPlayer1Texture, 0, 100, tw, th, SDL_FLIP_NONE);
 }
 
 // Player 2 Cards
@@ -1826,29 +1784,32 @@ void App::player2Render()
 {
 	SDL_QueryTexture(card1Texture, 0, 0, &tw, &th);
 	int numCards = players[1].cntPlayerDeck();
-	SDL_Rect dRectPlayer2Cards[PLAYERS_RENDERING_CARDS_CNT] = {};
 	for (int i = 0; i < numCards; i++)
 	{
-		dRectPlayer2Cards[i] = {220, 400 + i * 2, tw, th};
-		SDL_RenderCopy(renderer, card1Texture, nullptr, &dRectPlayer2Cards[i]);
+		drawTexture(card1Texture, 220, 400 + i * 2, tw, th, SDL_FLIP_NONE);
 	}
 	if (state == GameState::WAR && players[1].isActive() && !players[1].getMiniPlayerDeck().empty())
 	{
-		SDL_Rect dRectPlayer2MiniCards[9] = {};
 		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
 		for (int i = 0; i < players[1].getMiniPlayerDeck().size(); i++)
 		{
-			dRectPlayer2MiniCards[i] = {300, 220 + i * 20, tw, th};
-			SDL_RenderCopy(renderer, players[1].getMiniPlayerDeck()[i].texture, nullptr, &dRectPlayer2MiniCards[i]);
+			drawTexture(players[1].getMiniPlayerDeck()[i].texture, 300, 220 + i * 20, tw, th, SDL_FLIP_NONE);
 		}
 	}
 	dRectButtonStartPlayer2 = {350, 450, 70, 30};
+
 	dRectButtonDealPlayer2 = {350, 500, 70, 30};
 	SDL_RenderFillRect(renderer, &dRectButtonStartPlayer2);
 	SDL_RenderFillRect(renderer, &dRectButtonDealPlayer2);
-	SDL_RenderCopy(renderer, textStartTexture, nullptr, &dRectTextStartPlayer2);
-	SDL_RenderCopy(renderer, textDealTexture, nullptr, &dRectTextDealPlayer2);
-	SDL_RenderCopy(renderer, textPlayer2Texture, nullptr, &dRectTextPlayer2);
+
+	SDL_QueryTexture(textStartTexture, 0, 0, &tw, &th);
+	drawTexture(textStartTexture, 360, 455, tw, th, SDL_FLIP_NONE);
+
+	SDL_QueryTexture(textDealTexture, 0, 0, &tw, &th);
+	drawTexture(textDealTexture, 365, 505, tw, th, SDL_FLIP_NONE);
+
+	SDL_QueryTexture(textPlayer2Texture, 0, 0, &tw, &th);
+	drawTexture(textPlayer2Texture, 220, 350, tw, th, SDL_FLIP_NONE);
 }
 
 // Player 3 Cards
@@ -1857,21 +1818,16 @@ void App::player3Render()
 	// player 3 render in war of 3
 	SDL_QueryTexture(card1Texture, 0, 0, &tw, &th);
 	int numCards = players[2].cntPlayerDeck();
-	SDL_Rect dRectPlayer3Cards[PLAYERS_RENDERING_CARDS_CNT] = {};
 	for (int i = 0; i < numCards; i++)
 	{
-		dRectPlayer3Cards[i] = {800 - tw, 150 + i * 2, tw, th};
-		SDL_RenderCopy(renderer, card1Texture, nullptr, &dRectPlayer3Cards[i]);
+		drawTexture(card1Texture, 800 - tw, 150 + i * 2, tw, th, SDL_FLIP_NONE);
 	}
 	if (state == GameState::WAR && players[2].isActive() && !players[2].getMiniPlayerDeck().empty())
 	{
-		// std::cerr << std::boolalpha << players[2].isActive();
-		SDL_Rect dRectPlayer3MiniCards[9] = {};
 		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
 		for (int i = 0; i < players[2].getMiniPlayerDeck().size(); i++)
 		{
-			dRectPlayer3MiniCards[i] = {400, 120 + i * 20, tw, th};
-			SDL_RenderCopy(renderer, players[2].getMiniPlayerDeck()[i].texture, nullptr, &dRectPlayer3MiniCards[i]);
+			drawTexture(players[2].getMiniPlayerDeck()[i].texture, 400, 120 + i * 20, tw, th, SDL_FLIP_NONE);
 		}
 	}
 
@@ -1880,80 +1836,55 @@ void App::player3Render()
 	SDL_RenderFillRect(renderer, &dRectButtonStartPlayer3);
 	SDL_RenderFillRect(renderer, &dRectButtonDealPlayer3);
 
-	SDL_RenderCopy(renderer, textPlayer3Texture, nullptr, &dRectTextPlayer3);
-	SDL_RenderCopy(renderer, textStartTexture, nullptr, &dRectTextStartPlayer3);
-	SDL_RenderCopy(renderer, textDealTexture, nullptr, &dRectTextDealPlayer3);
+	SDL_QueryTexture(textStartTexture, 0, 0, &tw, &th);
+	drawTexture(textStartTexture, 800 - tw - 5 - 90, 355, tw, th, SDL_FLIP_NONE);
+
+	SDL_QueryTexture(textDealTexture, 0, 0, &tw, &th);
+	drawTexture(textDealTexture, 800 - tw - 5, 355, tw, th, SDL_FLIP_NONE);
+
+	SDL_QueryTexture(textPlayer3Texture, 0, 0, &tw, &th);
+	drawTexture(textPlayer3Texture, 800 - tw, 100, tw, th, SDL_FLIP_NONE);
 }
 
 void App::thrownCardsRender()
 {
+	SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
 	if (players[0].cntPlayerDeck() == 0 && players[1].cntPlayerDeck() == 0)
 	{
-		SDL_Rect dRectCard3Thrown;
-		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
-		dRectCard3Thrown = {400, 100, tw, th};
-		SDL_RenderCopy(renderer, c3.texture, nullptr, &dRectCard3Thrown);
+		drawTexture(c3.texture, 400, 100, tw, th, SDL_FLIP_NONE);
 		return;
 	}
 	else if (players[0].cntPlayerDeck() == 0 && players[2].cntPlayerDeck() == 0)
 	{
-		SDL_Rect dRectCard2Thrown;
-		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
-		dRectCard2Thrown = {300, 200, tw, th};
-		SDL_RenderCopy(renderer, c2.texture, nullptr, &dRectCard2Thrown);
+		drawTexture(c2.texture, 300, 200, tw, th, SDL_FLIP_NONE);
 		return;
 	}
 	else if (players[1].cntPlayerDeck() == 0 && players[2].cntPlayerDeck() == 0)
 	{
-		SDL_Rect dRectCard1Thrown;
-		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
-		dRectCard1Thrown = {400, 100, tw, th};
-		SDL_RenderCopy(renderer, c1.texture, nullptr, &dRectCard1Thrown);
+		drawTexture(c1.texture, 400, 100, tw, th, SDL_FLIP_NONE);
 		return;
 	}
 	else if (players[0].cntPlayerDeck() == 0)
 	{
-		SDL_Rect dRectCard2Thrown;
-		SDL_Rect dRectCard3Thrown;
-		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
-		dRectCard2Thrown = {300, 200, tw, th};
-		dRectCard3Thrown = {400, 100, tw, th};
-		SDL_RenderCopy(renderer, c2.texture, nullptr, &dRectCard2Thrown);
-		SDL_RenderCopy(renderer, c3.texture, nullptr, &dRectCard3Thrown);
+		drawTexture(c2.texture, 300, 200, tw, th, SDL_FLIP_NONE);
+		drawTexture(c3.texture, 400, 100, tw, th, SDL_FLIP_NONE);
 		return;
 	}
 	else if (players[1].cntPlayerDeck() == 0)
 	{
-		SDL_Rect dRectCard1Thrown;
-		SDL_Rect dRectCard3Thrown;
-		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
-		dRectCard1Thrown = {200, 100, tw, th};
-		dRectCard3Thrown = {400, 100, tw, th};
-		SDL_RenderCopy(renderer, c1.texture, nullptr, &dRectCard1Thrown);
-		SDL_RenderCopy(renderer, c3.texture, nullptr, &dRectCard3Thrown);
+		drawTexture(c1.texture, 200, 100, tw, th, SDL_FLIP_NONE);
+		drawTexture(c3.texture, 400, 100, tw, th, SDL_FLIP_NONE);
 		return;
 	}
 	else if (players[2].cntPlayerDeck() == 0)
 	{
-		SDL_Rect dRectCard1Thrown;
-		SDL_Rect dRectCard2Thrown;
-		SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
-		dRectCard1Thrown = {200, 100, tw, th};
-		dRectCard2Thrown = {300, 200, tw, th};
-		SDL_RenderCopy(renderer, c1.texture, nullptr, &dRectCard1Thrown);
-		SDL_RenderCopy(renderer, c2.texture, nullptr, &dRectCard2Thrown);
+		drawTexture(c1.texture, 200, 100, tw, th, SDL_FLIP_NONE);
+		drawTexture(c2.texture, 300, 200, tw, th, SDL_FLIP_NONE);
 		return;
 	}
-	SDL_Rect dRectCard1Thrown;
-	SDL_Rect dRectCard2Thrown;
-	SDL_Rect dRectCard3Thrown;
-	SDL_QueryTexture(c1.texture, 0, 0, &tw, &th);
-	dRectCard1Thrown = {200, 100, tw, th};
-	dRectCard2Thrown = {300, 200, tw, th};
-	dRectCard3Thrown = {400, 100, tw, th};
-	SDL_RenderCopy(renderer, c1.texture, nullptr, &dRectCard1Thrown);
-	SDL_RenderCopy(renderer, c2.texture, nullptr, &dRectCard2Thrown);
-	SDL_RenderCopy(renderer, c3.texture, nullptr, &dRectCard3Thrown);
+	drawTexture(c1.texture, 200, 100, tw, th, SDL_FLIP_NONE);
+	drawTexture(c2.texture, 300, 200, tw, th, SDL_FLIP_NONE);
+	drawTexture(c3.texture, 400, 100, tw, th, SDL_FLIP_NONE);
 }
 
 void App::cardsCountMessage()
@@ -1967,13 +1898,8 @@ void App::cardsCountMessage()
 
 	int textW = surfaceMessage->w;
 	int textH = surfaceMessage->h;
-	SDL_Rect MessagePos;
-	MessagePos.x = 3;
-	MessagePos.y = 380;
-	MessagePos.w = textW;
-	MessagePos.h = textH;
 
-	SDL_RenderCopy(renderer, Message, NULL, &MessagePos);
+	drawTexture(Message, 3, 380, textW, textH, SDL_FLIP_NONE);
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(surfaceMessage);
 
@@ -1983,13 +1909,10 @@ void App::cardsCountMessage()
 	SDL_Surface *surfaceMessage2 = TTF_RenderText_Solid(font, message2.c_str(), textColor);
 	SDL_Texture *Message2 = SDL_CreateTextureFromSurface(renderer, surfaceMessage2);
 
-	SDL_Rect Message2Pos;
-	Message2Pos.x = 360;
-	Message2Pos.y = 540;
-	Message2Pos.w = textW;
-	Message2Pos.h = textH;
+	textW = surfaceMessage2->w;
+	textH = surfaceMessage2->h;
 
-	SDL_RenderCopy(renderer, Message2, NULL, &Message2Pos);
+	drawTexture(Message2, 360, 540, textW, textH, SDL_FLIP_NONE);
 	SDL_DestroyTexture(Message2);
 	SDL_FreeSurface(surfaceMessage2);
 
@@ -1999,18 +1922,15 @@ void App::cardsCountMessage()
 	SDL_Surface *surfaceMessage3 = TTF_RenderText_Solid(font, message3.c_str(), textColor);
 	SDL_Texture *Message3 = SDL_CreateTextureFromSurface(renderer, surfaceMessage3);
 
-	SDL_Rect Message3Pos;
-	Message3Pos.x = 595;
-	Message3Pos.y = 400;
-	Message3Pos.w = textW;
-	Message3Pos.h = textH;
+	textW = surfaceMessage3->w;
+	textH = surfaceMessage3->h;
 
-	SDL_RenderCopy(renderer, Message3, NULL, &Message3Pos);
+	drawTexture(Message3, 595, 400, textW, textH, SDL_FLIP_NONE);
 	SDL_DestroyTexture(Message3);
 	SDL_FreeSurface(surfaceMessage3);
 }
 
-void App::winnerMessage()
+void App::winnerOverMessage()
 {
 	std::string winnerMessage = "Player " + std::to_string(getWinner() + 1) + " wins! "
 																			  "Press Start for a new game!";
@@ -2018,13 +1938,8 @@ void App::winnerMessage()
 	SDL_Surface *winnerSurface = TTF_RenderText_Solid(font, winnerMessage.c_str(), textColor);
 	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, winnerSurface);
 
-	SDL_Rect winMessagePos;
-	winMessagePos.x = 50;
-	winMessagePos.y = 75;
-	winMessagePos.h = 85;
-	winMessagePos.w = 660;
-
-	SDL_RenderCopy(renderer, Message, NULL, &winMessagePos);
+	SDL_QueryTexture(Message, 0, 0, &tw, &th);
+	drawTexture(Message, 50, 75, tw, th, SDL_FLIP_NONE);
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(winnerSurface);
 }
@@ -2037,15 +1952,8 @@ void App::warMessage()
 	SDL_Surface *warSurface = TTF_RenderText_Solid(font, warMessage.c_str(), textColor);
 	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, warSurface);
 
-	SDL_Rect warMessagePos;
-	warMessagePos.x = 300;
-	warMessagePos.y = 150;
-	// warMessagePos.x = 400;
-	// warMessagePos.y = 300;
-	warMessagePos.h = 40;
-	warMessagePos.w = 80;
-
-	SDL_RenderCopy(renderer, Message, NULL, &warMessagePos);
+	SDL_QueryTexture(Message, 0, 0, &tw, &th);
+	drawTexture(Message, 300, 150, tw, th, SDL_FLIP_NONE);
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(warSurface);
 }
@@ -2067,9 +1975,10 @@ void App::statsMessage()
 	SDL_Rect statsPos;
 	statsPos.x = 10;
 	statsPos.y = 15;
-	statsPos.w = 750;
+	statsPos.w = 790;
 	statsPos.h = 50;
 
+	// drawTexture()...
 	SDL_RenderCopy(renderer, Message, NULL, &statsPos);
 	SDL_DestroyTexture(Message);
 	SDL_FreeSurface(statsSurface);
@@ -2151,6 +2060,7 @@ void App::restartGame()
 	}
 
 	wasStartPressed = false;
+	winner = -1;
 	initDeck();
 
 	buttonPressedDeal1 = false;
@@ -2163,7 +2073,6 @@ void App::restartGame()
 
 	state = GameState::PLAYING;
 	clearTable();
-	buttonPressed = false;
 	showStats = false;
 	isRoundPlayed = false;
 	setWar(false);
@@ -2191,4 +2100,3 @@ int App::getWinner() const
 {
 	return winner;
 }
-

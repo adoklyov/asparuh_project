@@ -35,6 +35,7 @@ public:
 
 private:
 	bool active = false;
+	//flag follows who died first, so he can get a point on losses
 	bool flag = false;
 	unsigned int points = 0;
 	int wins = 0;
