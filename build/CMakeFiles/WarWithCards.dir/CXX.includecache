@@ -6,14 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/default/asparuh_project/App.cpp
-App.h
-/home/default/asparuh_project/App.h
-iostream
--
-cassert
--
-
 /home/default/asparuh_project/App.h
 SDL.h
 -
@@ -39,6 +31,16 @@ iostream
 /home/default/asparuh_project/Player.h
 vector
 -
+Deck.h
+/home/default/asparuh_project/Deck.h
+
+/home/default/asparuh_project/main.cpp
+SDL.h
+-
+iostream
+-
+App.h
+/home/default/asparuh_project/App.h
 Deck.h
 /home/default/asparuh_project/Deck.h
 

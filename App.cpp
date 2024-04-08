@@ -90,7 +90,7 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 
 	SDL_SetRenderDrawColor(renderer, 0x00, 0xCA, 0xAC, 0xFF);
 
-	SDL_Surface *tempSurface = getSurface("/home/default/asparuh_project/assets/cards/background.jpg");
+	SDL_Surface *tempSurface = getSurface("/home/default/asparuh_project/assets/cards/background2.jpg");
 	backgroundTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
@@ -266,6 +266,15 @@ void App::clearTable()
 	c1.texture = nullptr;
 	c2.texture = nullptr;
 	c3.texture = nullptr;
+	for (unsigned i = 0; i < players.size(); i++)
+	{
+		for (unsigned j = 0; j < players[i].getMiniPlayerDeck().size(); j++)
+		{
+			players[i].getMiniPlayerDeck()[j].texture = nullptr;
+		}
+		
+	}
+	
 }
 
 void App::render()
@@ -2024,13 +2033,15 @@ void App::warMessage()
 {
 	// War message
 	std::string warMessage = "WAR!";
-	SDL_Color textColor = {255, 255, 255, 255};
+	SDL_Color textColor = {173, 216, 230, 255};
 	SDL_Surface *warSurface = TTF_RenderText_Solid(font, warMessage.c_str(), textColor);
 	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, warSurface);
 
 	SDL_Rect warMessagePos;
-	warMessagePos.x = 400;
-	warMessagePos.y = 300;
+	warMessagePos.x = 300;
+	warMessagePos.y = 150;
+	// warMessagePos.x = 400;
+	// warMessagePos.y = 300;
 	warMessagePos.h = 40;
 	warMessagePos.w = 80;
 
