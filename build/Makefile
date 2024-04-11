@@ -560,6 +560,33 @@ App.cpp.s:
 	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/App.cpp.s
 .PHONY : App.cpp.s
 
+Button.o: Button.cpp.o
+
+.PHONY : Button.o
+
+# target to build an object file
+Button.cpp.o:
+	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Button.cpp.o
+.PHONY : Button.cpp.o
+
+Button.i: Button.cpp.i
+
+.PHONY : Button.i
+
+# target to preprocess a source file
+Button.cpp.i:
+	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Button.cpp.i
+.PHONY : Button.cpp.i
+
+Button.s: Button.cpp.s
+
+.PHONY : Button.s
+
+# target to generate assembly for a file
+Button.cpp.s:
+	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Button.cpp.s
+.PHONY : Button.cpp.s
+
 Deck.o: Deck.cpp.o
 
 .PHONY : Deck.o
@@ -712,6 +739,9 @@ help:
 	@echo "... App.o"
 	@echo "... App.i"
 	@echo "... App.s"
+	@echo "... Button.o"
+	@echo "... Button.i"
+	@echo "... Button.s"
 	@echo "... Deck.o"
 	@echo "... Deck.i"
 	@echo "... Deck.s"

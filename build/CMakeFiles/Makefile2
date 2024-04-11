@@ -104,7 +104,7 @@ clean: CMakeFiles/WarWithCards.dir/clean
 CMakeFiles/pugixml.dir/all:
 	$(MAKE) -f CMakeFiles/pugixml.dir/build.make CMakeFiles/pugixml.dir/depend
 	$(MAKE) -f CMakeFiles/pugixml.dir/build.make CMakeFiles/pugixml.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=6,7 "Built target pugixml"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=7,8 "Built target pugixml"
 .PHONY : CMakeFiles/pugixml.dir/all
 
 # Build rule for subdir invocation for target.
@@ -887,12 +887,12 @@ CMakeFiles/ContinuousSubmit.dir/clean:
 CMakeFiles/WarWithCards.dir/all: CMakeFiles/pugixml.dir/all
 	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/depend
 	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target WarWithCards"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target WarWithCards"
 .PHONY : CMakeFiles/WarWithCards.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/WarWithCards.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/default/asparuh_project/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/default/asparuh_project/build/CMakeFiles 8
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/WarWithCards.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/default/asparuh_project/build/CMakeFiles 0
 .PHONY : CMakeFiles/WarWithCards.dir/rule

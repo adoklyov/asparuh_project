@@ -5,11 +5,12 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/default/asparuh_project/App.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/App.cpp.o"
+  "/home/default/asparuh_project/Button.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Button.cpp.o"
   "/home/default/asparuh_project/Deck.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Deck.cpp.o"
   "/home/default/asparuh_project/Player.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Player.cpp.o"
   "/home/default/asparuh_project/main.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/main.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH

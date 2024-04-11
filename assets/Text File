@@ -1,0 +1,50 @@
+ 
+void App::setSettingsForButtonStart(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, SDL_Rect& rect, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+{
+	start.setActiveTexture(active);
+	start.setInactiveTexture(inactive);
+	start.setPressedTexture(pressed);
+	start.setPosition(rect);
+	start.setText("Start", font, textColor, renderer);
+}
+void App::setSettingsForButtonDeal(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+{
+	SDL_Rect rect = {190, 10, 130, 50};
+	deal.setActiveTexture(active);
+	deal.setInactiveTexture(inactive);
+	deal.setPressedTexture(pressed);
+	deal.setPosition(rect);
+	deal.setText("Deal", font, textColor, renderer);
+}
+void App::setSettingsForButtonDealAll(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+{
+	SDL_Rect rect = {335, 10, 130, 50};
+	dealAll.setActiveTexture(active);
+	dealAll.setInactiveTexture(inactive);
+	dealAll.setPressedTexture(pressed);
+	dealAll.setPosition(rect);
+	dealAll.setText("Deal All", font, textColor, renderer);
+}
+void App::setSettingsForButtonRestart(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+{
+	SDL_Rect rect = {480, 10, 130, 50};
+		restart.setActiveTexture(active);
+	restart.setInactiveTexture(inactive);
+	restart.setPressedTexture(pressed);
+	restart.setPosition(rect);
+	restart.setText("Restart", font, textColor, renderer);
+}
+void App::setSettingsForButtonStats(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+{
+	SDL_Rect rect = {625, 10, 130, 50};
+		stats.setActiveTexture(active);
+	stats.setInactiveTexture(inactive);
+	stats.setPressedTexture(pressed);
+	stats.setPosition(rect);
+	stats.setText("Stats", font, textColor, renderer);
+}
+	setSettingsForButtonStart(active, inactive, pressed, rect, font, textColor, renderer);
+	setSettingsForButtonDeal(active,  inactive, pressed,  font, textColor,  renderer);
+	setSettingsForButtonDealAll(active,  inactive, pressed,  font, textColor,  renderer);
+	setSettingsForButtonRestart(active,  inactive, pressed,  font, textColor,  renderer);
+	setSettingsForButtonStats(active,  inactive, pressed,  font, textColor,  renderer);

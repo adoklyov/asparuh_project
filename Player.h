@@ -14,11 +14,13 @@ public:
 	unsigned int getPoints() const;
 	int getWins() const;
 	int getLosses() const;
-	void setWins(int w);
-	void setLosses(int l);
+	void setWins(int wins);
+	void setLosses(int losses);
+	void incrementWins();
+	void incrementLosses();
 	bool getTurn() const;
 	void setTurn(bool turn);
-	void setPoints(unsigned int pp);
+	void setPoints(unsigned int points);
 	Card pullCard();
 	void dealCards(Deck &deck);
 	void printCards() const;
@@ -27,8 +29,8 @@ public:
 	Card getCurrentCard() const;
 	void setPlayerDeck();
 	void setCard();
-	void setFlag(bool f);
-	bool getFlag() const;
+	void setIsDefeated(bool isDef);
+	bool getIsDefeated() const;
 
 	void setActive(bool isActive);
 	bool isActive() const;
@@ -36,11 +38,11 @@ public:
 private:
 	bool active = false;
 	//flag follows who died first, so he can get a point on losses
-	bool flag = false;
+	bool isDefeated = false;
 	unsigned int points = 0;
 	int wins = 0;
 	int losses = 0;
-	bool turn;
+	bool turn=0;
 	std::vector<Card> miniPlayerDeck;
 	std::vector<Card> playerDeck;
 };

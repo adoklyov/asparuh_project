@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <deque>
 #include <iostream>
 class SDL_Texture;
 const unsigned short DECK_CAPACITY = 52;
@@ -31,9 +31,11 @@ enum Face
 
 struct Card
 {
+	Card() = default;
+	Card(Suit suit, Face face, unsigned short value);
 	Suit suit = {};
 	Face face = {};
-	unsigned short value = 0;
+	unsigned short value = 2;
 	SDL_Texture *texture = nullptr;
 
 	void print()
@@ -51,10 +53,8 @@ public:
 	void riffleShuffle();
 	void shuffle();
 
-	Card DealCardForManager();
-
-	std::vector<Card> &getDeck();
+	std::deque<Card> &getDeck();
 
 private:
-	std::vector<Card> deck;
+	std::deque<Card> deck;
 };

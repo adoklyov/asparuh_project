@@ -2,8 +2,6 @@
 #include <iostream>
 Player::Player()
 {
-	this->turn = false;
-	this->active = false;
 }
 
 Card Player::pullCard()
@@ -23,9 +21,9 @@ unsigned int Player::getPoints() const
 	return this->points;
 }
 
-void Player::setPoints(unsigned int pp)
+void Player::setPoints(unsigned int points)
 {
-	this->points = pp;
+	this->points = points;
 }
 
 bool Player::getTurn() const
@@ -38,6 +36,10 @@ void Player::setTurn(bool turn)
 	this->turn = turn;
 }
 
+// std::vector<Card> Player::getPlayerDeck()
+// {
+// 	return this->playerDeck;
+// }
 std::vector<Card> &Player::getPlayerDeck()
 {
 	return playerDeck;
@@ -55,38 +57,46 @@ size_t Player::cntPlayerDeck()
 
 int Player::getWins() const
 {
-	return wins;
+	return this->wins;
 }
 
-void Player::setWins(int w)
+void Player::incrementWins()
 {
-	wins += w;
+	this->wins++;
 }
 
-bool Player::getFlag() const
+bool Player::getIsDefeated() const
 {
-	return flag;
+	return this->isDefeated;
 }
 
-void Player::setFlag(bool f)
+void Player::setIsDefeated(bool isDef)
 {
-	this->flag = f;
+	this->isDefeated = isDef;
 }
 
 int Player::getLosses() const
 {
-	return losses;
+	return this->losses;
 }
 
-void Player::setLosses(int l)
+void Player::setWins(int wins)
 {
-	losses += l;
+	this->wins = wins;
+}
+void Player::setLosses(int losses)
+{
+	this->losses = losses;
+}
+void Player::incrementLosses()
+{
+	this->losses++;
 }
 
 void Player::dealCards(Deck &deck)
 {
 	playerDeck.clear();
-	for (unsigned count = 0; count < 10; count++)
+	for (unsigned count = 0; count < 10; count++) 
 	{
 		playerDeck.push_back(deck.DealCard());
 	}
@@ -201,11 +211,8 @@ void Player::setPlayerDeck()
 
 void Player::setCard()
 {
-	Card c1;
-	c1.value = 10;
-	c1.face = Face::Ace;
-	c1.suit = Suit::Hearts;
-	playerDeck.insert(playerDeck.begin() + 1, c1);
+	Card c1 ( Suit::Hearts, Face::Ace, 14);
+	playerDeck.insert(playerDeck.begin(), c1);
 }
 
 

@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/default/Downloads/pugixml-1.14/src/pugixml.cpp" "/home/default/asparuh_project/build/CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH

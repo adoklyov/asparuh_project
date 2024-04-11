@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include "Player.h"
+#include "Button.h"
 #include <pugixml.hpp>
 #include <vector>
 enum GameState
@@ -19,10 +20,9 @@ class App
 	friend bool operator>(const Card &card1, const Card &card2);
 	friend bool operator<(const Card &card1, const Card &card2);
 	friend bool operator==(const Card &card1, const Card &card2);
-	friend bool operator!=(const Card& card1, const Card& card2);
-	friend bool operator<=(const Card& card1 , const Card& card2);
-	friend bool operator>=(const Card& card1 , const Card& card2);
-
+	friend bool operator!=(const Card &card1, const Card &card2);
+	friend bool operator<=(const Card &card1, const Card &card2);
+	friend bool operator>=(const Card &card1, const Card &card2);
 
 public:
 	App();
@@ -35,7 +35,7 @@ public:
 	void drawTexture(SDL_Texture *tex, int x, int y, int width, int heigth, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	SDL_Texture *loadTexture(const std::string filePath, SDL_Renderer *renderer);
 	SDL_Surface *getSurface(const std::string filePath);
-	bool isClickableRectClicked(SDL_Rect *r, int xDown, int yDown, int xUp, int yUp);
+	bool isClickableRectClicked(const SDL_Rect& r, int xDown, int yDown, int xUp, int yUp);
 	void player1Render();
 	void player2Render();
 	void player3Render();
@@ -57,9 +57,8 @@ public:
 	bool registerWinner(std::vector<Card> &deskDeck, unsigned winner);
 	unsigned getWinner();
 	bool hasWar();
-	bool hasWarForTwo(Player &player1, Player &player2);
 	int calcTiePlayers(const Card &c);
-	Card getBiggestPlayerCard();
+	Card getBiggestPlayerCardAndSetWinner();
 	unsigned findPlayerWithCard(const Card &c);
 	void printDeck(const std::vector<Card> &deskDeck) const;
 	void playRound();
@@ -68,15 +67,15 @@ public:
 	bool PlayWarRound();
 	bool isGameOver();
 	void printPlayer(unsigned i);
-	unsigned playDuoNormalRound(Player &player1, Player &player2, std::vector<Card> &deskDeck);
-	Card getBiggestWarCard(Player &player1, Player &player2);
-
-	int calcTiePlayersResizable(const Card &c, std::vector<Player> players);
+	//buttons
+	void setSettingsForButtonStart(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, SDL_Rect& rect, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer);
+	void setSettingsForButtonDeal(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer);
+	void setSettingsForButtonDealAll(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer);
+	void setSettingsForButtonRestart(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer);
+	void setSettingsForButtonStats(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer);
 
 	// stats message
 	void statsMessage();
-
-	bool showStats;
 
 	// XML
 	void updateStatsXML();
@@ -87,24 +86,28 @@ public:
 	void setWar(bool war);
 	bool getWar() const;
 
-	//winner
+	// winner
 	void setWinner(int winner);
-	int getWinner() const;
+	auto getWinner() const -> int;
+
+	void setShowStats(bool stats);
+	bool getShowStats() const;
+
+	bool handleWarWinConditionsEmpty(const unsigned playerInWar1Index, const unsigned playerInWar2Index, std::vector<Card> &deskDeck);
+	void handleMiniDeckConditions(const unsigned playerInWar1Index, const unsigned playerInWar2Index, std::vector<Card> &deskDeck);
 
 private:
-	bool war = false;
 	Deck *deck;
 	Player *player1;
 	Player *player2;
 	Player *player3;
-	std::vector<Card> dump;
-	std::vector<Player> players;
-	bool isRoundPlayed;
-	unsigned short round;
-	bool wasStartPressed;
 	SDL_Window *window = nullptr;
 	SDL_Renderer *renderer = nullptr;
-	void initDeck();
+
+	void initOnlyNeededDeck();
+	void DestroyTextures();
+	void DestroyTexturesForRestart();
+	void DestroyTextureOfDeck();
 
 	void setButtonPressedDeal1(bool pr);
 	void setButtonPressedDeal2(bool pr);
@@ -113,44 +116,63 @@ private:
 	bool getButtonPressedDeal1() const;
 	bool getButtonPressedDeal2() const;
 	bool getButtonPressedDeal3() const;
+
+	GameState state;
+	Card c1, c2, c3;
+
+	std::vector<Card> dump;
+	std::vector<Player> players;
 	std::vector<bool> buttonPressedDeal;
 	bool buttonPressedDeal1;
 	bool buttonPressedDeal2;
 	bool buttonPressedDeal3;
-	GameState state;
+
+	bool wasStartPressed;
+	bool showStats;
+	bool war = false;
+	bool isRoundPlayed;
 	bool running;
-	Card c1;
-	Card c2;
-	Card c3;
+	unsigned short round;
+
+	// mouse coordinates
+	int mouseDownX = 0, mouseDownY = 0;
+	// texture width and heigth
+	int tw = 0, th = 0;
+	// winner
+	int winner = -1;
+
 	// textures
+	SDL_Texture *tex = nullptr;
+	SDL_Texture *texture = nullptr;
+	SDL_Surface *surface = nullptr;
 	// player 1 cards Textures
-	SDL_Texture *card1Texture;
+	SDL_Texture *card1Texture = nullptr;
 	// war card textures
-	SDL_Texture *warCardTexture;
+	SDL_Texture *warCardTexture = nullptr;
 	// background texture
-	SDL_Texture *backgroundTexture;
-	//start from Over state texture
-	SDL_Texture* textStartOverTexture; 
+	SDL_Texture *backgroundTexture = nullptr;
+	// start from Over state texture
+	SDL_Texture *textStartOverTexture = nullptr;
 	// start texture player1
-	SDL_Texture *textStartTexture;
+	SDL_Texture *textStartTexture = nullptr;
 	// deal texture player1
-	SDL_Texture *textDealTexture;
+	SDL_Texture *textDealTexture = nullptr;
 	// start texture player2
-	SDL_Texture *textStartTexturePlayer2;
+	SDL_Texture *textStartTexturePlayer2 = nullptr;
 	// deal texture player2
-	SDL_Texture *textDealTexturePlayer2;
+	SDL_Texture *textDealTexturePlayer2 = nullptr;
 	// start texture player3
-	SDL_Texture *textStartTexturePlayer3;
+	SDL_Texture *textStartTexturePlayer3 = nullptr;
 	// deal texture player3
-	SDL_Texture *textDealTexturePlayer3;
+	SDL_Texture *textDealTexturePlayer3 = nullptr;
 	// error texture
-	SDL_Texture *textErrorTexture;
+	SDL_Texture *textErrorTexture = nullptr;
 	// Player 1 text texture
-	SDL_Texture *textPlayer1Texture;
+	SDL_Texture *textPlayer1Texture = nullptr;
 	// Player 2 text texture
-	SDL_Texture *textPlayer2Texture;
+	SDL_Texture *textPlayer2Texture = nullptr;
 	// Player 3 text texture
-	SDL_Texture *textPlayer3Texture;
+	SDL_Texture *textPlayer3Texture = nullptr;
 	// Rects
 	// buttons
 	// start
@@ -163,28 +185,24 @@ private:
 	SDL_Rect dRectButtonDealPlayer3;
 
 	// stats texture
-	SDL_Texture *statsTexture;
+	SDL_Texture *statsTexture = nullptr;
 	// stats
 	SDL_Rect statsButton;
 	// all deal texture
-	SDL_Texture *allDealTexture;
+	SDL_Texture *allDealTexture = nullptr;
 	// all deal
 	SDL_Rect allDeal;
 	// reset texture
-	SDL_Texture *resetTexture;
+	SDL_Texture *resetTexture = nullptr;
 	// reset
 	SDL_Rect reset;
 	// TTF Font
-	TTF_Font *font;
+	TTF_Font *font = nullptr;
 
-	// mouse coordinates
-	int mouseDownX, mouseDownY;
-	// texture width and heigth
-	int tw, th;
-	// points, wins and losses test
-	int pts = 0;
-	int ws = 0;
-	int ls = 0;
-	//winner
-	int winner = -1;
+	// //Buttons
+	Button start;
+	Button deal;
+	Button dealAll;
+	Button restart;
+	Button stats;
 };

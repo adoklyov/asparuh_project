@@ -8,7 +8,7 @@ enable_testing()
 
 include_directories(/usr/include/SDL2)
 
-add_executable(WarWithCards main.cpp App.cpp Deck.cpp Player.cpp)
+add_executable(WarWithCards main.cpp App.cpp Deck.cpp Player.cpp Button.cpp)
 
 add_library(pugixml /home/default/Downloads/pugixml-1.14/src/pugixml.cpp)
 

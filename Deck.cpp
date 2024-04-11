@@ -9,7 +9,7 @@ Deck::Deck() : deck(DECK_CAPACITY)
 	{
 		deck[i].suit = Suit(i % 4);
 		deck[i].face = Face(i % 13);
-		deck[i].value = deck[i].face + 2; // start from 2, not 0
+		deck[i].value = deck[i].face + 2;
 	}
 }
 
@@ -84,22 +84,15 @@ void Deck::print() const
 	}
 }
 
-Card Deck::DealCardForManager()
-{
-	Card result = deck.front();
-	deck.erase(deck.begin());
-	return result;
-}
-
 Card Deck::DealCard()
 {
 	Card result = deck.front();
-	deck.erase(deck.begin());
+	deck.pop_front();
 	return result;
 }
 
 void Deck::riffleShuffle()
-{
+{	
 	const unsigned halfDeckSize = DECK_CAPACITY / 2;
 
 	Card deckFirstHalf[halfDeckSize] = {}, deckSecondHalf[halfDeckSize] = {};
@@ -107,25 +100,19 @@ void Deck::riffleShuffle()
 	for (unsigned i = 0; i < halfDeckSize; i++)
 	{
 		deckFirstHalf[i] = deck[i];
-	}
+		deckSecondHalf[i] = deck[i + halfDeckSize];
 
-	for (unsigned i = halfDeckSize, k = 0; i < DECK_CAPACITY || k < halfDeckSize; i++, k++)
-	{
-		deckSecondHalf[k] = deck[i];
 	}
 
 	for (unsigned i = 0, j = 0; j < halfDeckSize || i < DECK_CAPACITY; i += 2, j++)
 	{
 		deck[i] = deckSecondHalf[j];
+		deck[i+1] = deckFirstHalf[j];
 	}
 
-	for (unsigned i = 1, j = 0; j < halfDeckSize || i < DECK_CAPACITY; i += 2, j++)
-	{
-		deck[i] = deckFirstHalf[j];
-	}
 }
 
-std::vector<Card> &Deck::getDeck()
+std::deque<Card> &Deck::getDeck()
 {
 	return deck;
 }
@@ -134,4 +121,11 @@ void Deck::shuffle()
 {
 	srand(unsigned(time(NULL)));
 	std::random_shuffle(deck.begin(), deck.end());
+}
+
+Card::Card(Suit suit, Face face, unsigned short value)
+{
+	this->suit = suit;
+	this->face = face;
+	this->value = value;
 }

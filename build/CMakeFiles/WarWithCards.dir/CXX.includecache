@@ -25,13 +25,25 @@ string
 -
 Player.h
 /home/default/asparuh_project/Player.h
+Button.h
+/home/default/asparuh_project/Button.h
 pugixml.hpp
 -
 vector
 -
 
+/home/default/asparuh_project/Button.h
+SDL2/SDL.h
+-
+SDL2/SDL_image.h
+-
+SDL2/SDL_ttf.h
+-
+string
+-
+
 /home/default/asparuh_project/Deck.h
-vector
+deque
 -
 iostream
 -

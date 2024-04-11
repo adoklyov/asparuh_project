@@ -60,15 +60,15 @@ include CMakeFiles/pugixml.dir/flags.make
 CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.o: CMakeFiles/pugixml.dir/flags.make
 CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.o: /home/default/Downloads/pugixml-1.14/src/pugixml.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.o -c /home/default/Downloads/pugixml-1.14/src/pugixml.cpp
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.o -c /home/default/Downloads/pugixml-1.14/src/pugixml.cpp
 
 CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/Downloads/pugixml-1.14/src/pugixml.cpp > CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/Downloads/pugixml-1.14/src/pugixml.cpp > CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.i
 
 CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/Downloads/pugixml-1.14/src/pugixml.cpp -o CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/Downloads/pugixml-1.14/src/pugixml.cpp -o CMakeFiles/pugixml.dir/home/default/Downloads/pugixml-1.14/src/pugixml.cpp.s
 
 # Object files for target pugixml
 pugixml_OBJECTS = \

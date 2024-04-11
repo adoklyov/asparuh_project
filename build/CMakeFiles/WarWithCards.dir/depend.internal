@@ -4,6 +4,7 @@
 CMakeFiles/WarWithCards.dir/App.cpp.o
  /home/default/asparuh_project/App.cpp
  /home/default/asparuh_project/App.h
+ /home/default/asparuh_project/Button.h
  /home/default/asparuh_project/Deck.h
  /home/default/asparuh_project/Player.h
  /usr/include/SDL2/SDL.h
@@ -52,6 +53,9 @@ CMakeFiles/WarWithCards.dir/App.cpp.o
  /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
+CMakeFiles/WarWithCards.dir/Button.cpp.o
+ /home/default/asparuh_project/Button.cpp
+ /home/default/asparuh_project/Button.h
 CMakeFiles/WarWithCards.dir/Deck.cpp.o
  /home/default/asparuh_project/Deck.cpp
  /home/default/asparuh_project/Deck.h
@@ -61,6 +65,7 @@ CMakeFiles/WarWithCards.dir/Player.cpp.o
  /home/default/asparuh_project/Player.h
 CMakeFiles/WarWithCards.dir/main.cpp.o
  /home/default/asparuh_project/App.h
+ /home/default/asparuh_project/Button.h
  /home/default/asparuh_project/Deck.h
  /home/default/asparuh_project/Player.h
  /home/default/asparuh_project/main.cpp
