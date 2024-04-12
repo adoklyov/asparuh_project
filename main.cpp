@@ -29,6 +29,12 @@ const unsigned WINDOW_HEIGHT = 600;
 
 int main(int argc, char **argv)
 {
+	const int FPS = 144;
+	const int frameDelay = 1000/FPS;
+
+	Uint32 frameStart;
+	int frameTime;
+
 	app = new App();
 
 	bool init = app->init("WarWithCards",
@@ -43,8 +49,19 @@ int main(int argc, char **argv)
 	app->ttf_init();
 	while (app->isRunning())
 	{
+		frameStart = SDL_GetTicks();
+
 		app->handleEvents();
 		app->render();
+		app->update();
+
+		frameTime = SDL_GetTicks() - frameStart;
+
+		if (frameDelay > frameTime)
+		{
+			SDL_Delay(frameDelay - frameTime);
+		}
+		
 	}
 
 	delete app;

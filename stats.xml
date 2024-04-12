@@ -2,17 +2,17 @@
 <Stats>
 	<Player id="1">
 		<Points>25919</Points>
-		<Wins>95</Wins>
+		<Wins>150</Wins>
 		<Losses>6</Losses>
 	</Player>
 	<Player id="2">
 		<Points>23702</Points>
 		<Wins>71</Wins>
-		<Losses>7</Losses>
+		<Losses>8</Losses>
 	</Player>
 	<Player id="3">
 		<Points>20702</Points>
 		<Wins>110</Wins>
-		<Losses>2</Losses>
+		<Losses>3</Losses>
 	</Player>
 </Stats>

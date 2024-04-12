@@ -184,21 +184,20 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 
 void App::setSettingsForArrow(SDL_Texture *visible, SDL_Texture *invisible, SDL_Renderer *renderer)
 {
-	SDL_Rect rectArrow = {190, 10, 130, 50};
+	SDL_Rect rectArrow = {400, 200, 130, 50};
 	arrow.setVisibleTexture(visible);
 	arrow.setInvisibleTexture(invisible);
 	arrow.setPosition(rectArrow);
 
-	// sourceRectangle.x = 60;
-	// sourceRectangle.y = 103;
-	// sourceRectangle.w = 55;
-	// sourceRectangle.h = 55;
+	sourceRectangle.x = 60;
+	sourceRectangle.y = 103;
+	sourceRectangle.w = 55;
+	sourceRectangle.h = 55;
 
-	// destinationRectangle.x = 0;
-	// destinationRectangle.y = 0;
-	// destinationRectangle.w = 110;
-	// destinationRectangle.h = 110;
-
+	destinationRectangle.x = 0;
+	destinationRectangle.y = 0;
+	destinationRectangle.w = 110;
+	destinationRectangle.h = 110;
 }
 
 void App::setSettingsForButtonStart(SDL_Texture *active, SDL_Texture *inactive, SDL_Texture *pressed, SDL_Rect &rect, TTF_Font *font, SDL_Color textColor, SDL_Renderer *renderer)
@@ -1198,27 +1197,43 @@ void App::playNormalRound()
 
 void App::update()
 {
-	// Window width and height
-	int ww, wh;
 
-	// Picture movement
-	SDL_GetWindowSize(window, &ww, &wh);
-	destinationRectangle.y = (wh - destinationRectangle.h) / 2;
+	rectArrow.y += y;
+	arrow.setPosition(rectArrow);
+	if (rectArrow.y % 100 == 0)
+		y *= -1;
 
-	if (SDL_GetTicks() % 35 == 0) {
+	/*
+		// Picture movement
+		SDL_GetWindowSize(window, &ww, &wh);
+		destinationRectangle.y = (wh - destinationRectangle.h) / 2;
+		// sourceRectangle.x++;
+		arrow.setPosition(rectArrow);
 
-	// Boundaries
-	if ((destinationRectangle.x + destinationRectangle.w) || (destinationRectangle.x <= 0))
-	{
-		
-			// Speed change on bounce
-			speed *= -1;
-			if (speed < 0)
-				speed--;
-			else
-				speed++;
-		}
-	}
+		if (SDL_GetTicks() % 35 == 0) {
+		rectArrow.y -= 25;
+		arrow.setPosition(rectArrow);
+		rectArrow.y -= 25;
+		arrow.setPosition(rectArrow);
+		rectArrow.y -= 25;
+		arrow.setPosition(rectArrow);
+		rectArrow.y -= 25;
+		arrow.setPosition(rectArrow);
+
+
+		// Boundaries
+		if ((destinationRectangle.x + destinationRectangle.w) || (destinationRectangle.x <= 0))
+		{
+
+				// Speed change on bounce
+
+				speed *= -1;
+				if (speed < 0)
+					speed--;
+				else
+					speed++;
+			}
+		}*/
 }
 
 void App::handleEvents()

@@ -139,12 +139,14 @@ private:
 	bool running;
 	unsigned short round;
 
+	int y = 2; // ======
 	// mouse coordinates
 	int mouseDownX = 0, mouseDownY = 0;
 	// texture width and heigth
 	int tw = 0, th = 0;
 	// winner
 	int winner = -1;
+	SDL_Rect rectArrow = {0, 0, 100, 50}; // =======
 
 	// textures
 	SDL_Texture *tex = nullptr;
