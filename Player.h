@@ -35,7 +35,12 @@ public:
 	void setActive(bool isActive);
 	bool isActive() const;
 
+	//Turn Arrow Methods
+
 private:
+
+	//Turn Arrow
+
 	bool active = false;
 	//flag follows who died first, so he can get a point on losses
 	bool isDefeated = false;

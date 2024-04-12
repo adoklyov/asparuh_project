@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/default/asparuh_project/App.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/App.cpp.o"
+  "/home/default/asparuh_project/Arrow.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Arrow.cpp.o"
   "/home/default/asparuh_project/Button.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Button.cpp.o"
   "/home/default/asparuh_project/Deck.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Deck.cpp.o"
   "/home/default/asparuh_project/Player.cpp" "/home/default/asparuh_project/build/CMakeFiles/WarWithCards.dir/Player.cpp.o"

@@ -27,9 +27,19 @@ Player.h
 /home/default/asparuh_project/Player.h
 Button.h
 /home/default/asparuh_project/Button.h
+Arrow.h
+/home/default/asparuh_project/Arrow.h
 pugixml.hpp
 -
 vector
+-
+
+/home/default/asparuh_project/Arrow.h
+SDL2/SDL.h
+-
+SDL2/SDL_image.h
+-
+SDL2/SDL_ttf.h
 -
 
 /home/default/asparuh_project/Button.h

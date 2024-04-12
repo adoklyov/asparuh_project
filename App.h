@@ -5,6 +5,7 @@
 #include <string>
 #include "Player.h"
 #include "Button.h"
+#include "Arrow.h"
 #include <pugixml.hpp>
 #include <vector>
 enum GameState
@@ -27,6 +28,9 @@ class App
 public:
 	App();
 	~App();
+
+	//Updates the game state and objects
+	void update();
 
 	bool init(const std::string title, int xpos, int ypos, int width, int height, int flags);
 	bool ttf_init();
@@ -73,7 +77,8 @@ public:
 	void setSettingsForButtonDealAll(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer);
 	void setSettingsForButtonRestart(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer);
 	void setSettingsForButtonStats(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer);
-
+	//Arrow
+	void setSettingsForArrow(SDL_Texture* visible, SDL_Texture *invisible,  SDL_Renderer *renderer);
 	// stats message
 	void statsMessage();
 
@@ -199,10 +204,20 @@ private:
 	// TTF Font
 	TTF_Font *font = nullptr;
 
-	// //Buttons
+	// Buttons
 	Button start;
 	Button deal;
 	Button dealAll;
 	Button restart;
 	Button stats;
+
+	// Arrow
+	Arrow arrow;
+
+	// Source and destination rectangles for arrow hover animation
+	SDL_Rect sourceRectangle;
+	SDL_Rect destinationRectangle;
+
+	// Speed of the object
+	int speed;
 };

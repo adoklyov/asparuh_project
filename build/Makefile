@@ -560,6 +560,33 @@ App.cpp.s:
 	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/App.cpp.s
 .PHONY : App.cpp.s
 
+Arrow.o: Arrow.cpp.o
+
+.PHONY : Arrow.o
+
+# target to build an object file
+Arrow.cpp.o:
+	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Arrow.cpp.o
+.PHONY : Arrow.cpp.o
+
+Arrow.i: Arrow.cpp.i
+
+.PHONY : Arrow.i
+
+# target to preprocess a source file
+Arrow.cpp.i:
+	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Arrow.cpp.i
+.PHONY : Arrow.cpp.i
+
+Arrow.s: Arrow.cpp.s
+
+.PHONY : Arrow.s
+
+# target to generate assembly for a file
+Arrow.cpp.s:
+	$(MAKE) -f CMakeFiles/WarWithCards.dir/build.make CMakeFiles/WarWithCards.dir/Arrow.cpp.s
+.PHONY : Arrow.cpp.s
+
 Button.o: Button.cpp.o
 
 .PHONY : Button.o
@@ -739,6 +766,9 @@ help:
 	@echo "... App.o"
 	@echo "... App.i"
 	@echo "... App.s"
+	@echo "... Arrow.o"
+	@echo "... Arrow.i"
+	@echo "... Arrow.s"
 	@echo "... Button.o"
 	@echo "... Button.i"
 	@echo "... Button.s"

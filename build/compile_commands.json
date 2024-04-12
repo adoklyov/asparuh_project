@@ -28,5 +28,10 @@
   "directory": "/home/default/asparuh_project/build",
   "command": "/usr/bin/clang++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/Button.cpp.o -c /home/default/asparuh_project/Button.cpp",
   "file": "/home/default/asparuh_project/Button.cpp"
+},
+{
+  "directory": "/home/default/asparuh_project/build",
+  "command": "/usr/bin/clang++   -I/usr/include/SDL2  -g   -o CMakeFiles/WarWithCards.dir/Arrow.cpp.o -c /home/default/asparuh_project/Arrow.cpp",
+  "file": "/home/default/asparuh_project/Arrow.cpp"
 }
 ]

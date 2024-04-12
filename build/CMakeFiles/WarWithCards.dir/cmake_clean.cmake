@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/WarWithCards.dir/App.cpp.o"
+  "CMakeFiles/WarWithCards.dir/Arrow.cpp.o"
   "CMakeFiles/WarWithCards.dir/Button.cpp.o"
   "CMakeFiles/WarWithCards.dir/Deck.cpp.o"
   "CMakeFiles/WarWithCards.dir/Player.cpp.o"

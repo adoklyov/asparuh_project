@@ -8,11 +8,11 @@
 	<Player id="2">
 		<Points>23702</Points>
 		<Wins>71</Wins>
-		<Losses>6</Losses>
+		<Losses>7</Losses>
 	</Player>
 	<Player id="3">
 		<Points>20702</Points>
-		<Wins>98</Wins>
+		<Wins>110</Wins>
 		<Losses>2</Losses>
 	</Player>
 </Stats>

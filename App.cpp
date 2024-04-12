@@ -153,6 +153,13 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 	// Text Color
 	SDL_Color textColor = {0, 0, 0};
 
+	// Arrow textures
+	SDL_Texture *visible = IMG_LoadTexture(renderer, "/home/default/asparuh_project/assets/TurnArrow.png");
+	SDL_Texture *invisible = IMG_LoadTexture(renderer, "/home/default/asparuh_project/assets/TurnArrow.png");
+
+	// Arrow
+	setSettingsForArrow(visible, invisible, renderer);
+
 	// Button textures
 	SDL_Texture *active = IMG_LoadTexture(renderer, "/home/default/asparuh_project/assets/button.png");
 	SDL_Texture *pressed = IMG_LoadTexture(renderer, "/home/default/asparuh_project/assets/button.png");
@@ -162,10 +169,10 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 
 	// Buttons
 	setSettingsForButtonStart(active, inactive, pressed, rect, font, textColor, renderer);
-	setSettingsForButtonDeal(active,  inactive, pressed,  font, textColor,  renderer);
-	setSettingsForButtonDealAll(active,  inactive, pressed,  font, textColor,  renderer);
-	setSettingsForButtonRestart(active,  inactive, pressed,  font, textColor,  renderer);
-	setSettingsForButtonStats(active,  inactive, pressed,  font, textColor,  renderer);
+	setSettingsForButtonDeal(active, inactive, pressed, font, textColor, renderer);
+	setSettingsForButtonDealAll(active, inactive, pressed, font, textColor, renderer);
+	setSettingsForButtonRestart(active, inactive, pressed, font, textColor, renderer);
+	setSettingsForButtonStats(active, inactive, pressed, font, textColor, renderer);
 
 	SDL_SetTextureAlphaMod(card1Texture, 255);
 
@@ -175,7 +182,26 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 	return true;
 }
 
-void App::setSettingsForButtonStart(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, SDL_Rect& rect, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+void App::setSettingsForArrow(SDL_Texture *visible, SDL_Texture *invisible, SDL_Renderer *renderer)
+{
+	SDL_Rect rectArrow = {190, 10, 130, 50};
+	arrow.setVisibleTexture(visible);
+	arrow.setInvisibleTexture(invisible);
+	arrow.setPosition(rectArrow);
+
+	// sourceRectangle.x = 60;
+	// sourceRectangle.y = 103;
+	// sourceRectangle.w = 55;
+	// sourceRectangle.h = 55;
+
+	// destinationRectangle.x = 0;
+	// destinationRectangle.y = 0;
+	// destinationRectangle.w = 110;
+	// destinationRectangle.h = 110;
+
+}
+
+void App::setSettingsForButtonStart(SDL_Texture *active, SDL_Texture *inactive, SDL_Texture *pressed, SDL_Rect &rect, TTF_Font *font, SDL_Color textColor, SDL_Renderer *renderer)
 {
 	start.setActiveTexture(active);
 	start.setInactiveTexture(inactive);
@@ -183,7 +209,7 @@ void App::setSettingsForButtonStart(SDL_Texture* active, SDL_Texture* inactive, 
 	start.setPosition(rect);
 	start.setText("Start", font, textColor, renderer);
 }
-void App::setSettingsForButtonDeal(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+void App::setSettingsForButtonDeal(SDL_Texture *active, SDL_Texture *inactive, SDL_Texture *pressed, TTF_Font *font, SDL_Color textColor, SDL_Renderer *renderer)
 {
 	SDL_Rect rect = {190, 10, 130, 50};
 	deal.setActiveTexture(active);
@@ -192,7 +218,7 @@ void App::setSettingsForButtonDeal(SDL_Texture* active, SDL_Texture* inactive, S
 	deal.setPosition(rect);
 	deal.setText("Deal", font, textColor, renderer);
 }
-void App::setSettingsForButtonDealAll(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+void App::setSettingsForButtonDealAll(SDL_Texture *active, SDL_Texture *inactive, SDL_Texture *pressed, TTF_Font *font, SDL_Color textColor, SDL_Renderer *renderer)
 {
 	SDL_Rect rect = {335, 10, 130, 50};
 	dealAll.setActiveTexture(active);
@@ -201,19 +227,19 @@ void App::setSettingsForButtonDealAll(SDL_Texture* active, SDL_Texture* inactive
 	dealAll.setPosition(rect);
 	dealAll.setText("Deal All", font, textColor, renderer);
 }
-void App::setSettingsForButtonRestart(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+void App::setSettingsForButtonRestart(SDL_Texture *active, SDL_Texture *inactive, SDL_Texture *pressed, TTF_Font *font, SDL_Color textColor, SDL_Renderer *renderer)
 {
 	SDL_Rect rect = {480, 10, 130, 50};
-		restart.setActiveTexture(active);
+	restart.setActiveTexture(active);
 	restart.setInactiveTexture(inactive);
 	restart.setPressedTexture(pressed);
 	restart.setPosition(rect);
 	restart.setText("Restart", font, textColor, renderer);
 }
-void App::setSettingsForButtonStats(SDL_Texture* active, SDL_Texture* inactive, SDL_Texture* pressed, TTF_Font* font, SDL_Color textColor, SDL_Renderer* renderer)
+void App::setSettingsForButtonStats(SDL_Texture *active, SDL_Texture *inactive, SDL_Texture *pressed, TTF_Font *font, SDL_Color textColor, SDL_Renderer *renderer)
 {
 	SDL_Rect rect = {625, 10, 130, 50};
-		stats.setActiveTexture(active);
+	stats.setActiveTexture(active);
 	stats.setInactiveTexture(inactive);
 	stats.setPressedTexture(pressed);
 	stats.setPosition(rect);
@@ -620,6 +646,9 @@ void App::render()
 	restart.render(renderer);
 	stats.render(renderer);
 
+	// Turn Arrow
+	arrow.render(renderer);
+
 	if (GameState::START == state)
 	{
 		dRectButtonStart = {0, 350, 70, 30};
@@ -673,7 +702,7 @@ void App::render()
 	SDL_RenderPresent(renderer);
 }
 
-bool App::isClickableRectClicked(const SDL_Rect& r, int xDown, int yDown, int xUp, int yUp)
+bool App::isClickableRectClicked(const SDL_Rect &r, int xDown, int yDown, int xUp, int yUp)
 {
 	if ((xDown >= r.x && xDown <= (r.x + r.w) && xUp >= r.x && xUp <= (r.x + r.w) &&
 		 (yDown >= r.y && yDown <= (r.y + r.h) && yUp >= r.y && yUp <= (r.y + r.h))))
@@ -1167,6 +1196,31 @@ void App::playNormalRound()
 	}
 }
 
+void App::update()
+{
+	// Window width and height
+	int ww, wh;
+
+	// Picture movement
+	SDL_GetWindowSize(window, &ww, &wh);
+	destinationRectangle.y = (wh - destinationRectangle.h) / 2;
+
+	if (SDL_GetTicks() % 35 == 0) {
+
+	// Boundaries
+	if ((destinationRectangle.x + destinationRectangle.w) || (destinationRectangle.x <= 0))
+	{
+		
+			// Speed change on bounce
+			speed *= -1;
+			if (speed < 0)
+				speed--;
+			else
+				speed++;
+		}
+	}
+}
+
 void App::handleEvents()
 {
 
@@ -1195,127 +1249,159 @@ void App::handleEvents()
 			SDL_GetMouseState(&msx, &msy);
 			mouseDownX = msx;
 			mouseDownY = msy;
-			if ((mouseDownX >= dRectButtonStart.x && mouseDownX <= (dRectButtonStart.x + dRectButtonStart.w) && 
-				msx >= dRectButtonStart.x && msx <= (dRectButtonStart.x + dRectButtonStart.w) &&
-				 (mouseDownY >= dRectButtonStart.y && mouseDownY <= (dRectButtonStart.y + dRectButtonStart.h) && 
-				msy >= dRectButtonStart.y && msy <= (dRectButtonStart.y + dRectButtonStart.h))))
+			if ((mouseDownX >= dRectButtonStart.x && mouseDownX <= (dRectButtonStart.x + dRectButtonStart.w) &&
+				 msx >= dRectButtonStart.x && msx <= (dRectButtonStart.x + dRectButtonStart.w) &&
+				 (mouseDownY >= dRectButtonStart.y && mouseDownY <= (dRectButtonStart.y + dRectButtonStart.h) &&
+				  msy >= dRectButtonStart.y && msy <= (dRectButtonStart.y + dRectButtonStart.h))))
 			{
 				std::cout << std::boolalpha << true;
 			}
 		}
 		break;
-	case SDL_MOUSEWHEEL:
-	{
-		winnerMessage();
-		players[0].setTurn(true);
-		players[1].setTurn(true);
-		players[2].setTurn(true);
-
-		c1 = players[0].getPlayerDeck().front();
-		c2 = players[1].getPlayerDeck().front();
-		c3 = players[2].getPlayerDeck().front();
-
-		isRoundPlayed = true;
-		saveStatsXML();
-		std::cerr << "---------------------------------\n";
-		int sum = 0;
-		for (unsigned i = 0; i < players.size(); i++)
+		case SDL_MOUSEWHEEL:
 		{
-			sum += players[i].cntPlayerDeck();
-		}
-		std::cerr << "\nSUM " << sum;
-		std::cerr << "\nnew  round\n";
-		playRound();
-	};
-	break;
-	case SDL_MOUSEBUTTONUP:
-	{
-		int msx, msy;
-		if (event.button.button == SDL_BUTTON_LEFT)
-		{
-			// Play War Round returns true and continue the game as War
-			// Waiting to press a button
+			winnerMessage();
+			players[0].setTurn(true);
+			players[1].setTurn(true);
+			players[2].setTurn(true);
 
-			SDL_GetMouseState(&msx, &msy);
-			SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
-			SDL_Rect dRectStartOver = {330, 270, tw, th};
-			if (isClickableRectClicked(dRectStartOver, mouseDownX, mouseDownY, msx, msy) && state == GameState::OVER)
+			c1 = players[0].getPlayerDeck().front();
+			c2 = players[1].getPlayerDeck().front();
+			c3 = players[2].getPlayerDeck().front();
+
+			isRoundPlayed = true;
+			saveStatsXML();
+			std::cerr << "---------------------------------\n";
+			int sum = 0;
+			for (unsigned i = 0; i < players.size(); i++)
 			{
-				restartGame();
+				sum += players[i].cntPlayerDeck();
 			}
-			if (isClickableRectClicked(start.getButtonRect(), mouseDownX, mouseDownY, msx, msy)/* || isClickableRectClicked(dRectButtonStart, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(dRectButtonStartPlayer2, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(dRectButtonStartPlayer3, mouseDownX, mouseDownY, msx, msy)*/)
+			std::cerr << "\nSUM " << sum;
+			std::cerr << "\nnew  round\n";
+			playRound();
+		};
+		break;
+		case SDL_MOUSEBUTTONUP:
+		{
+			int msx, msy;
+			if (event.button.button == SDL_BUTTON_LEFT)
 			{
-				if (!wasStartPressed)
+				// Play War Round returns true and continue the game as War
+				// Waiting to press a button
+
+				SDL_GetMouseState(&msx, &msy);
+				SDL_QueryTexture(textStartOverTexture, 0, 0, &tw, &th);
+				SDL_Rect dRectStartOver = {330, 270, tw, th};
+				if (isClickableRectClicked(dRectStartOver, mouseDownX, mouseDownY, msx, msy) && state == GameState::OVER)
 				{
-					wasStartPressed = true;
-					std::cerr << " CLICKED START"
-							  << "\n";
-					SDL_SetTextureAlphaMod(textStartTexture, 128);
-					SDL_SetTextureAlphaMod(card1Texture, 255);
-					state = GameState::PLAYING;
+					restartGame();
 				}
-			}
-			else if (isClickableRectClicked(dRectButtonDeal, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(dRectButtonDealPlayer2, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(dRectButtonDealPlayer3, mouseDownX, mouseDownY, msx, msy))
-			{
-				// Having a boolean helps with indicating whether there is a war or not
-				// a possible if structure here
-				if (players[0].cntPlayerDeck() == 0)
+				if (isClickableRectClicked(start.getButtonRect(), mouseDownX, mouseDownY, msx, msy) /* || isClickableRectClicked(dRectButtonStart, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(dRectButtonStartPlayer2, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(dRectButtonStartPlayer3, mouseDownX, mouseDownY, msx, msy)*/)
+				{
+					if (!wasStartPressed)
+					{
+						wasStartPressed = true;
+						std::cerr << " CLICKED START"
+								  << "\n";
+						SDL_SetTextureAlphaMod(textStartTexture, 128);
+						SDL_SetTextureAlphaMod(card1Texture, 255);
+						state = GameState::PLAYING;
+					}
+				}
+				else if (isClickableRectClicked(dRectButtonDeal, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(dRectButtonDealPlayer2, mouseDownX, mouseDownY, msx, msy) || isClickableRectClicked(dRectButtonDealPlayer3, mouseDownX, mouseDownY, msx, msy))
+				{
+					// Having a boolean helps with indicating whether there is a war or not
+					// a possible if structure here
+					if (players[0].cntPlayerDeck() == 0)
+					{
+						players[0].setTurn(true);
+						setButtonPressedDeal1(true);
+						setButtonPressedDeal2(false);
+						setButtonPressedDeal3(false);
+					}
+					else if (players[1].cntPlayerDeck() == 0)
+					{
+						players[1].setTurn(true);
+						setButtonPressedDeal1(false);
+						setButtonPressedDeal2(true);
+						setButtonPressedDeal3(false);
+					}
+					else if (players[2].cntPlayerDeck() == 0)
+					{
+						players[2].setTurn(true);
+						setButtonPressedDeal1(false);
+						setButtonPressedDeal2(false);
+						setButtonPressedDeal3(true);
+					}
+					if (isClickableRectClicked(dRectButtonDeal, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal1())
+					{
+						clearTable();
+						players[0].setTurn(true);
+
+						c1 = players[0].getPlayerDeck().front();
+						setButtonPressedDeal1(true);
+						setButtonPressedDeal2(false);
+					}
+					else if (isClickableRectClicked(dRectButtonDealPlayer2, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal2())
+					{
+
+						players[1].setTurn(true);
+						c2 = players[1].getPlayerDeck().front();
+						setButtonPressedDeal3(false);
+					}
+					else if (isClickableRectClicked(dRectButtonDealPlayer3, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal3())
+					{
+						players[2].setTurn(true);
+
+						c3 = players[2].getPlayerDeck().front();
+						setButtonPressedDeal1(false);
+						setButtonPressedDeal2(true);
+						setButtonPressedDeal3(true);
+					}
+					if (GameState::WAR == state && isClickableRectClicked(dRectButtonDeal, mouseDownX, mouseDownY, msx, msy))
+					{
+						state = GameState::PLAYING;
+						isRoundPlayed = false;
+					}
+					if (true == players[0].getTurn() && true == players[1].getTurn() && true == players[2].getTurn())
+					{
+
+						players[0].setTurn(false);
+						players[1].setTurn(false);
+						players[2].setTurn(false);
+						saveStatsXML();
+						std::cerr << "---------------------------------\n";
+						int sum = 0;
+						for (unsigned i = 0; i < players.size(); i++)
+						{
+							sum += players[i].cntPlayerDeck();
+						}
+						std::cerr << "SUM " << sum;
+						std::cerr << "\nnew  round\n";
+						isRoundPlayed = true;
+
+						playRound();
+					}
+					// conditions to put actives on false so that we can proceed with rendering based on the war players
+				}
+
+				else if (isClickableRectClicked(stats.getButtonRect(), mouseDownX, mouseDownY, msx, msy))
+				{
+					setShowStats(!getShowStats());
+					statsMessage();
+				}
+				else if (isClickableRectClicked(dealAll.getButtonRect(), mouseDownX, mouseDownY, msx, msy))
 				{
 					players[0].setTurn(true);
-					setButtonPressedDeal1(true);
-					setButtonPressedDeal2(false);
-					setButtonPressedDeal3(false);
-				}
-				else if (players[1].cntPlayerDeck() == 0)
-				{
 					players[1].setTurn(true);
-					setButtonPressedDeal1(false);
-					setButtonPressedDeal2(true);
-					setButtonPressedDeal3(false);
-				}
-				else if (players[2].cntPlayerDeck() == 0)
-				{
 					players[2].setTurn(true);
-					setButtonPressedDeal1(false);
-					setButtonPressedDeal2(false);
-					setButtonPressedDeal3(true);
-				}
-				if (isClickableRectClicked(dRectButtonDeal, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal1())
-				{
-					clearTable();
-					players[0].setTurn(true);
 
 					c1 = players[0].getPlayerDeck().front();
-					setButtonPressedDeal1(true);
-					setButtonPressedDeal2(false);
-				}
-				else if (isClickableRectClicked(dRectButtonDealPlayer2, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal2())
-				{
-
-					players[1].setTurn(true);
 					c2 = players[1].getPlayerDeck().front();
-					setButtonPressedDeal3(false);
-				}
-				else if (isClickableRectClicked(dRectButtonDealPlayer3, mouseDownX, mouseDownY, msx, msy) && !getButtonPressedDeal3())
-				{
-					players[2].setTurn(true);
-
 					c3 = players[2].getPlayerDeck().front();
-					setButtonPressedDeal1(false);
-					setButtonPressedDeal2(true);
-					setButtonPressedDeal3(true);
-				}
-				if (GameState::WAR == state && isClickableRectClicked(dRectButtonDeal, mouseDownX, mouseDownY, msx, msy))
-				{
-					state = GameState::PLAYING;
-					isRoundPlayed = false;
-				}
-				if (true == players[0].getTurn() && true == players[1].getTurn() && true == players[2].getTurn())
-				{
 
-					players[0].setTurn(false);
-					players[1].setTurn(false);
-					players[2].setTurn(false);
+					isRoundPlayed = true;
 					saveStatsXML();
 					std::cerr << "---------------------------------\n";
 					int sum = 0;
@@ -1323,72 +1409,40 @@ void App::handleEvents()
 					{
 						sum += players[i].cntPlayerDeck();
 					}
-					std::cerr << "SUM " << sum;
+					std::cerr << "\nSUM " << sum;
 					std::cerr << "\nnew  round\n";
-					isRoundPlayed = true;
-
+					// for (unsigned i = 0; i < !players[0].isActive() || !players[1].isActive() || !players[2].isActive(); i++)
+					// {
+					// 	playRound();
+					// 	if(i%5 == 0)
+					// 		restartGame();
+					// }
 					playRound();
 				}
-				// conditions to put actives on false so that we can proceed with rendering based on the war players
-			}
-
-			else if (isClickableRectClicked(stats.getButtonRect(), mouseDownX, mouseDownY, msx, msy))
-			{
-				setShowStats(!getShowStats());
-				statsMessage();
-			}
-			else if (isClickableRectClicked(dealAll.getButtonRect(), mouseDownX, mouseDownY, msx, msy))
-			{
-				players[0].setTurn(true);
-				players[1].setTurn(true);
-				players[2].setTurn(true);
-
-				c1 = players[0].getPlayerDeck().front();
-				c2 = players[1].getPlayerDeck().front();
-				c3 = players[2].getPlayerDeck().front();
-
-				isRoundPlayed = true;
-				saveStatsXML();
-				std::cerr << "---------------------------------\n";
-				int sum = 0;
-				for (unsigned i = 0; i < players.size(); i++)
+				else if (isClickableRectClicked(restart.getButtonRect(), mouseDownX, mouseDownY, msx, msy))
 				{
-					sum += players[i].cntPlayerDeck();
+					restartGame();
 				}
-				std::cerr << "\nSUM " << sum;
-				std::cerr << "\nnew  round\n";
-				// for (unsigned i = 0; i < !players[0].isActive() || !players[1].isActive() || !players[2].isActive(); i++)
-				// {
-				// 	playRound();
-				// 	if(i%5 == 0)
-				// 		restartGame();
-				// }
-				playRound();
+
+				else
+				{
+					std::cerr << "NOTHING CLICKED "
+							  << "\n";
+				}
 			}
-			else if (isClickableRectClicked(restart.getButtonRect(), mouseDownX, mouseDownY, msx, msy))
+
+			// if(start)
+			// {
+
+			// }
+			if (event.button.button == SDL_BUTTON_RIGHT)
 			{
 				restartGame();
 			}
-
-			else
-			{
-				std::cerr << "NOTHING CLICKED "
-						  << "\n";
-			}
+		};
+		break;
 		}
-
-		// if(start)
-		// {
-
-		// }
-		if (event.button.button == SDL_BUTTON_RIGHT)
-		{
-			restartGame();
-		}
-	};
-	break;
 	}
-}
 }
 
 void App::printDeck(const std::vector<Card> &deskDeck) const

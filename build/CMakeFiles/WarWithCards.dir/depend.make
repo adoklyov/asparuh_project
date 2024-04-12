@@ -3,6 +3,7 @@
 
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../App.cpp
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../App.h
+CMakeFiles/WarWithCards.dir/App.cpp.o: ../Arrow.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../Button.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../Deck.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../Player.h
@@ -53,6 +54,9 @@ CMakeFiles/WarWithCards.dir/App.cpp.o: /usr/include/SDL2/SDL_video.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: /usr/include/SDL2/begin_code.h
 CMakeFiles/WarWithCards.dir/App.cpp.o: /usr/include/SDL2/close_code.h
 
+CMakeFiles/WarWithCards.dir/Arrow.cpp.o: ../Arrow.cpp
+CMakeFiles/WarWithCards.dir/Arrow.cpp.o: ../Arrow.h
+
 CMakeFiles/WarWithCards.dir/Button.cpp.o: ../Button.cpp
 CMakeFiles/WarWithCards.dir/Button.cpp.o: ../Button.h
 
@@ -64,6 +68,7 @@ CMakeFiles/WarWithCards.dir/Player.cpp.o: ../Player.cpp
 CMakeFiles/WarWithCards.dir/Player.cpp.o: ../Player.h
 
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../App.h
+CMakeFiles/WarWithCards.dir/main.cpp.o: ../Arrow.h
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../Button.h
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../Deck.h
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../Player.h
