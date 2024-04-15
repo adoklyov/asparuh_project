@@ -24,10 +24,17 @@ public:
     void setVisibleTexture(SDL_Texture *visible);
     void setInvisibleTexture(SDL_Texture *invisible);
 
+    double getSpeedY() const;
+    void setSpeedY(double sy);
+
+    void changePosition();
+
     void setActive(bool active);
     bool isActive();
 
     SDL_Rect getArrowRect() const;
+
+ 
 
 private:
     SDL_Rect arrow;
@@ -36,4 +43,12 @@ private:
     SDL_Texture *visible;
     SDL_Texture *invisible;
 
+    //Index for current position
+    int currentPosition;
+
+    //Positions
+    SDL_Rect fixedPositions[3];
+
+    //Animation speed
+    double speedY;
 };

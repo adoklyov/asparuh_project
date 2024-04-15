@@ -4,6 +4,9 @@
 
 const unsigned PLAYERS_RENDERING_CARDS_CNT = 300;
 
+double speedY = 1;
+double y = speedY;
+
 App::App()
 	: card1Texture(nullptr)
 {
@@ -184,24 +187,14 @@ bool App::init(const std::string title, int xpos, int ypos, int width, int heigh
 
 void App::setSettingsForArrow(SDL_Texture *visible, SDL_Texture *invisible, SDL_Renderer *renderer)
 {
-	SDL_Rect rectArrow = {400, 200, 130, 50};
 	arrow.setVisibleTexture(visible);
 	arrow.setInvisibleTexture(invisible);
 	arrow.setPosition(rectArrow);
-
-	sourceRectangle.x = 60;
-	sourceRectangle.y = 103;
-	sourceRectangle.w = 55;
-	sourceRectangle.h = 55;
-
-	destinationRectangle.x = 0;
-	destinationRectangle.y = 0;
-	destinationRectangle.w = 110;
-	destinationRectangle.h = 110;
 }
 
 void App::setSettingsForButtonStart(SDL_Texture *active, SDL_Texture *inactive, SDL_Texture *pressed, SDL_Rect &rect, TTF_Font *font, SDL_Color textColor, SDL_Renderer *renderer)
 {
+	
 	start.setActiveTexture(active);
 	start.setInactiveTexture(inactive);
 	start.setPressedTexture(pressed);
@@ -645,8 +638,8 @@ void App::render()
 	restart.render(renderer);
 	stats.render(renderer);
 
-	// Turn Arrow
-	arrow.render(renderer);
+	// // Turn Arrow
+	// arrow.render(renderer);
 
 	if (GameState::START == state)
 	{
@@ -656,8 +649,34 @@ void App::render()
 		drawTexture(textStartTexture, 5, 355, tw, th, SDL_FLIP_NONE);
 	}
 
+	// if (GameState::START == state && statsButton.isClicked())
+
+	// {
+
+	// }
+	/*
+	if(GameState::PLAYING == state && player 1 turn)
+	{
+
+	}
+
+	if(GameState::PLAYING == state && player 2 turn)
+	{
+
+	}
+
+	if(GameState::PLAYING == state && player 3 turn)
+	{
+
+	}
+
+	*/
 	else if (GameState::PLAYING == state)
 	{
+		// Turn Arrow Test Render
+		arrow.render(renderer);
+
+
 		thrownCardsRender();
 		player1Render();
 		player2Render();
@@ -1185,8 +1204,6 @@ void App::playNormalRound()
 	std::cerr << "Desk deck:\n";
 	printDeck(deskDeck);
 
-	// play the game
-
 	registerWinner(deskDeck, winner);
 
 	for (int i = 0; i < players.size(); i++)
@@ -1201,39 +1218,8 @@ void App::update()
 	rectArrow.y += y;
 	arrow.setPosition(rectArrow);
 	if (rectArrow.y % 100 == 0)
-		y *= -1;
+		 y = (y == speedY) ? -speedY : speedY;
 
-	/*
-		// Picture movement
-		SDL_GetWindowSize(window, &ww, &wh);
-		destinationRectangle.y = (wh - destinationRectangle.h) / 2;
-		// sourceRectangle.x++;
-		arrow.setPosition(rectArrow);
-
-		if (SDL_GetTicks() % 35 == 0) {
-		rectArrow.y -= 25;
-		arrow.setPosition(rectArrow);
-		rectArrow.y -= 25;
-		arrow.setPosition(rectArrow);
-		rectArrow.y -= 25;
-		arrow.setPosition(rectArrow);
-		rectArrow.y -= 25;
-		arrow.setPosition(rectArrow);
-
-
-		// Boundaries
-		if ((destinationRectangle.x + destinationRectangle.w) || (destinationRectangle.x <= 0))
-		{
-
-				// Speed change on bounce
-
-				speed *= -1;
-				if (speed < 0)
-					speed--;
-				else
-					speed++;
-			}
-		}*/
 }
 
 void App::handleEvents()
@@ -1258,6 +1244,10 @@ void App::handleEvents()
 			}
 		};
 		break;
+		case SDLK_SPACE:
+		{
+			arrow.changePosition();
+		}
 		case SDL_MOUSEMOTION:
 		{
 			int msx, msy;
@@ -1405,6 +1395,7 @@ void App::handleEvents()
 				{
 					setShowStats(!getShowStats());
 					statsMessage();
+					
 				}
 				else if (isClickableRectClicked(dealAll.getButtonRect(), mouseDownX, mouseDownY, msx, msy))
 				{

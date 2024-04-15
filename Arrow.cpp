@@ -1,11 +1,24 @@
 #include "Arrow.h"
 
-Arrow::Arrow()
+
+Arrow::Arrow() 
 {
     arrowState = VISIBLE;
     visible = nullptr;
     invisible = nullptr;
-    arrow = {0, 0, 100, 50};
+    currentPosition = 0;
+    arrow = {300, 300, 100, 50};
+    fixedPositions [0] = {0, 0, 100, 50};
+    fixedPositions [1] = {200, 150, 100, 50};
+    fixedPositions [2] = {400, 150, 100, 50};
+    setPosition(fixedPositions[currentPosition]);
+    
+}
+
+void Arrow::changePosition()
+{
+    currentPosition = (currentPosition + 1) % 3;
+    setPosition(fixedPositions[currentPosition]);
 }
 
 Arrow::~Arrow()
@@ -36,10 +49,7 @@ void Arrow::setInvisibleTexture(SDL_Texture *texture)
 
 void Arrow::setPosition(SDL_Rect& rectArrow)
 {
-    arrow.x = rectArrow.x;
-    arrow.y = rectArrow.y;
-    arrow.w = rectArrow.w;
-    arrow.h = rectArrow.h;
+    arrow = rectArrow;
 }
 
 SDL_Rect Arrow::getArrowRect() const
@@ -62,4 +72,14 @@ void Arrow::setActive(bool active)
 bool Arrow::isActive()
 {
     return arrowState != INVISIBLE;
+}
+
+double Arrow::getSpeedY() const
+{
+    return speedY;
+}
+
+void Arrow::setSpeedY(double sy) 
+{
+    speedY = sy;
 }

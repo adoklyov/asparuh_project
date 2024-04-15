@@ -60,80 +60,80 @@ include CMakeFiles/WarWithCards.dir/flags.make
 CMakeFiles/WarWithCards.dir/main.cpp.o: CMakeFiles/WarWithCards.dir/flags.make
 CMakeFiles/WarWithCards.dir/main.cpp.o: ../main.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/WarWithCards.dir/main.cpp.o"
-	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/main.cpp.o -c /home/default/asparuh_project/main.cpp
+	/usr/bin/clang++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/main.cpp.o -c /home/default/asparuh_project/main.cpp
 
 CMakeFiles/WarWithCards.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WarWithCards.dir/main.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/main.cpp > CMakeFiles/WarWithCards.dir/main.cpp.i
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/main.cpp > CMakeFiles/WarWithCards.dir/main.cpp.i
 
 CMakeFiles/WarWithCards.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WarWithCards.dir/main.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/main.cpp -o CMakeFiles/WarWithCards.dir/main.cpp.s
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/main.cpp -o CMakeFiles/WarWithCards.dir/main.cpp.s
 
 CMakeFiles/WarWithCards.dir/App.cpp.o: CMakeFiles/WarWithCards.dir/flags.make
 CMakeFiles/WarWithCards.dir/App.cpp.o: ../App.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/WarWithCards.dir/App.cpp.o"
-	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/App.cpp.o -c /home/default/asparuh_project/App.cpp
+	/usr/bin/clang++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/App.cpp.o -c /home/default/asparuh_project/App.cpp
 
 CMakeFiles/WarWithCards.dir/App.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WarWithCards.dir/App.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/App.cpp > CMakeFiles/WarWithCards.dir/App.cpp.i
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/App.cpp > CMakeFiles/WarWithCards.dir/App.cpp.i
 
 CMakeFiles/WarWithCards.dir/App.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WarWithCards.dir/App.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/App.cpp -o CMakeFiles/WarWithCards.dir/App.cpp.s
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/App.cpp -o CMakeFiles/WarWithCards.dir/App.cpp.s
 
 CMakeFiles/WarWithCards.dir/Deck.cpp.o: CMakeFiles/WarWithCards.dir/flags.make
 CMakeFiles/WarWithCards.dir/Deck.cpp.o: ../Deck.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/WarWithCards.dir/Deck.cpp.o"
-	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/Deck.cpp.o -c /home/default/asparuh_project/Deck.cpp
+	/usr/bin/clang++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/Deck.cpp.o -c /home/default/asparuh_project/Deck.cpp
 
 CMakeFiles/WarWithCards.dir/Deck.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WarWithCards.dir/Deck.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/Deck.cpp > CMakeFiles/WarWithCards.dir/Deck.cpp.i
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/Deck.cpp > CMakeFiles/WarWithCards.dir/Deck.cpp.i
 
 CMakeFiles/WarWithCards.dir/Deck.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WarWithCards.dir/Deck.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/Deck.cpp -o CMakeFiles/WarWithCards.dir/Deck.cpp.s
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/Deck.cpp -o CMakeFiles/WarWithCards.dir/Deck.cpp.s
 
 CMakeFiles/WarWithCards.dir/Player.cpp.o: CMakeFiles/WarWithCards.dir/flags.make
 CMakeFiles/WarWithCards.dir/Player.cpp.o: ../Player.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/WarWithCards.dir/Player.cpp.o"
-	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/Player.cpp.o -c /home/default/asparuh_project/Player.cpp
+	/usr/bin/clang++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/Player.cpp.o -c /home/default/asparuh_project/Player.cpp
 
 CMakeFiles/WarWithCards.dir/Player.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WarWithCards.dir/Player.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/Player.cpp > CMakeFiles/WarWithCards.dir/Player.cpp.i
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/Player.cpp > CMakeFiles/WarWithCards.dir/Player.cpp.i
 
 CMakeFiles/WarWithCards.dir/Player.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WarWithCards.dir/Player.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/Player.cpp -o CMakeFiles/WarWithCards.dir/Player.cpp.s
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/Player.cpp -o CMakeFiles/WarWithCards.dir/Player.cpp.s
 
 CMakeFiles/WarWithCards.dir/Button.cpp.o: CMakeFiles/WarWithCards.dir/flags.make
 CMakeFiles/WarWithCards.dir/Button.cpp.o: ../Button.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/WarWithCards.dir/Button.cpp.o"
-	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/Button.cpp.o -c /home/default/asparuh_project/Button.cpp
+	/usr/bin/clang++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/Button.cpp.o -c /home/default/asparuh_project/Button.cpp
 
 CMakeFiles/WarWithCards.dir/Button.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WarWithCards.dir/Button.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/Button.cpp > CMakeFiles/WarWithCards.dir/Button.cpp.i
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/Button.cpp > CMakeFiles/WarWithCards.dir/Button.cpp.i
 
 CMakeFiles/WarWithCards.dir/Button.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WarWithCards.dir/Button.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/Button.cpp -o CMakeFiles/WarWithCards.dir/Button.cpp.s
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/Button.cpp -o CMakeFiles/WarWithCards.dir/Button.cpp.s
 
 CMakeFiles/WarWithCards.dir/Arrow.cpp.o: CMakeFiles/WarWithCards.dir/flags.make
 CMakeFiles/WarWithCards.dir/Arrow.cpp.o: ../Arrow.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/default/asparuh_project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/WarWithCards.dir/Arrow.cpp.o"
-	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/Arrow.cpp.o -c /home/default/asparuh_project/Arrow.cpp
+	/usr/bin/clang++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WarWithCards.dir/Arrow.cpp.o -c /home/default/asparuh_project/Arrow.cpp
 
 CMakeFiles/WarWithCards.dir/Arrow.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WarWithCards.dir/Arrow.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/Arrow.cpp > CMakeFiles/WarWithCards.dir/Arrow.cpp.i
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/default/asparuh_project/Arrow.cpp > CMakeFiles/WarWithCards.dir/Arrow.cpp.i
 
 CMakeFiles/WarWithCards.dir/Arrow.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WarWithCards.dir/Arrow.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/Arrow.cpp -o CMakeFiles/WarWithCards.dir/Arrow.cpp.s
+	/usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/default/asparuh_project/Arrow.cpp -o CMakeFiles/WarWithCards.dir/Arrow.cpp.s
 
 # Object files for target WarWithCards
 WarWithCards_OBJECTS = \

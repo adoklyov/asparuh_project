@@ -207,7 +207,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/clang++"
+			"value" : "/usr/bin/clang++-9"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_AR",
@@ -223,7 +223,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/lib/llvm-10/bin/llvm-ar"
+			"value" : "/usr/lib/llvm-9/bin/llvm-ar"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_RANLIB",
@@ -239,7 +239,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/lib/llvm-10/bin/llvm-ranlib"
+			"value" : "/usr/lib/llvm-9/bin/llvm-ranlib"
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS",
@@ -335,7 +335,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/clang"
+			"value" : "/usr/bin/clang-9"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_AR",
@@ -351,7 +351,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/lib/llvm-10/bin/llvm-ar"
+			"value" : "/usr/lib/llvm-9/bin/llvm-ar"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_RANLIB",
@@ -367,7 +367,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/lib/llvm-10/bin/llvm-ranlib"
+			"value" : "/usr/lib/llvm-9/bin/llvm-ranlib"
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",
